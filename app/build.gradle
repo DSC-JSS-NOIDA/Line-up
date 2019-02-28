@@ -32,6 +32,7 @@ dependencies {
 
     implementation 'com.github.ibrahimsn98:android-particles:1.6'
     implementation 'com.google.android.material:material:1.1.0-alpha04'
+    implementation 'agency.tango.android:material-intro-screen:0.0.5'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.2-alpha01'
