@@ -11,20 +11,55 @@
         android:orientation="vertical">
 
         <EditText
+            android:id="@+id/name_signup"
             android:layout_width="300dp"
             android:layout_height="56dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="92dp"
             android:background="@drawable/bubble"
             android:gravity="center_vertical"
-            android:hint="@string/email"
+            android:hint="@string/name"
             android:inputType="text"
             android:paddingStart="32dp"
             android:paddingEnd="32dp"
+            android:fontFamily="@font/roboto_thin"
             android:textColor="#ffffff"
             android:textColorHint="#8effffff" />
 
         <EditText
+            android:id="@+id/zeal_id_signup"
+            android:layout_width="300dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bubble"
+            android:gravity="center_vertical"
+            android:hint="@string/zeal_id"
+            android:inputType="text"
+            android:paddingEnd="32dp"
+            android:paddingStart="32dp"
+            android:fontFamily="@font/roboto_thin"
+            android:textColor="#ffffff"
+            android:textColorHint="#8effffff" />
+
+        <EditText
+            android:id="@+id/phone_signup"
+            android:layout_width="300dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bubble"
+            android:gravity="center_vertical"
+            android:hint="@string/phone_no"
+            android:inputType="phone"
+            android:paddingEnd="32dp"
+            android:paddingStart="32dp"
+            android:fontFamily="@font/roboto_thin"
+            android:textColor="#ffffff"
+            android:textColorHint="#8effffff" />
+
+        <EditText
+            android:id="@+id/password_signup"
             android:layout_width="300dp"
             android:layout_height="56dp"
             android:layout_gravity="center_horizontal"
@@ -35,21 +70,9 @@
             android:inputType="textPassword"
             android:paddingStart="32dp"
             android:textColor="#ffffff"
+            android:fontFamily="@font/roboto_thin"
             android:paddingEnd="32dp"
             android:textColorHint="#8effffff" />
 
-        <EditText
-            android:layout_width="300dp"
-            android:layout_height="56dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/bubble"
-            android:gravity="center_vertical"
-            android:hint="@string/confirm_password"
-            android:inputType="textPassword"
-            android:paddingEnd="32dp"
-            android:paddingStart="32dp"
-            android:textColor="#ffffff"
-            android:textColorHint="#8effffff" />
     </LinearLayout>
 </FrameLayout>

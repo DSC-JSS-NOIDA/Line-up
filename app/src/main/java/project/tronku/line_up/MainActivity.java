@@ -2,7 +2,6 @@ package project.tronku.line_up;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import me.ibrahimsn.particle.ParticleView;
 import project.tronku.line_up.login.LoginButton;
 import project.tronku.line_up.login.LoginFragment;
 import project.tronku.line_up.login.SignUpFragment;
@@ -11,7 +10,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 
 import static android.view.View.INVISIBLE;
@@ -37,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         signUpFragment = findViewById(R.id.sign_up_fragment);
         wrapper = findViewById(R.id.wrapper);
         button = findViewById(R.id.button);
+        view.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
 
         LoginFragment topLoginFragment = new LoginFragment();
         SignUpFragment topSignUpFragment = new SignUpFragment();
@@ -54,8 +53,9 @@ public class MainActivity extends AppCompatActivity {
         button.setOnButtonSwitched(new OnButtonSwitchedListener() {
             @Override
             public void onButtonSwitched(boolean isLogin) {
-                view.setBackgroundColor(ContextCompat.getColor(MainActivity.this,
-                        isLogin ? R.color.firstPage : R.color.secondPage));
+                view.setBackgroundColor(ContextCompat.getColor(
+                        MainActivity.this,
+                        isLogin ? R.color.colorPrimary : R.color.secondPage));
             }
         });
 

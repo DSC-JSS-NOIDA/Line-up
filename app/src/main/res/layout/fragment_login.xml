@@ -6,6 +6,7 @@
     tools:context="project.tronku.line_up.login.LoginFragment">
 
     <EditText
+        android:id="@+id/zeal_id_login"
         android:layout_width="300dp"
         android:layout_height="56dp"
         android:layout_gravity="center_horizontal"
@@ -15,10 +16,12 @@
         android:background="@drawable/bubble"
         android:gravity="center_vertical"
         android:paddingStart="32dp"
-        android:hint="@string/email"
+        android:hint="@string/zeal_id"
+        android:fontFamily="@font/roboto_thin"
         android:textColor="#ffffff" />
 
     <EditText
+        android:id="@+id/password_login"
         android:layout_width="300dp"
         android:layout_height="56dp"
         android:paddingEnd="32dp"
@@ -28,16 +31,9 @@
         android:textColorHint="#8effffff"
         android:gravity="center_vertical"
         android:paddingStart="32dp"
+        android:inputType="textPassword"
         android:hint="@string/password"
+        android:fontFamily="@font/roboto_thin"
         android:textColor="#ffffff" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_gravity="center_horizontal"
-        android:id="@+id/forgot_password"
-        android:layout_marginTop="64dp"
-        android:gravity="center"
-        android:text="@string/forgot_password"
-        android:textColor="#ffffff" />
 </LinearLayout>

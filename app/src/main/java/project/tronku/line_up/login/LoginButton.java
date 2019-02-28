@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import project.tronku.line_up.OnButtonSwitchedListener;
 import project.tronku.line_up.R;
 
@@ -77,8 +79,8 @@ public class LoginButton extends View {
     private Rect loginButtonOutline;
     private Rect signUpButtonOutline;
 
-    private project.tronku.line_up.login.OnSignUpListener onSignUpListener;
-    private project.tronku.line_up.login.OnLoginListener onLoginListener;
+    private OnSignUpListener onSignUpListener;
+    private OnLoginListener onLoginListener;
     private Rect loginTextOutline;
     private Rect signUpTextOutline;
 
@@ -104,12 +106,13 @@ public class LoginButton extends View {
     }
 
     private void init() {
+        Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.roboto_bold);
         loginButtonPaint = new Paint();
         loginButtonPaint.setColor(ContextCompat.getColor(getContext(), R.color.secondPage));
         loginButtonPaint.setStyle(FILL);
 
         signUpButtonPaint = new Paint();
-        signUpButtonPaint.setColor(ContextCompat.getColor(getContext(), R.color.firstPage));
+        signUpButtonPaint.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         signUpButtonPaint.setStyle(FILL);
 
         paint2 = new Paint();
@@ -119,12 +122,14 @@ public class LoginButton extends View {
         loginPaint = new Paint();
         loginPaint.setColor(ContextCompat.getColor(getContext(), R.color.text));
         loginPaint.setTextAlign(CENTER);
+        loginPaint.setTypeface(typeface);
         loginPaint.setTextSize(dpToPixels(16));
 
         signUpPaint = new Paint();
         signUpPaint.setColor(ContextCompat.getColor(getContext(), R.color.text));
         signUpPaint.setTextSize(dpToPixels(64));
         signUpPaint.setTextAlign(CENTER);
+        signUpPaint.setTypeface(typeface);
 //        signUpPaint.setAlpha(255);
     }
 
@@ -208,7 +213,6 @@ public class LoginButton extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
         if (isLogin) {
             canvas.drawText(getString(R.string.sign_up), width / 2, dpToPixels(457), signUpPaint);
         } else {
@@ -524,11 +528,11 @@ public class LoginButton extends View {
         });
     }
 
-    public void setOnSignUpListener(project.tronku.line_up.login.OnSignUpListener listener) {
+    public void setOnSignUpListener(OnSignUpListener listener) {
         onSignUpListener = listener;
     }
 
-    public void setOnLoginListener(project.tronku.line_up.login.OnLoginListener listener) {
+    public void setOnLoginListener(OnLoginListener listener) {
         onLoginListener = listener;
     }
 
