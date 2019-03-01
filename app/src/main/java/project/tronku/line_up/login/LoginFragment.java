@@ -75,8 +75,9 @@ public class LoginFragment extends Fragment implements project.tronku.line_up.lo
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_INTRO) {
             if (resultCode == RESULT_OK) {
-                Toast.makeText(getActivity(), "Welcome!", Toast.LENGTH_SHORT).show();
                 PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("intro", false).apply();
+                Intent qrcode = new Intent(getActivity(), QRCodeActivity.class);
+                startActivity(qrcode);
             } else {
                 //Toast
             }

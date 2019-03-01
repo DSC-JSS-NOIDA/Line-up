@@ -18,7 +18,7 @@ public class InstructionsActivity extends IntroActivity {
 
         addSlide(new SimpleSlide.Builder()
                 .title("Grant Permission")
-                .permissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+                .permissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CAMERA})
                 .description("Description........")
                 .image(R.drawable.ic_security)
                 .background(R.color.grant)
