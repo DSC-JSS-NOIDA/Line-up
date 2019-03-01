@@ -2,11 +2,11 @@
 <resources>
     <color name="colorPrimary">#282828</color>
     <color name="colorPrimaryDark">#000000</color>
-    <!--<color name="colorAccent">#f1c40f</color>-->
+    <color name="colorAccent">#f1c40f</color>
 
     <color name="firstPage">#131A56</color>
     <color name="secondPage">#00838F</color>
-    <color name="colorAccent">#ba68c8</color>
+    <!--<color name="colorAccent">#ba68c8</color>-->
     <color name="text">#ffffff</color>
     <color name="text_two">#94ffffff</color>
     <color name="green">#940ce61f</color>
@@ -14,4 +14,5 @@
     <color name="grant">#545e67</color>
     <color name="location">#19788C</color>
     <color name="qr">#C12F2F</color>
+    <color name="red"> #e74c3c </color>
 </resources>

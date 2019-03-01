@@ -1,37 +1,44 @@
 package project.tronku.line_up;
 
-import agency.tango.materialintroscreen.MaterialIntroActivity;
-import agency.tango.materialintroscreen.SlideFragmentBuilder;
-
+import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
-public class InstructionsActivity extends MaterialIntroActivity {
+import com.heinrichreimersoftware.materialintro.app.IntroActivity;
+import com.heinrichreimersoftware.materialintro.slide.SimpleSlide;
 
+
+public class InstructionsActivity extends IntroActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_instructions);
+        setFullscreen(true);
 
-        addSlide(new SlideFragmentBuilder()
-                .backgroundColor(R.color.grant)
-                .image(R.drawable.permission)
-                .title("Grant access")
-                .description("Grant access to app to get location")
+        addSlide(new SimpleSlide.Builder()
+                .title("Grant Permission")
+                .permissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+                .description("Description........")
+                .image(R.drawable.ic_security)
+                .background(R.color.grant)
+                .scrollable(false)
                 .build());
 
-        addSlide(new SlideFragmentBuilder()
-                .backgroundColor(R.color.location)
-                .image(R.drawable.location)
-                .title("GPS Access")
-                .description("Grant access to app to get location")
+        addSlide(new SimpleSlide.Builder()
+                .title("QR Code")
+                .description("Description........")
+                .image(R.drawable.ic_qr_big)
+                .background(R.color.qr)
+                .scrollable(false)
                 .build());
 
-        addSlide(new SlideFragmentBuilder()
-                .backgroundColor(R.color.qr)
-                .image(R.drawable.qr_code)
-                .title("QR Code scan")
-                .description("Grant access to app to get location")
+        addSlide(new SimpleSlide.Builder()
+                .title("Location")
+                .description("Description........")
+                .image(R.drawable.ic_route)
+                .background(R.color.location)
+                .scrollable(false)
                 .build());
 
     }
