@@ -84,6 +84,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:onClick="Location"
             android:layout_width="260dp"
             android:layout_height="68dp"
             app:cardCornerRadius="36dp"

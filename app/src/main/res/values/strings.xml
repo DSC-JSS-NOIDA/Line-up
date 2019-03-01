@@ -11,4 +11,5 @@
     <string name="name">Name</string>
     <string name="phone_no">Phone no</string>
     <string name="zeal_id">Zeal id</string>
+    <string name="title_activity_location_radar">LocationRadar</string>
 </resources>
