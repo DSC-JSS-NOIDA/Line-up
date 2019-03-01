@@ -15,4 +15,6 @@
     <color name="location">#19788C</color>
     <color name="qr">#C12F2F</color>
     <color name="red"> #e74c3c </color>
+
+    <color name="qr_green"> #138d75 </color>
 </resources>

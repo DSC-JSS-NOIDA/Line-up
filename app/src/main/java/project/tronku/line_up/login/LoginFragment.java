@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import project.tronku.line_up.InstructionsActivity;
+import project.tronku.line_up.QRCodeActivity;
 import project.tronku.line_up.R;
 
 import androidx.fragment.app.Fragment;
@@ -59,8 +60,12 @@ public class LoginFragment extends Fragment implements project.tronku.line_up.lo
         }
         else {
             if (firstTime) {
-                Intent intent = new Intent(getActivity(), InstructionsActivity.class);
-                startActivityForResult(intent, REQUEST_CODE_INTRO);
+                Intent intro = new Intent(getActivity(), InstructionsActivity.class);
+                startActivityForResult(intro, REQUEST_CODE_INTRO);
+            }
+            else {
+                Intent qrcode = new Intent(getActivity(), QRCodeActivity.class);
+                startActivity(qrcode);
             }
         }
     }
