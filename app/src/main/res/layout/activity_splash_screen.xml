@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".splash_screen"
+    android:background="#000000">
+
+
+
+    <View
+        android:id="@+id/line_a"
+        android:layout_margin="2dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@id/lineup"
+        android:layout_above="@id/line_d"
+        android:layout_width="2dp"
+        android:layout_height="140dp"
+        android:background="@android:color/white"/>
+    <View
+        android:id="@+id/line_b"
+        android:layout_margin="2dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_above="@id/lineup"
+        android:layout_height="2dp"
+        android:layout_marginEnd="60dp"
+
+        android:layout_toEndOf="@id/line_a"
+        android:background="@android:color/white"
+        android:layout_width="200dp" />
+    <View
+        android:id="@+id/line_c"
+        android:layout_margin="2dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/lineup"
+        android:layout_width="2dp"
+        android:layout_height="140dp"
+        android:layout_below="@id/line_b"
+        android:background="@android:color/white"/>
+
+    <View
+        android:id="@+id/line_d"
+        android:layout_margin="2dp"
+        android:layout_marginStart="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_below="@id/lineup"
+        android:layout_width="200dp"
+        android:layout_height="2dp"
+        android:layout_toLeftOf="@id/line_c"
+        android:background="@android:color/white"/>
+
+    <LinearLayout
+        android:id="@+id/lineup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="5dp"
+        android:padding="5dp">
+
+
+        <TextView
+            android:id="@+id/line"
+            android:layout_marginEnd="5dp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="LINE"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:textSize="50sp"
+            android:typeface="sans"
+            />
+        <TextView
+            android:id="@+id/up"
+            android:background="#fff"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="UP"
+            android:textColor="#363627"
+            android:typeface="sans"
+            android:textStyle="bold"
+            android:textSize="50sp"
+            android:padding="3dp"
+            />
+    </LinearLayout>
+
+</RelativeLayout>
