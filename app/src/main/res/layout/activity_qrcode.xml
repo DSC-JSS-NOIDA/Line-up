@@ -1,92 +1,200 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/qr_green"
-    android:orientation="vertical"
-    tools:context=".QRCodeActivity">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Your QR Code"
-        android:textSize="20sp"
-        android:textColor="@android:color/white"
-        android:layout_marginStart="30dp"
-        android:fontFamily="@font/roboto_medium"
-        android:layout_marginTop="30dp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Show this QR code when you meet your team-mates."
-        android:textSize="18sp"
-        android:layout_marginEnd="30dp"
-        android:fontFamily="@font/roboto_thin"
-        android:textColor="@color/text_two"
-        android:layout_marginStart="30dp"/>
-
-
-    <ImageView
-        android:id="@+id/my_qr"
-        android:layout_width="260dp"
-        android:layout_height="260dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:background="@android:color/white"
-        android:layout_marginTop="30dp"
-        android:layout_gravity="center"/>
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="40dp">
+        android:layout_marginBottom="40dp"
+        android:background="@color/qr_green"
+        android:orientation="vertical"
+        tools:context=".QRCodeActivity">
 
-        <ImageButton
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your QR Code"
+            android:textSize="20sp"
+            android:textColor="@android:color/white"
+            android:layout_marginStart="30dp"
+            android:fontFamily="@font/roboto_medium"
+            android:layout_marginTop="30dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show this QR code when you meet your team-mates."
+            android:textSize="18sp"
+            android:layout_marginEnd="30dp"
+            android:fontFamily="@font/roboto_thin"
+            android:textColor="@color/text_two"
+            android:layout_marginStart="30dp"/>
+
+
+        <ImageView
+            android:id="@+id/my_qr"
+            android:layout_width="260dp"
+            android:layout_height="260dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:background="@android:color/white"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center"/>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="260dp"
+            android:layout_height="68dp"
+            app:cardCornerRadius="36dp"
             android:id="@+id/scan_qr"
-            android:layout_alignParentStart="true"
-            android:layout_width="140dp"
-            android:layout_height="140dp"
-            android:background="@drawable/circular_button"
-            android:gravity="center"
-            android:src="@drawable/ic_qr_scan"/>
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center"
+            app:cardBackgroundColor="@android:color/white">
 
-        <TextView
-            android:layout_width="140dp"
-            android:textAlignment="center"
-            android:layout_height="wrap_content"
-            android:text="SCAN QR"
-            android:fontFamily="@font/roboto_medium"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:layout_below="@id/scan_qr"
-            android:layout_marginTop="6dp"/>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal">
 
-        <ImageButton
+                <ImageView
+                    android:id="@+id/qr_icon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_qr_scan"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/qr_icon"
+                    android:text="Scan QR Code"
+                    android:textSize="18sp"
+                    android:layout_marginStart="14dp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textColor="@color/qr_green"
+                    android:layout_centerInParent="true"/>
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="260dp"
+            android:layout_height="68dp"
+            app:cardCornerRadius="36dp"
             android:id="@+id/locate"
-            android:layout_alignParentEnd="true"
-            android:layout_width="140dp"
-            android:layout_height="140dp"
-            android:background="@drawable/circular_button"
-            android:gravity="center"
-            android:src="@drawable/ic_locate"/>
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center"
+            app:cardBackgroundColor="@android:color/white">
 
-        <TextView
-            android:layout_width="140dp"
-            android:textAlignment="center"
-            android:layout_alignParentEnd="true"
-            android:layout_height="wrap_content"
-            android:text="LOCATE"
-            android:fontFamily="@font/roboto_medium"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:layout_below="@id/locate"
-            android:layout_marginTop="6dp"/>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal">
 
-    </RelativeLayout>
+                <ImageView
+                    android:id="@+id/locate_icon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_locate"/>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/locate_icon"
+                    android:text="Locate Mates"
+                    android:textSize="18sp"
+                    android:layout_marginStart="14dp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textColor="@color/qr_green"
+                    android:layout_centerInParent="true"/>
 
-</LinearLayout>
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="260dp"
+            android:layout_height="68dp"
+            app:cardCornerRadius="36dp"
+            android:id="@+id/route"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center"
+            app:cardBackgroundColor="@android:color/white">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal">
+
+                <ImageView
+                    android:id="@+id/route_icon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_route"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/route_icon"
+                    android:text="Your route"
+                    android:textSize="18sp"
+                    android:layout_marginStart="24dp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textColor="@color/qr_green"
+                    android:layout_centerInParent="true"/>
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="260dp"
+            android:layout_height="68dp"
+            app:cardCornerRadius="36dp"
+            android:id="@+id/leaderboard"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="40dp"
+            app:cardBackgroundColor="@android:color/white">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal">
+
+                <ImageView
+                    android:id="@+id/leaderboard_icon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_podium"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/leaderboard_icon"
+                    android:text="Leaderboard"
+                    android:textSize="18sp"
+                    android:layout_marginStart="14dp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textColor="@color/qr_green"
+                    android:layout_centerInParent="true"/>
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+</ScrollView>

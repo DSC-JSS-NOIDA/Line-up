@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".splash_screen"
+    tools:context=".SplashScreenActivity"
     android:background="#000000">
 
 
@@ -74,7 +74,7 @@
             android:textColor="#fff"
             android:textStyle="bold"
             android:textSize="50sp"
-            android:typeface="sans"
+            android:fontFamily="@font/roboto_medium"
             />
         <TextView
             android:id="@+id/up"
@@ -83,7 +83,7 @@
             android:layout_width="wrap_content"
             android:text="UP"
             android:textColor="#363627"
-            android:typeface="sans"
+            android:fontFamily="@font/roboto_medium"
             android:textStyle="bold"
             android:textSize="50sp"
             android:padding="3dp"
