@@ -69,7 +69,7 @@ public class QRCodeActivity extends AppCompatActivity {
     }
 
     public void Location(View view){
-        Intent i=new Intent(QRCodeActivity.this,LocationRadar.class);
+        Intent i=new Intent(QRCodeActivity.this,LocationRadarActivity.class);
         startActivity(i);
     }
 
