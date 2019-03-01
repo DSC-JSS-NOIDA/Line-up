@@ -1,6 +1,7 @@
 package project.tronku.line_up;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -29,7 +30,7 @@ public class QRCodeActivity extends AppCompatActivity {
 
     private ImageView myQRCode;
     private String zealid;
-    private ImageButton scanQR, locate;
+    private CardView scanQR, locate, leaderboard, route;
     private static final int CAMERA_PERMISSION_CODE = 2;
 
     @Override
@@ -40,6 +41,8 @@ public class QRCodeActivity extends AppCompatActivity {
         myQRCode = findViewById(R.id.my_qr);
         scanQR = findViewById(R.id.scan_qr);
         locate = findViewById(R.id.locate);
+        route = findViewById(R.id.route);
+        leaderboard = findViewById(R.id.leaderboard);
 
         zealid = "ZO_2R414";
 
