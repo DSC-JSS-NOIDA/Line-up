@@ -14,12 +14,12 @@ import android.view.animation.Animation;
 
 public class ContactUs extends AppCompatActivity {
 
-    private View layout1,layout2;
+//    private View layout1,layout2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contact_us);
-        layout1=findViewById(R.id.layout);
+       setContentView(R.layout.activity_contact_us);
+//        layout1=findViewById(R.id.layout);
 //        layout2=findViewById(R.id.layout_2);
 //        layout2.setVisibility(layout2.INVISIBLE);
 //
@@ -46,12 +46,12 @@ public class ContactUs extends AppCompatActivity {
 //        layout2.startAnimation(end);
 
 
-
-        ObjectAnimator animation_x1=ObjectAnimator.ofFloat(layout1,"translationX",-5000f, 0f);
-        animation_x1.setDuration(1000);
-
-        animation_x1.start();
 //
+//        ObjectAnimator animation_x1=ObjectAnimator.ofFloat(layout1,"translationX",-5000f, 0f);
+//        animation_x1.setDuration(1000);
+//
+//        animation_x1.start();
+////
 //        ObjectAnimator animation_x2=ObjectAnimator.ofFloat(layout2,"translationX",-5000f, 0f);
 //        animation_x2.getStartDelay(1000)
 //        animation_x2.setDuration(1000);
