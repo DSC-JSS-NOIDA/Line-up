@@ -8,9 +8,14 @@ import project.tronku.line_up.login.SignUpFragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.FrameLayout;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -101,4 +106,29 @@ public class MainActivity extends AppCompatActivity {
         button.startAnimation();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        if (pref.contains("token")) {
+            Intent qrcode = new Intent(this, QRCodeActivity.class);
+            startActivity(qrcode);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        final Snackbar snackbar = Snackbar.make(view, "Are you sure to exit?", Snackbar.LENGTH_LONG);
+        snackbar.setAction("YES", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finishAffinity();
+            }
+        });
+
+        View snackbarView = snackbar.getView();
+        snackbarView.setBackgroundColor(getResources().getColor(R.color.qr));
+        snackbar.show();
+    }
 }

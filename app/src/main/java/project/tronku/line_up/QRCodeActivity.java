@@ -17,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.Result;
@@ -30,6 +31,7 @@ public class QRCodeActivity extends AppCompatActivity {
 
     private ImageView myQRCode;
     private String zealid;
+    private View view;
     private CardView scanQR, locate, leaderboard, route;
     private static final int CAMERA_PERMISSION_CODE = 2;
 
@@ -38,6 +40,7 @@ public class QRCodeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrcode);
 
+        view = findViewById(android.R.id.content);
         myQRCode = findViewById(R.id.my_qr);
         scanQR = findViewById(R.id.scan_qr);
         locate = findViewById(R.id.locate);
@@ -90,5 +93,18 @@ public class QRCodeActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        final Snackbar snackbar = Snackbar.make(view, "Are you sure to exit?", Snackbar.LENGTH_LONG);
+        snackbar.setAction("YES", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finishAffinity();
+            }
+        });
+        View snackbarView = snackbar.getView();
+        snackbarView.setBackgroundColor(getResources().getColor(R.color.qr));
+        snackbar.show();
+    }
 
 }

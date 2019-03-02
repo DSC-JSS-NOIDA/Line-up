@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:paddingBottom="20dp"
+    android:layout_margin="10dp"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/error"
+        android:layout_margin="5dp"
+        android:id="@+id/errorIcon"
+        android:layout_centerHorizontal="true"/>
+
+    <ImageView
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:src="@drawable/ic_close"
+        android:scaleType="fitCenter"
+        android:id="@+id/close"
+        android:layout_alignParentRight="true"/>
+
+    <TextView
+        android:layout_below="@id/errorIcon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="6dp"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:fontFamily="@font/roboto_medium"
+        android:id="@+id/errorText"/>
+
+</RelativeLayout>

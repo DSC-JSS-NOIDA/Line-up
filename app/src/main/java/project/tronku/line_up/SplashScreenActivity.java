@@ -9,14 +9,22 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.ProgressBar;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
-    private View lineb;
+    private View linea, lineb, linec, lined;
+    private ProgressBar loader;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+
+        linea = findViewById(R.id.line_a);
+        lineb = findViewById(R.id.line_b);
+        linec = findViewById(R.id.line_c);
+        lined = findViewById(R.id.line_d);
+        loader = findViewById(R.id.loader);
 
         final Intent i=new Intent(SplashScreenActivity.this,MainActivity.class);
         Thread timer=new Thread()
@@ -36,20 +44,19 @@ public class SplashScreenActivity extends AppCompatActivity {
         };
         timer.start();
 
-        lineb = findViewById(R.id.line_b);
         ObjectAnimator animation_x1=ObjectAnimator.ofFloat(lineb,"translationX",500f, 0f);
         animation_x1.setInterpolator(new AccelerateInterpolator());
         animation_x1.setDuration(400);
         animation_x1.start();
-        ObjectAnimator animation_x2=ObjectAnimator.ofFloat(findViewById(R.id.line_d),"translationX",-500f, 0f);
+        ObjectAnimator animation_x2=ObjectAnimator.ofFloat(lined,"translationX",-500f, 0f);
         animation_x2.setInterpolator(new AccelerateInterpolator());
         animation_x2.setDuration(400);
         animation_x2.start();
-        ObjectAnimator animation_y1=ObjectAnimator.ofFloat(findViewById(R.id.line_a),"translationY",-500f, 0f);
+        ObjectAnimator animation_y1=ObjectAnimator.ofFloat(linea,"translationY",-500f, 0f);
         animation_y1.setInterpolator(new AccelerateInterpolator());
         animation_y1.setDuration(400);
         animation_y1.start();
-        ObjectAnimator animation_y2=ObjectAnimator.ofFloat(findViewById(R.id.line_c),"translationY",500f, 0f);
+        ObjectAnimator animation_y2=ObjectAnimator.ofFloat(linec,"translationY",500f, 0f);
         animation_y2.setInterpolator(new AccelerateInterpolator());
         animation_y2.setDuration(400);
         animation_y2.start();
@@ -86,21 +93,22 @@ public class SplashScreenActivity extends AppCompatActivity {
         animation__x1.setStartDelay(1500);
         animation__x1.setDuration(1000);
         animation__x1.start();
-        ObjectAnimator animation__x2=ObjectAnimator.ofFloat(findViewById(R.id.line_d),"translationX", 0f,-5500f);
+        ObjectAnimator animation__x2=ObjectAnimator.ofFloat(lined,"translationX", 0f,-5500f);
 
         animation__x2.setDuration(1000);
         animation__x2.setStartDelay(1500);
         animation__x2.start();
-        ObjectAnimator animation__y1=ObjectAnimator.ofFloat(findViewById(R.id.line_a),"translationY", 0f,-5500f);
+        ObjectAnimator animation__y1=ObjectAnimator.ofFloat(linea,"translationY", 0f,-5500f);
 
         animation__y1.setDuration(1000);
         animation__y1.setStartDelay(1500);
         animation__y1.start();
-        ObjectAnimator animation__y2=ObjectAnimator.ofFloat(findViewById(R.id.line_c),"translationY", 0f,5500f);
+        ObjectAnimator animation__y2=ObjectAnimator.ofFloat(linec,"translationY", 0f,5500f);
 
         animation__y2.setDuration(1000);
         animation__y2.setStartDelay(1500);
         animation__y2.start();
+
 
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

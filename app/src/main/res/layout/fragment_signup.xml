@@ -75,4 +75,20 @@
             android:textColorHint="#8effffff" />
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:alpha="0.6"
+        android:id="@+id/signup_layer"
+        android:visibility="invisible"/>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/signup_loader"
+        android:visibility="invisible"/>
+
 </FrameLayout>
