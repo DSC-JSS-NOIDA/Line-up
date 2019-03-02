@@ -16,7 +16,7 @@
         app:rb_color="#0099CC"
         app:rb_radius="32dp"
         app:rb_rippleAmount="4"
-        app:rb_duration="2000"
+        app:rb_duration="3500"
         app:rb_scale="6"/>
 
     <ImageView
@@ -161,7 +161,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="200dp"
-        android:layout_height="80dp"
+        android:layout_height="74dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="60dp"

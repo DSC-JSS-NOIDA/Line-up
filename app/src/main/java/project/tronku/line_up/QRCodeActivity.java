@@ -9,9 +9,11 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -33,6 +35,7 @@ public class QRCodeActivity extends AppCompatActivity {
     private ImageView myQRCode;
     private String zealid;
     private View view;
+    private SharedPreferences pref;
     private CardView scanQR, locate, leaderboard, route;
     public static final String TAG = "QRCodeActivty";
     private static final int CAMERA_PERMISSION_CODE = 2;
@@ -48,8 +51,9 @@ public class QRCodeActivity extends AppCompatActivity {
         locate = findViewById(R.id.locate);
         route = findViewById(R.id.route);
         leaderboard = findViewById(R.id.leaderboard);
+        pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-        zealid = "ZO_2R414";
+        zealid = pref.getString("zealid", "zo1241");
 
         Intent service = new Intent(this, LocationFinderService.class);
         ContextCompat.startForegroundService(this, service);

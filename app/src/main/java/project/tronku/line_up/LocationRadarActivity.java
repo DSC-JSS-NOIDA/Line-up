@@ -1,6 +1,7 @@
 package project.tronku.line_up;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -41,11 +42,10 @@ public class LocationRadarActivity extends AppCompatActivity {
     private ImageView player1, player2, player3, player4;
     private TextView dis1, dis2, dis3, dis4;
     private RippleBackground rippleBackground;
-
-
-
-    private View layer;
-    private ProgressBar loader;
+    private SharedPreferences pref;
+    private CardView refresh;
+    private double lat, lng;
+    private String accessToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,9 @@ public class LocationRadarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_location_radar);
 
         rippleBackground = findViewById(R.id.ripple);
+        refresh = findViewById(R.id.refresh);
         rippleBackground.startRippleAnimation();
+        pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         player1 = findViewById(R.id.player1_img);
         player2 = findViewById(R.id.player2_img);
@@ -65,14 +67,17 @@ public class LocationRadarActivity extends AppCompatActivity {
         dis3 = findViewById(R.id.player3_distance);
         dis4 = findViewById(R.id.player4_distance);
 
-        layer = findViewById(R.id.layer);
-        loader = findViewById(R.id.progress_loader);
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     private class Participant {
 
         private String username;
-
         private int distance;
     }
 
@@ -80,15 +85,13 @@ public class LocationRadarActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         if (pref.contains("token")) {
-            String accessToken = pref.getString("token", "");
-            layer.setVisibility(View.VISIBLE);
-            loader.setVisibility(View.VISIBLE);
-
+            accessToken = pref.getString("token", "");
             final List<TextView> textViews = Arrays.asList(dis1, dis2, dis3, dis4);
-            //TODO Send the current location of the user, add the data to below parameters.
-            double lat = 34.34, lng = -43.33;
+
+            lat = Double.parseDouble(pref.getString("latitude", "28.4245"));
+            lng = Double.parseDouble(pref.getString("longitude", "28.4245"));
+
             fetchNearestParticipants(getApplicationContext(), accessToken, lat, lng, new VolleyCallback(){
                 @SuppressLint("SetTextI18n")
                 @Override
@@ -100,8 +103,6 @@ public class LocationRadarActivity extends AppCompatActivity {
                             Participant participant = participants.get(i);
                             textView.setText(participant.distance + "m");
                         }
-                        layer.setVisibility(View.INVISIBLE);
-                        loader.setVisibility(View.INVISIBLE);
                     } else{
                         Toast.makeText(getApplicationContext(), "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));

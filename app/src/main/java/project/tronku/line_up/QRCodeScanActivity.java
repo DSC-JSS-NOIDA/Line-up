@@ -33,12 +33,14 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
     private ZXingScannerView scannerView;
 
     private static final String TAG = "QRScanActivity";
+    private SharedPreferences pref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         scannerView = new ZXingScannerView(this);
         setContentView(scannerView);
+        pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     }
 
 
@@ -54,12 +56,15 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
         });
 
         String accessToken = getAccessToken();
-         if(accessToken == null){
+        if(accessToken == null){
             Intent mainActivity = new Intent(this, MainActivity.class);
             startActivity(mainActivity);
         }
-        //TODO Send the current location of the user, add the data to below parameters.
-        double lat = 0, lng = 0;
+
+        double lat, lng;
+        lat = Double.parseDouble(pref.getString("latitude", "28.4245"));
+        lng = Double.parseDouble(pref.getString("longitude", "28.4245"));
+
         validateQR(getApplicationContext(), rawResult.getText(), accessToken, lat, lng, new VolleyCallback() {
             @Override
             public void onSuccess(String response) {
@@ -75,6 +80,10 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
             public void onError(int status, String error) {
                 if(status == HttpStatus.UNAUTHORIZED.value()){
                     builder.setMessage("Please login to continue.");
+                    pref.edit().clear();
+                    Intent login = new Intent(QRCodeScanActivity.this, MainActivity.class);
+                    login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(login);
                 } else {
                     builder.setMessage("Error scanning the code, please try again.");
                 }
@@ -122,11 +131,9 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
     }
 
     private String getAccessToken() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
         String token = null;
-        if (sharedPreferences.contains("token")) {
-            token = sharedPreferences.getString("token", "");
+        if (pref.contains("token")) {
+            token = pref.getString("token", "");
         }
         return token;
     }

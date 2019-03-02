@@ -41,8 +41,10 @@ import static project.tronku.line_up.LineUpApplication.NOTIF_CHANNEL_ID;
 public class LocationFinderService extends Service {
 
     private FusedLocationProviderClient fusedLocationClient;
+    private SharedPreferences pref;
     private static final String TAG = "LocationFinder";
     private double latitude, longitude;
+    private double prevLat, prevLong;
     private Handler handler;
     private int delay = 30000;
 
@@ -57,6 +59,9 @@ public class LocationFinderService extends Service {
         super.onCreate();
         handler = new Handler();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
+        pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        prevLat = Double.parseDouble(pref.getString("latitude", "28.353"));
+        prevLong = Double.parseDouble(pref.getString("longitude", "28.353"));
     }
 
     @Override
@@ -102,8 +107,15 @@ public class LocationFinderService extends Service {
             public void onSuccess(Location location) {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
-                Log.e(TAG, "lat: " + latitude + "; long: " + longitude);
-                sendLocation(latitude, longitude);
+
+                if (Math.abs(latitude - prevLat) > 0.005 || Math.abs(longitude - prevLong) > 0.005) {
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString("latitude", String.valueOf(latitude));
+                    editor.putString("longitude", String.valueOf(longitude));
+                    editor.apply();
+                    Log.e(TAG, "lat: " + latitude + "; long: " + longitude);
+                    sendLocation(latitude, longitude);
+                }
             }
         });
     }

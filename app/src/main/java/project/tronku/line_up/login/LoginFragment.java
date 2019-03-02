@@ -119,6 +119,7 @@ public class LoginFragment extends Fragment implements project.tronku.line_up.lo
                 Log.e(TAG, "onResponse: " + token);
                 SharedPreferences.Editor editor = pref.edit();
                 editor.putString("token", token);
+                editor.putString("zealid", username);
                 editor.apply();
                 startActivities();
             }
