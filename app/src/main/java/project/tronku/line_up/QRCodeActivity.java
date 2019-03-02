@@ -68,6 +68,11 @@ public class QRCodeActivity extends AppCompatActivity {
         });
     }
 
+    public void Location(View view){
+        Intent i=new Intent(QRCodeActivity.this,LocationRadarActivity.class);
+        startActivity(i);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NotNull String permissions[], @NotNull int[] grantResults) {

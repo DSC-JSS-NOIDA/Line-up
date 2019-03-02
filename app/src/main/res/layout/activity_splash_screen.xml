@@ -5,9 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SplashScreenActivity"
+    android:padding="40dp"
     android:background="@android:color/black">
-
-
 
     <View
         android:id="@+id/line_a"
@@ -30,7 +29,7 @@
         android:layout_marginEnd="60dp"
         android:layout_toEndOf="@id/line_a"
         android:background="@android:color/white"
-        android:layout_width="200dp" />
+        android:layout_width="wrap_content" />
 
     <View
         android:id="@+id/line_c"
@@ -46,11 +45,11 @@
     <View
         android:id="@+id/line_d"
         android:layout_margin="2dp"
-        android:layout_marginStart="60dp"
+        android:layout_marginLeft="65dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_below="@id/lineup"
-        android:layout_width="200dp"
+        android:layout_width="wrap_content"
         android:layout_height="2dp"
         android:layout_toStartOf="@id/line_c"
         android:background="@android:color/white"/>

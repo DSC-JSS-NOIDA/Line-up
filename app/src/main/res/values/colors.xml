@@ -17,4 +17,5 @@
     <color name="red"> #e74c3c </color>
 
     <color name="qr_green"> #138d75 </color>
+    <color name="ripple">#05192E</color>
 </resources>
