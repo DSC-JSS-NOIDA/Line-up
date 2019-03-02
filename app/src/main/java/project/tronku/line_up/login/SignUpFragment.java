@@ -1,16 +1,34 @@
 package project.tronku.line_up.login;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PatternMatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import project.tronku.line_up.API;
+import project.tronku.line_up.MainActivity;
 import project.tronku.line_up.R;
 
 import androidx.annotation.NonNull;
@@ -59,7 +77,70 @@ public class SignUpFragment extends Fragment implements OnSignUpListener {
             snackbar.show();
         }
         else {
-
+            signUpUser(name, phone, zealid, password);
         }
     }
+
+    private void signUpUser(String name, String phone, String zealid, String password) {
+        RequestQueue login;
+        JSONObject credentials = new JSONObject();
+        try{
+            credentials.put("username", name);
+            credentials.put("password", password);
+            credentials.put("matchingPassword", password);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest loginreq = new JsonObjectRequest(Request.Method.POST, API.BASE + API.SIGN_UP, credentials,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.e(TAG, "onResponse: " + response.toString());
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if(error.networkResponse!=null && error.networkResponse.statusCode==404){
+                    String json = new String(error.networkResponse.data);
+                    try {
+                        JSONObject jsonError = new JSONObject(json);
+
+                        Log.e(TAG, "onErrorResponse: " + json);
+//                        if(jsonError.has("error")){
+//                            String errorString = jsonError.get("error").toString();
+//
+//                            final Dialog dialog = new Dialog(getActivity());
+//                            dialog.setContentView(R.layout.dialog_layout);
+//                            ImageView close = dialog.findViewById(R.id.close);
+//                            close.setOnClickListener(new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View view) {
+//                                    dialog.dismiss();
+//                                }
+//                            });
+//
+//                            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                                @Override
+//                                public void onDismiss(DialogInterface dialogInterface) {
+//
+//                                }
+//                            });
+//
+//                            TextView errorView = dialog.findViewById(R.id.errorText);
+//                            errorView.setText(errorString);
+//                            dialog.show();
+
+                        //}
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        login = Volley.newRequestQueue(getContext());
+        login.add(loginreq);
+    }
+
 }

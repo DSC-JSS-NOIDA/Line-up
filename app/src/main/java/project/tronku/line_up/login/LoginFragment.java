@@ -1,19 +1,36 @@
 package project.tronku.line_up.login;
 
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import androidx.annotation.NonNull;
+import project.tronku.line_up.API;
 import project.tronku.line_up.InstructionsActivity;
+import project.tronku.line_up.MainActivity;
 import project.tronku.line_up.QRCodeActivity;
 import project.tronku.line_up.R;
 
@@ -83,4 +100,7 @@ public class LoginFragment extends Fragment implements project.tronku.line_up.lo
             }
         }
     }
+
+
+
 }
