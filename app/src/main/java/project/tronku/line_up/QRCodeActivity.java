@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -33,6 +34,7 @@ public class QRCodeActivity extends AppCompatActivity {
     private String zealid;
     private View view;
     private CardView scanQR, locate, leaderboard, route;
+    public static final String TAG = "QRCodeActivty";
     private static final int CAMERA_PERMISSION_CODE = 2;
 
     @Override
@@ -48,6 +50,10 @@ public class QRCodeActivity extends AppCompatActivity {
         leaderboard = findViewById(R.id.leaderboard);
 
         zealid = "ZO_2R414";
+
+        Intent service = new Intent(this, LocationFinderService.class);
+        ContextCompat.startForegroundService(this, service);
+        Log.e(TAG, "onCreate: ");
 
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
@@ -72,7 +78,7 @@ public class QRCodeActivity extends AppCompatActivity {
     }
 
     public void Location(View view){
-        Intent i=new Intent(QRCodeActivity.this,LocationRadarActivity.class);
+        Intent i = new Intent(QRCodeActivity.this,LocationRadarActivity.class);
         startActivity(i);
     }
 

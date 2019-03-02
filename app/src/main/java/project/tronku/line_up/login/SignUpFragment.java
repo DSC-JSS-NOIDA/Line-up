@@ -32,6 +32,7 @@ import org.json.JSONObject;
 
 import project.tronku.line_up.API;
 import project.tronku.line_up.InstructionsActivity;
+import project.tronku.line_up.LineUpApplication;
 import project.tronku.line_up.MainActivity;
 import project.tronku.line_up.QRCodeActivity;
 import project.tronku.line_up.R;
@@ -113,7 +114,6 @@ public class SignUpFragment extends Fragment implements OnSignUpListener {
     }
 
     private void signUpUser(String name, final String phone, String zealid, String password) {
-        RequestQueue signUp;
         JSONObject credentials = new JSONObject();
         try{
             credentials.put("username", zealid);
@@ -155,6 +155,22 @@ public class SignUpFragment extends Fragment implements OnSignUpListener {
                             }
                         });
 
+                        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialogInterface) {
+                                zealIdEditText.setText("");
+                                passwordEditText.setText("");
+                                nameEditText.setText("");
+                                phoneEditText.setText("");
+                                phoneEditText.setEnabled(true);
+                                nameEditText.setEnabled(true);
+                                zealIdEditText.setEnabled(true);
+                                passwordEditText.setEnabled(true);
+                                layer.setVisibility(View.INVISIBLE);
+                                loader.setVisibility(View.INVISIBLE);
+                            }
+                        });
+
                         TextView errorView = dialog.findViewById(R.id.errorText);
                         errorView.setText(errorString);
                         dialog.show();
@@ -166,9 +182,8 @@ public class SignUpFragment extends Fragment implements OnSignUpListener {
             }
         });
 
-        signUp = Volley.newRequestQueue(getContext());
-        signUp.add(signUpReq);
-        signUp.addRequestFinishedListener(new RequestQueue.RequestFinishedListener<JSONObject>() {
+        LineUpApplication.getInstance().addToRequestQueue(signUpReq);
+        LineUpApplication.getInstance().getRequestQueue().addRequestFinishedListener(new RequestQueue.RequestFinishedListener<JSONObject>() {
             @Override
             public void onRequestFinished(Request<JSONObject> request) {
                 layer.setVisibility(View.INVISIBLE);

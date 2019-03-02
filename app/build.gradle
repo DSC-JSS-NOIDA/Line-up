@@ -43,6 +43,8 @@ dependencies {
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation  'com.google.code.gson:gson:2.8.5'
+    implementation "android.arch.work:work-runtime:1.0.0-rc02"
+    implementation 'com.skyfishjy.ripplebackground:library:1.0.1'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.2-alpha01'

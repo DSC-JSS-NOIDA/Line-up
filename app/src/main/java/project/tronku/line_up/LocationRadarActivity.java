@@ -6,15 +6,22 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.skyfishjy.library.RippleBackground;
+
 public class LocationRadarActivity extends AppCompatActivity {
 
     private ImageView player1, player2, player3, player4;
     private TextView dis1, dis2, dis3, dis4;
+    private RippleBackground rippleBackground;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_radar);
+
+        rippleBackground = findViewById(R.id.ripple);
+        rippleBackground.startRippleAnimation();
 
         player1 = findViewById(R.id.player1_img);
         player2 = findViewById(R.id.player2_img);
