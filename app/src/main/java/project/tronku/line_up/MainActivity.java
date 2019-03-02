@@ -15,6 +15,8 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static project.tronku.line_up.FlexibleFrameLayout.ORDER_LOGIN_STATE;
@@ -112,5 +114,21 @@ public class MainActivity extends AppCompatActivity {
             Intent qrcode = new Intent(this, QRCodeActivity.class);
             startActivity(qrcode);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        final Snackbar snackbar = Snackbar.make(view, "Are you sure to exit?", Snackbar.LENGTH_LONG);
+        snackbar.setAction("YES", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finishAffinity();
+            }
+        });
+
+        View snackbarView = snackbar.getView();
+        snackbarView.setBackgroundColor(getResources().getColor(R.color.qr));
+        snackbar.show();
     }
 }

@@ -87,4 +87,14 @@
             android:padding="3dp" />
     </LinearLayout>
 
+    <ProgressBar
+        android:layout_width="200dp"
+        android:layout_height="3dp"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_below="@id/line_d"
+        android:layout_marginTop="70dp"
+        android:indeterminateBehavior="repeat"
+        android:id="@+id/loader"
+        android:layout_centerHorizontal="true"/>
+
 </RelativeLayout>

@@ -26,8 +26,11 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -96,16 +99,14 @@ public class LoginFragment extends Fragment implements project.tronku.line_up.lo
         if (zealid.isEmpty() || password.isEmpty()) {
             Snackbar snackbar = Snackbar.make(inflate, "Enter details.", Snackbar.LENGTH_SHORT);
             View snackbarView = snackbar.getView();
-            snackbarView.setBackgroundColor(getResources().getColor(R.color.red));
+            snackbarView.setBackgroundColor(getResources().getColor(R.color.qr));
             snackbar.show();
-        }
-        else {
+        } else{
             layer.setVisibility(View.VISIBLE);
             loader.setVisibility(View.VISIBLE);
             zealIdEditText.setEnabled(false);
             passwordEditText.setEnabled(false);
-
-            loginUser(zealid, password);
+            login(zealid, password);
         }
     }
 
@@ -118,106 +119,49 @@ public class LoginFragment extends Fragment implements project.tronku.line_up.lo
         }
     }
 
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_INTRO) {
-            if (resultCode == RESULT_OK) {
-                PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("intro", false).apply();
-                Intent qrcode = new Intent(getActivity(), QRCodeActivity.class);
-                startActivity(qrcode);
-            } else {
-                //Toast
+    private void login(final String username, final String password){
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+        StringRequest sr = new StringRequest(Request.Method.POST,API.BASE + API.LOGIN, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.e(TAG, " Login Activity onResponse: " + response);
+                Map<String, String> responseMap = new Gson().fromJson(response,
+                        new TypeToken<Map<String, String>>() {}.getType());
+                String token = responseMap.get("access_token");
+                Log.e(TAG, "onResponse: " + token);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putString("token", token);
+                editor.apply();
+                startActivity(new Intent(getActivity(), QRCodeActivity.class));
             }
-        }
-    }
-
-    private void loginUser(final String zealid, final String password) {
-        RequestQueue login;
-//        JSONObject credentials = new JSONObject();
-//        try{
-//            credentials.put("username", zealid);
-//            credentials.put("password", password);
-//            credentials.put("grant_type", "password");
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-
-        JsonObjectRequest loginReq = new JsonObjectRequest(Request.Method.POST, API.BASE + API.LOGIN, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.e(TAG, "onResponse: " + response.toString());
-                        try {
-                            String token = response.getString("access_token");
-                            Log.e(TAG, "token" + token);
-                            SharedPreferences.Editor editor = pref.edit();
-                            editor.putString("token", token);
-                            editor.apply();
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if(error.networkResponse!=null){
-                    String json = new String(error.networkResponse.data);
-                    Log.e(TAG, "onErrorResponse: " + json);
-                    try {
-                        JSONObject jsonError = new JSONObject(json);
-                        String errorString = jsonError.get("username").toString();
-                        final Dialog dialog = new Dialog(getActivity());
-                        dialog.setContentView(R.layout.dialog_layout);
-                        ImageView close = dialog.findViewById(R.id.close);
-                        close.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                dialog.dismiss();
-                            }
-                        });
-
-                        TextView errorView = dialog.findViewById(R.id.errorText);
-                        errorView.setText(errorString);
-                        dialog.show();
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
+                Log.e(TAG, " Login Activity onErrorResponse: " + error.toString());
             }
-        }) {
+        }){
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<>();
-                String credentials = API.USERNAME + ":" + API.PASSWORD;
-                String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-                Log.e(TAG, "getHeaders: " + auth);
-                headers.put("Authorization", auth);
-                headers.put("Content-Type", "application/x-www-form-urlencoded");
-                return headers;
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "application/x-www-form-urlencoded; charset=UTF-8";
-            }
-
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("username", zealid);
-                params.put("password", password);
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<>();
+                params.put("username",username);
+                params.put("password",password);
                 params.put("grant_type", "password");
                 return params;
             }
-        };
 
-        login = Volley.newRequestQueue(getContext());
-        login.add(loginReq);
-        login.addRequestFinishedListener(new RequestQueue.RequestFinishedListener<JSONObject>() {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                String credentials = API.USERNAME + ":" + API.PASSWORD;
+                String encoding = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                Map<String,String> params = new HashMap<>();
+                params.put("Content-Type","application/x-www-form-urlencoded");
+                params.put("Authorization", "Basic " + encoding);
+
+                return params;
+            }
+        };
+        queue.add(sr);
+        queue.addRequestFinishedListener(new RequestQueue.RequestFinishedListener<JSONObject>() {
             @Override
             public void onRequestFinished(Request<JSONObject> request) {
                 layer.setVisibility(View.INVISIBLE);
@@ -235,6 +179,21 @@ public class LoginFragment extends Fragment implements project.tronku.line_up.lo
                 }
             }
         });
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_INTRO) {
+            if (resultCode == RESULT_OK) {
+                PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("intro", false).apply();
+                Intent qrcode = new Intent(getActivity(), QRCodeActivity.class);
+                startActivity(qrcode);
+            } else {
+                //Toast
+            }
+        }
     }
 
 }

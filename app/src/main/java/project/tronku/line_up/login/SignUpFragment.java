@@ -78,19 +78,19 @@ public class SignUpFragment extends Fragment implements OnSignUpListener {
         if (name.isEmpty() || phone.isEmpty() || zealid.isEmpty() || password.isEmpty()) {
             Snackbar snackbar = Snackbar.make(inflate, "Enter details.", Snackbar.LENGTH_SHORT);
             View snackbarView = snackbar.getView();
-            snackbarView.setBackgroundColor(getResources().getColor(R.color.red));
+            snackbarView.setBackgroundColor(getResources().getColor(R.color.qr));
             snackbar.show();
         }
         else if (!Patterns.PHONE.matcher(phone).matches()) {
             Snackbar snackbar = Snackbar.make(inflate, "Enter valid number.", Snackbar.LENGTH_SHORT);
             View snackbarView = snackbar.getView();
-            snackbarView.setBackgroundColor(getResources().getColor(R.color.red));
+            snackbarView.setBackgroundColor(getResources().getColor(R.color.qr));
             snackbar.show();
         }
         else if (password.length() < 6 || password.length() > 18) {
             Snackbar snackbar = Snackbar.make(inflate, "Password length should be between 6 and 18.", Snackbar.LENGTH_SHORT);
             View snackbarView = snackbar.getView();
-            snackbarView.setBackgroundColor(getResources().getColor(R.color.red));
+            snackbarView.setBackgroundColor(getResources().getColor(R.color.qr));
             snackbar.show();
         }
         else {
@@ -144,7 +144,7 @@ public class SignUpFragment extends Fragment implements OnSignUpListener {
                     Log.e(TAG, "onErrorResponse: " + json);
                     try {
                         JSONObject jsonError = new JSONObject(json);
-                        String errorString = jsonError.get("username").toString();
+                        String errorString = jsonError.get("username").toString() + jsonError.get("password").toString();
                         final Dialog dialog = new Dialog(getActivity());
                         dialog.setContentView(R.layout.dialog_layout);
                         ImageView close = dialog.findViewById(R.id.close);
