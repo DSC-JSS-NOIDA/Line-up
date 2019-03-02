@@ -33,11 +33,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.skyfishjy.library.RippleBackground;
+
 public class LocationRadarActivity extends AppCompatActivity {
 
     private static final String TAG = "LocationRadarActivity";
     private ImageView player1, player2, player3, player4;
     private TextView dis1, dis2, dis3, dis4;
+    private RippleBackground rippleBackground;
+
 
 
     private View layer;
@@ -47,6 +51,9 @@ public class LocationRadarActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_radar);
+
+        rippleBackground = findViewById(R.id.ripple);
+        rippleBackground.startRippleAnimation();
 
         player1 = findViewById(R.id.player1_img);
         player2 = findViewById(R.id.player2_img);

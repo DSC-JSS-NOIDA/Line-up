@@ -10,4 +10,5 @@ public class API {
 
     public static final String USERNAME = "line_up_app";
     public static final String PASSWORD = "dscjss123";
+    public static final String LOCATION_SEND = "/api/location";
 }
