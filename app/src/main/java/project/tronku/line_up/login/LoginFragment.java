@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,16 +17,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import project.tronku.line_up.API;
@@ -78,8 +84,10 @@ public class LoginFragment extends Fragment implements project.tronku.line_up.lo
             View snackbarView = snackbar.getView();
             snackbarView.setBackgroundColor(getResources().getColor(R.color.red));
             snackbar.show();
+        } else{
+            login(zealid, password);
         }
-        else {
+        /*else {
             if (firstTime) {
                 Intent intro = new Intent(getActivity(), InstructionsActivity.class);
                 startActivityForResult(intro, REQUEST_CODE_INTRO);
@@ -88,8 +96,45 @@ public class LoginFragment extends Fragment implements project.tronku.line_up.lo
                 Intent qrcode = new Intent(getActivity(), QRCodeActivity.class);
                 startActivity(qrcode);
             }
-        }
+        }*/
     }
+
+    private void login(final String username, final String password){
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+        StringRequest sr = new StringRequest(Request.Method.POST,API.BASE + API.LOGIN, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.e(TAG, " Login Activity onResponse: " + response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, " Login Activity onErrorResponse: " + error.toString());
+            }
+        }){
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("username",username);
+                params.put("password",password);
+                params.put("grant_type", "password");
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                String credentials = API.USERNAME + ":" + API.PASSWORD;
+                String encoding = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("Content-Type","application/x-www-form-urlencoded");
+                params.put("Authorization", "Basic " + encoding);
+
+                return params;
+            }
+        };
+        queue.add(sr);
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
