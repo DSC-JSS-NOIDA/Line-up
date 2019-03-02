@@ -76,6 +76,11 @@ public class QRCodeActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    public void ContactUs(View view){
+        Intent i=new Intent(QRCodeActivity.this,ContactUs.class);
+        startActivity(i);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NotNull String permissions[], @NotNull int[] grantResults) {

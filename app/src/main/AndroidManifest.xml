@@ -16,7 +16,8 @@
         android:roundIcon="@drawable/line_up"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LocationRadarActivity"></activity>
+        <activity android:name=".ContactUs"></activity>
+        <activity android:name=".LocationRadarActivity" />
         <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

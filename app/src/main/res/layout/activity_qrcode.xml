@@ -196,6 +196,44 @@
 
         </androidx.cardview.widget.CardView>
 
+        <androidx.cardview.widget.CardView
+            android:layout_width="260dp"
+            android:layout_height="68dp"
+            app:cardCornerRadius="36dp"
+            android:id="@+id/ContactUs"
+            android:layout_gravity="center"
+            android:layout_marginBottom="40dp"
+            app:cardBackgroundColor="@android:color/white"
+            android:onClick="ContactUs">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal">
+
+                <ImageView
+                    android:id="@+id/ContactUs_icon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_podium"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/ContactUs_icon"
+                    android:text="Contact us"
+                    android:textSize="18sp"
+                    android:layout_marginStart="14dp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textColor="@color/qr_green"
+                    android:layout_centerInParent="true"/>
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
     </LinearLayout>
 
 </ScrollView>

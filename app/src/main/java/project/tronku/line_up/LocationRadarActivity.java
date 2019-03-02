@@ -3,8 +3,11 @@ package project.tronku.line_up;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.skyfishjy.library.RippleBackground;
 
 public class LocationRadarActivity extends AppCompatActivity {
 
@@ -26,6 +29,16 @@ public class LocationRadarActivity extends AppCompatActivity {
         dis3 = findViewById(R.id.player3_distance);
         dis4 = findViewById(R.id.player4_distance);
 
+
+        final RippleBackground rippleBackground=(RippleBackground)findViewById(R.id.content);
+        ImageView imageView=(ImageView)findViewById(R.id.player);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rippleBackground.startRippleAnimation();
+            }
+        });
+        rippleBackground.startRippleAnimation();
     }
 
 }
