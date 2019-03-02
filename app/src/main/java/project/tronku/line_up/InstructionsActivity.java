@@ -36,7 +36,7 @@ public class InstructionsActivity extends IntroActivity {
         addSlide(new SimpleSlide.Builder()
                 .title("Location")
                 .description("Description........")
-                .image(R.drawable.ic_route)
+                .image(R.drawable.route_intro)
                 .background(R.color.location)
                 .scrollable(false)
                 .build());

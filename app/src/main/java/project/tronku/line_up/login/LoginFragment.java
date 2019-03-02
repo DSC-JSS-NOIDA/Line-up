@@ -30,6 +30,7 @@ import org.json.JSONObject;
 import androidx.annotation.NonNull;
 import project.tronku.line_up.API;
 import project.tronku.line_up.InstructionsActivity;
+import project.tronku.line_up.LocationFinder;
 import project.tronku.line_up.MainActivity;
 import project.tronku.line_up.QRCodeActivity;
 import project.tronku.line_up.R;
@@ -45,6 +46,7 @@ public class LoginFragment extends Fragment implements project.tronku.line_up.lo
     private EditText zealIdEditText, passwordEditText;
     private String zealid, password;
     private View inflate;
+    private LocationFinder locationFinder;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -60,6 +62,8 @@ public class LoginFragment extends Fragment implements project.tronku.line_up.lo
 
         zealIdEditText = inflate.findViewById(R.id.zeal_id_login);
         passwordEditText = inflate.findViewById(R.id.password_login);
+        locationFinder = new LocationFinder(getActivity());
+        locationFinder.getLocation();
         return inflate;
     }
 
