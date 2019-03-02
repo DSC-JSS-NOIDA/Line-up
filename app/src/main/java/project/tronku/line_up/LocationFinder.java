@@ -2,6 +2,8 @@ package project.tronku.line_up;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.job.JobParameters;
+import android.app.job.JobService;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -9,15 +11,11 @@ import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-public class LocationFinder {
+public class LocationFinder extends JobService {
 
     private FusedLocationProviderClient fusedLocationClient;
     private Context context;
@@ -44,5 +42,13 @@ public class LocationFinder {
     }
 
 
+    @Override
+    public boolean onStartJob(JobParameters jobParameters) {
+        return false;
+    }
 
+    @Override
+    public boolean onStopJob(JobParameters jobParameters) {
+        return false;
+    }
 }

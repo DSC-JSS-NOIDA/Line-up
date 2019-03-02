@@ -8,7 +8,10 @@ import project.tronku.line_up.login.SignUpFragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -101,4 +104,13 @@ public class MainActivity extends AppCompatActivity {
         button.startAnimation();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        if (pref.contains("token")) {
+            Intent qrcode = new Intent(this, QRCodeActivity.class);
+            startActivity(qrcode);
+        }
+    }
 }

@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,33 +9,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="92dp"
-        >
+        android:layout_marginTop="92dp">
 
-    <ImageView
-        android:layout_height="25dp"
-        android:layout_width="25dp"
-        android:src="@drawable/person"
-        android:layout_margin="10dp"
-        android:layout_marginLeft="35dp"
-        android:layout_centerVertical="true"
-        />
+        <ImageView
+            android:layout_height="25dp"
+            android:layout_width="25dp"
+            android:src="@drawable/person"
+            android:layout_margin="10dp"
+            android:layout_marginLeft="35dp"
+            android:layout_centerVertical="true" />
 
 
-    <EditText
-        android:id="@+id/zeal_id_login"
-        android:layout_width="300dp"
-        android:layout_height="56dp"
-        android:layout_gravity="center_horizontal"
+        <EditText
+            android:id="@+id/zeal_id_login"
+            android:layout_width="300dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center_horizontal"
+            android:textColorHint="#8effffff"
+            android:paddingEnd="32dp"
+            android:background="@drawable/bubble"
+            android:gravity="center_vertical"
+            android:paddingStart="42dp"
+            android:hint="@string/zeal_id"
+            android:fontFamily="@font/roboto_thin"
+            android:textColor="#ffffff" />
 
-        android:textColorHint="#8effffff"
-        android:paddingEnd="32dp"
-        android:background="@drawable/bubble"
-        android:gravity="center_vertical"
-        android:paddingStart="42dp"
-        android:hint="@string/zeal_id"
-        android:fontFamily="@font/roboto_thin"
-        android:textColor="#ffffff" />
     </RelativeLayout>
 
 
@@ -43,8 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"
-        >
+        android:layout_marginTop="164dp">
 
         <ImageView
             android:layout_height="25dp"
@@ -52,23 +49,38 @@
             android:src="@drawable/lock"
             android:layout_margin="10dp"
             android:layout_marginLeft="35dp"
-            android:layout_centerVertical="true"
+            android:layout_centerVertical="true"/>
 
-            />
-    <EditText
-        android:id="@+id/password_login"
-        android:layout_width="300dp"
-        android:layout_height="56dp"
-        android:paddingEnd="32dp"
-        android:layout_gravity="center_horizontal"
+        <EditText
+            android:id="@+id/password_login"
+            android:layout_width="300dp"
+            android:layout_height="56dp"
+            android:paddingEnd="32dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/bubble"
+            android:textColorHint="#8effffff"
+            android:gravity="center_vertical"
+            android:paddingStart="42dp"
+            android:inputType="textPassword"
+            android:hint="@string/password"
+            android:fontFamily="@font/roboto_thin"
+            android:textColor="#ffffff" />
 
-        android:background="@drawable/bubble"
-        android:textColorHint="#8effffff"
-        android:gravity="center_vertical"
-        android:paddingStart="42dp"
-        android:inputType="textPassword"
-        android:hint="@string/password"
-        android:fontFamily="@font/roboto_thin"
-        android:textColor="#ffffff" />
     </RelativeLayout>
-</LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:alpha="0.6"
+        android:id="@+id/login_layer"
+        android:visibility="invisible"/>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/login_loader"
+        android:visibility="invisible"/>
+
+</FrameLayout>
