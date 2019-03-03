@@ -24,7 +24,7 @@
         android:layout_height="74dp"
         android:id="@+id/player"
         android:layout_centerInParent="true"
-        android:src="@drawable/female"/>
+        android:src="@drawable/pokeball"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -38,7 +38,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/female"
+            android:src="@drawable/pokemon_3"
             android:visibility="invisible"
             android:id="@+id/player1_img"/>
 
@@ -65,7 +65,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/female"
+            android:src="@drawable/pokemon_1"
             android:visibility="invisible"
             android:id="@+id/player2_img"/>
 
@@ -94,7 +94,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:visibility="invisible"
-            android:src="@drawable/female"
+            android:src="@drawable/pokemon_4"
             android:id="@+id/player3_img"/>
 
         <TextView
@@ -121,7 +121,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/female"
+            android:src="@drawable/pokemon_2"
             android:visibility="invisible"
             android:id="@+id/player4_img"/>
 
