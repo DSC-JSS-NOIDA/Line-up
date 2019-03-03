@@ -110,11 +110,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
         if (pref.contains("token")) {
             Intent qrcode = new Intent(this, QRCodeActivity.class);
             startActivity(qrcode);
         }
     }
+
+
 
     @Override
     public void onBackPressed() {

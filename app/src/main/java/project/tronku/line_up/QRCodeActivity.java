@@ -4,9 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
+import project.tronku.line_up.timer.CountDownTimerActivity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -26,6 +29,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
@@ -34,6 +39,10 @@ import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class QRCodeActivity extends AppCompatActivity {
 
@@ -47,6 +56,7 @@ public class QRCodeActivity extends AppCompatActivity {
     private static final int CAMERA_PERMISSION_CODE = 2;
     public static final int GPS_PERMISSION_CODE = 3;
     private Intent service;
+    private PlayerPOJO currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,25 +74,20 @@ public class QRCodeActivity extends AppCompatActivity {
 
         service = new Intent(this, LocationFinderService.class);
 
-        uniqueCode = pref.getString("uniqueCode", "Data missing");
         receiver = new NetworkReceiver();
 
         startLocationService();
 
-        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-        try {
-            BitMatrix bitMatrix = multiFormatWriter.encode(uniqueCode, BarcodeFormat.QR_CODE,1000,1000);
-            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-            Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
-            myQRCode.setImageBitmap(bitmap);
-        } catch (WriterException e) {
-            e.printStackTrace();
-        }
+
 
         leaderboard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(QRCodeActivity.this, LeaderboardActivity.class));
+               // startActivity(new Intent(QRCodeActivity.this, LeaderboardActivity.class));
+
+                Intent countDown = new Intent(QRCodeActivity.this, CountDownTimerActivity.class);
+                startActivity(countDown);
+
             }
         });
 
@@ -114,6 +119,57 @@ public class QRCodeActivity extends AppCompatActivity {
                 startActivity(new Intent(QRCodeActivity.this, YourRouteActivity.class));
             }
         });
+
+
+    }
+    //TODO Add layer loader in this activity as well
+    private void updateUniqueCode() {
+
+        String accessToken = LineUpApplication.getInstance().getAccessToken();
+        if(accessToken == null){
+            Intent mainActivity = new Intent(this, MainActivity.class);
+            LineUpApplication.getInstance().getDefaultSharedPreferences().edit().clear().apply();
+            finishAffinity();
+            startActivity(mainActivity);
+        } else{
+            if (receiver.isConnected()) {
+                Helper.fetchUserInfo(accessToken, new VolleyCallback(){
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onSuccess(String response) {
+                        if(response != null){
+                            currentUser = Helper.getPlayerFromJsonString(response);
+                            uniqueCode = currentUser.getUniqueCode();
+                            updateQR();
+                        } else{
+                            Toast.makeText(getApplicationContext(), "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
+                        }
+                        /*layer.setVisibility(View.INVISIBLE);
+                        loader.setVisibility(View.INVISIBLE);
+                        swipeRefreshLayout.setRefreshing(false);
+                        swipeRefreshLayout.setEnabled(true);*/
+                    }
+
+                    @Override
+                    public void onError(int status, String error) {
+                        if(status == HttpStatus.UNAUTHORIZED.value()){
+                            Toast.makeText(getApplicationContext(), "Please login to perform this action.", Toast.LENGTH_SHORT).show();
+                            LineUpApplication.getInstance().getDefaultSharedPreferences().edit().clear().apply();
+                            Intent login = new Intent(getApplicationContext(), MainActivity.class);
+                            finishAffinity();
+                            startActivity(login);
+                        } else{
+                            Toast.makeText(getApplicationContext(), "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        }
+                    }
+                });
+            } else {
+                Toast.makeText(this, "No internet!", Toast.LENGTH_SHORT).show();
+                //layer.setVisibility(View.INVISIBLE);
+                //loader.setVisibility(View.INVISIBLE);
+            }
+        }
     }
 
     private void startLocationService() {
@@ -174,6 +230,42 @@ public class QRCodeActivity extends AppCompatActivity {
         super.onStart();
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(receiver, filter);
+
+        if(pref.contains("uniqueCode")){
+            uniqueCode = pref.getString("uniqueCode", "Data missing");
+            updateQR();
+        } else{
+            updateUniqueCode();
+        }
+
+
+    }
+
+    private void fetchEventDetails() {
+        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+        JsonObjectRequest request = new JsonObjectRequest(API.BASE + API.EVENT_DETAILS, new JSONObject(), future, future);
+        LineUpApplication.getInstance().getRequestQueue().add(request);
+
+        try {
+            JSONObject response = future.get(); // this will block
+        } catch (InterruptedException e) {
+            // exception handling
+        } catch (ExecutionException e) {
+            // exception handling
+        }
+    }
+
+    private void updateQR(){
+
+        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+        try {
+            BitMatrix bitMatrix = multiFormatWriter.encode(uniqueCode, BarcodeFormat.QR_CODE,1000,1000);
+            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+            Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
+            myQRCode.setImageBitmap(bitmap);
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -214,5 +306,5 @@ public class QRCodeActivity extends AppCompatActivity {
                     Uri.parse("http://facebook.com/dscjssnoida")));
         }
 
-        }
+    }
 }

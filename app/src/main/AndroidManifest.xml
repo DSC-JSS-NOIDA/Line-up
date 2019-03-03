@@ -48,6 +48,9 @@
             android:name=".MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".timer.CountDownTimerActivity"
+            android:screenOrientation="portrait" />
 
         <service android:name=".LocationFinderService" />
     </application>
