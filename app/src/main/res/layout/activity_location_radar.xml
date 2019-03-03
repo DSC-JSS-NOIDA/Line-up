@@ -185,7 +185,7 @@
                 android:text="REFRESH"
                 android:textSize="20sp"
                 android:layout_marginStart="10dp"
-                android:fontFamily="@font/roboto_thin"
+                android:fontFamily="@font/roboto_medium"
                 android:textColor="@android:color/black"/>
 
         </LinearLayout>

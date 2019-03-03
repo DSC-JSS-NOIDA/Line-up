@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,15 +35,16 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
         holder.zealid.setText(playerList.get(position).getZealId());
         holder.position.setText(playerList.get(position).getPosition());
         holder.score.setText(playerList.get(position).getScore());
+        holder.timeTaken.setText("|  " + playerList.get(position).getTimeTaken());
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return playerList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView score, name, zealid, position;
+        private TextView score, name, zealid, position, timeTaken;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -50,6 +52,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
             name = itemView.findViewById(R.id.player_name);
             zealid = itemView.findViewById(R.id.player_zealid);
             position = itemView.findViewById(R.id.player_position);
+            timeTaken = itemView.findViewById(R.id.player_time);
         }
     }
 
