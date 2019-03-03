@@ -4,7 +4,9 @@ import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 
+import android.content.SharedPreferences;
 import android.os.Build;
+import android.preference.PreferenceManager;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -56,6 +58,19 @@ public class LineUpApplication extends Application {
     public void cancelRequest(Object tag) {
         if (mRequestQueue != null)
             mRequestQueue.cancelAll(tag);
+    }
+
+    public SharedPreferences getDefaultSharedPreferences(){
+        return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+    }
+
+    public String getAccessToken() {
+        SharedPreferences sharedPreferences = getDefaultSharedPreferences();
+        String token = null;
+        if (sharedPreferences.contains("token")) {
+            token = sharedPreferences.getString("token", "");
+        }
+        return token;
     }
 
 }
