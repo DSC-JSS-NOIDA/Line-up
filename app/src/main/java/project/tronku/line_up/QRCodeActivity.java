@@ -8,16 +8,20 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -112,6 +116,11 @@ public class QRCodeActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    public void ContactUs(View view){
+        Intent i=new Intent(QRCodeActivity.this,ContactUs.class);
+        startActivity(i);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NotNull String permissions[], @NotNull int[] grantResults) {
@@ -163,4 +172,38 @@ public class QRCodeActivity extends AppCompatActivity {
         super.onStop();
         unregisterReceiver(receiver);
     }
+
+    public void call_shubham(View view) {
+
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:9643761192"));
+        startActivity(intent);
+    }
+    public void mail_dsc(View view) {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto: dscjssnoida@gmail.com"));
+        intent.putExtra(Intent.EXTRA_EMAIL, "dscjssnoida@gmail.com");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Queries");
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+    public void facebook(View view)
+    {
+
+        Uri uri = Uri.parse("http://facebook.com/dscjssnoida");
+        Intent i= new Intent(Intent.ACTION_VIEW,uri);
+
+        i.setPackage("com.facebook.katana");
+
+        try{
+            i=new Intent(Intent.ACTION_VIEW,Uri.parse("dscjssnoida"));
+            startActivity(i);
+        } catch (ActivityNotFoundException e) {
+
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://facebook.com/dscjssnoida")));
+        }
+
+        }
 }
