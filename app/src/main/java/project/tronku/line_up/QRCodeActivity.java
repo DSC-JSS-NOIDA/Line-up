@@ -5,6 +5,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
+import project.tronku.line_up.timer.CountDownTimerActivity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -76,7 +77,11 @@ public class QRCodeActivity extends AppCompatActivity {
         leaderboard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(QRCodeActivity.this, LeaderboardActivity.class));
+               // startActivity(new Intent(QRCodeActivity.this, LeaderboardActivity.class));
+
+                    Intent countDown = new Intent(QRCodeActivity.this, CountDownTimerActivity.class);
+                    startActivity(countDown);
+
             }
         });
 
