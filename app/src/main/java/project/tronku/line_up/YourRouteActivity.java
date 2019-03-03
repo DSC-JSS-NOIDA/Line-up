@@ -13,22 +13,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonNull;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 public class YourRouteActivity extends AppCompatActivity {
 
@@ -38,8 +28,10 @@ public class YourRouteActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private NetworkReceiver receiver;
+    private RouteAdapter adapter;
+    private TextView noMembers;
 
-    private List<PlayerPOJO> teammatesFound = new ArrayList<>();
+    private ArrayList<PlayerPOJO> teammatesFound = new ArrayList<>();
 
 
 
@@ -52,7 +44,9 @@ public class YourRouteActivity extends AppCompatActivity {
         loader = findViewById(R.id.loader_route);
         swipeRefreshLayout = findViewById(R.id.swipe_route);
         recyclerView = findViewById(R.id.route_recyclerview);
+        noMembers  = findViewById(R.id.no_members);
         receiver = new NetworkReceiver();
+        adapter = new RouteAdapter(this, teammatesFound);
 
         updateRoute();
 
@@ -89,10 +83,17 @@ public class YourRouteActivity extends AppCompatActivity {
                     public void onSuccess(String response) {
                         if(response != null){
                             teammatesFound = new ArrayList<>(Helper.getPlayersFromResponse(response));
-                            recyclerView.setLayoutManager(new LinearLayoutManager(YourRouteActivity.this));
-                            //recyclerView.setAdapter(adapter);
+                            if (teammatesFound.size() == 0) {
+                                noMembers.setVisibility(View.VISIBLE);
+                                Toast.makeText(YourRouteActivity.this, "No teammates found!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                noMembers.setVisibility(View.INVISIBLE);
+                                adapter.updateList(teammatesFound);
+                                recyclerView.setLayoutManager(new LinearLayoutManager(YourRouteActivity.this));
+                                recyclerView.setAdapter(adapter);
+                            }
                         } else{
-                            Toast.makeText(getApplicationContext(), "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(YourRouteActivity.this, "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
                         }
                         layer.setVisibility(View.INVISIBLE);
                         loader.setVisibility(View.INVISIBLE);
@@ -103,14 +104,14 @@ public class YourRouteActivity extends AppCompatActivity {
                     @Override
                     public void onError(int status, String error) {
                         if(status == HttpStatus.UNAUTHORIZED.value()){
-                            Toast.makeText(getApplicationContext(), "Please login to perform this action.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(YourRouteActivity.this, "Please login to perform this action.", Toast.LENGTH_SHORT).show();
                             LineUpApplication.getInstance().getDefaultSharedPreferences().edit().clear().apply();
-                            Intent login = new Intent(getApplicationContext(), MainActivity.class);
+                            Intent login = new Intent(YourRouteActivity.this, MainActivity.class);
                             finishAffinity();
                             startActivity(login);
                         } else{
-                            Toast.makeText(getApplicationContext(), "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            Toast.makeText(YourRouteActivity.this, "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(YourRouteActivity.this, MainActivity.class));
                         }
                     }
                 });
@@ -118,12 +119,11 @@ public class YourRouteActivity extends AppCompatActivity {
                 Toast.makeText(this, "No internet!", Toast.LENGTH_SHORT).show();
                 layer.setVisibility(View.INVISIBLE);
                 loader.setVisibility(View.INVISIBLE);
+                swipeRefreshLayout.setEnabled(true);
             }
         }
 
     }
-
-
 
     @Override
     protected void onStart() {

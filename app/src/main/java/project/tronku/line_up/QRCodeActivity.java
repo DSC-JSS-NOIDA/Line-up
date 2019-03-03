@@ -27,6 +27,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -57,6 +58,7 @@ public class QRCodeActivity extends AppCompatActivity {
     public static final int GPS_PERMISSION_CODE = 3;
     private Intent service;
     private PlayerPOJO currentUser;
+    private ProgressBar loader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,23 +72,21 @@ public class QRCodeActivity extends AppCompatActivity {
         route = findViewById(R.id.route);
         logout = findViewById(R.id.logout);
         leaderboard = findViewById(R.id.leaderboard);
+        loader = findViewById(R.id.loader_qr);
+
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         service = new Intent(this, LocationFinderService.class);
-
         receiver = new NetworkReceiver();
-
         startLocationService();
-
-
 
         leaderboard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // startActivity(new Intent(QRCodeActivity.this, LeaderboardActivity.class));
+                startActivity(new Intent(QRCodeActivity.this, LeaderboardActivity.class));
 
-                Intent countDown = new Intent(QRCodeActivity.this, CountDownTimerActivity.class);
-                startActivity(countDown);
+//                Intent countDown = new Intent(QRCodeActivity.this, CountDownTimerActivity.class);
+//                startActivity(countDown);
 
             }
         });
@@ -122,7 +122,7 @@ public class QRCodeActivity extends AppCompatActivity {
 
 
     }
-    //TODO Add layer loader in this activity as well
+
     private void updateUniqueCode() {
 
         String accessToken = LineUpApplication.getInstance().getAccessToken();
@@ -140,27 +140,26 @@ public class QRCodeActivity extends AppCompatActivity {
                         if(response != null){
                             currentUser = Helper.getPlayerFromJsonString(response);
                             uniqueCode = currentUser.getUniqueCode();
+                            pref.edit().putString("uniqueCode", uniqueCode).apply();
                             updateQR();
                         } else{
-                            Toast.makeText(getApplicationContext(), "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(QRCodeActivity.this, "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
                         }
                         /*layer.setVisibility(View.INVISIBLE);
-                        loader.setVisibility(View.INVISIBLE);
-                        swipeRefreshLayout.setRefreshing(false);
-                        swipeRefreshLayout.setEnabled(true);*/
+                        loader.setVisibility(View.INVISIBLE);*/
                     }
 
                     @Override
                     public void onError(int status, String error) {
                         if(status == HttpStatus.UNAUTHORIZED.value()){
-                            Toast.makeText(getApplicationContext(), "Please login to perform this action.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(QRCodeActivity.this, "Please login to perform this action.", Toast.LENGTH_SHORT).show();
                             LineUpApplication.getInstance().getDefaultSharedPreferences().edit().clear().apply();
-                            Intent login = new Intent(getApplicationContext(), MainActivity.class);
+                            Intent login = new Intent(QRCodeActivity.this, MainActivity.class);
                             finishAffinity();
                             startActivity(login);
                         } else{
-                            Toast.makeText(getApplicationContext(), "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            Toast.makeText(QRCodeActivity.this, "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(QRCodeActivity.this, MainActivity.class));
                         }
                     }
                 });
@@ -235,6 +234,7 @@ public class QRCodeActivity extends AppCompatActivity {
             uniqueCode = pref.getString("uniqueCode", "Data missing");
             updateQR();
         } else{
+            loader.setVisibility(View.VISIBLE);
             updateUniqueCode();
         }
 
@@ -256,7 +256,7 @@ public class QRCodeActivity extends AppCompatActivity {
     }
 
     private void updateQR(){
-
+        loader.setVisibility(View.INVISIBLE);
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
             BitMatrix bitMatrix = multiFormatWriter.encode(uniqueCode, BarcodeFormat.QR_CODE,1000,1000);
