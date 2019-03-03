@@ -34,16 +34,27 @@
             android:textColor="@color/text_two"
             android:layout_marginStart="30dp"/>
 
-
-        <ImageView
-            android:id="@+id/my_qr"
+        <FrameLayout
             android:layout_width="260dp"
             android:layout_height="260dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:background="@android:color/white"
-            android:layout_marginTop="30dp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp">
+
+            <ImageView
+                android:id="@+id/my_qr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:layout_gravity="center"/>
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/loader_qr"
+                android:visibility="invisible"/>
+
+        </FrameLayout>
 
         <androidx.cardview.widget.CardView
             android:layout_width="260dp"
@@ -231,6 +242,7 @@
             </RelativeLayout>
 
         </androidx.cardview.widget.CardView>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -246,8 +258,7 @@
             android:layout_height="68dp"
             android:orientation="horizontal"
             android:layout_gravity="center"
-            android:layout_marginBottom="16dp"
-            >
+            android:layout_marginBottom="16dp">
 
             <ImageView
                 android:onClick="call_shubham"
@@ -257,6 +268,7 @@
                 android:src="@drawable/call"
                 android:background="@drawable/bubble2"
                 android:layout_margin="10dp"/>
+
             <ImageView
                 android:onClick="mail_dsc"
                 android:padding="5dp"
@@ -265,20 +277,16 @@
                 android:src="@drawable/email"
                 android:background="@drawable/bubble2"
                 android:layout_margin="10dp"/>
+
             <ImageView
                 android:onClick="facebook"
                 android:alpha="0.7"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:src="@drawable/facebook_white"
-                android:layout_margin="7dp"
-                />
-
-
-
+                android:layout_margin="7dp"/>
 
         </LinearLayout>
-
 
     </LinearLayout>
 

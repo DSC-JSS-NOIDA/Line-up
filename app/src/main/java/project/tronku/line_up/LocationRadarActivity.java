@@ -96,7 +96,6 @@ public class LocationRadarActivity extends AppCompatActivity {
 
     private void updatePositions() {
         if (pref.contains("token")) {
-            getLocation();
             accessToken = pref.getString("token", "");
             layer.setVisibility(View.VISIBLE);
             loader.setVisibility(View.VISIBLE);
@@ -118,7 +117,7 @@ public class LocationRadarActivity extends AppCompatActivity {
                             }
 
                         } else{
-                            Toast.makeText(getApplicationContext(), "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LocationRadarActivity.this, "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
                         }
                         layer.setVisibility(View.INVISIBLE);
                         loader.setVisibility(View.INVISIBLE);
@@ -134,15 +133,15 @@ public class LocationRadarActivity extends AppCompatActivity {
                     @Override
                     public void onError(int status, String error) {
                         if(status == HttpStatus.UNAUTHORIZED.value()){
-                            Toast.makeText(getApplicationContext(), "Please login to perform this action.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LocationRadarActivity.this, "Please login to perform this action.", Toast.LENGTH_SHORT).show();
                             pref.edit().clear().apply();
                             Intent login = new Intent(LocationRadarActivity.this, MainActivity.class);
                             login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(login);
                         } else{
-                            Toast.makeText(getApplicationContext(), "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LocationRadarActivity.this, "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
                         }
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        startActivity(new Intent(LocationRadarActivity.this, QRCodeActivity.class));
                     }
                 });
             }
@@ -205,7 +204,7 @@ public class LocationRadarActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        updatePositions();
+        getLocation();
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(receiver, filter);
     }
@@ -236,6 +235,7 @@ public class LocationRadarActivity extends AppCompatActivity {
                     lng = longitude;
                     lat = latitude;
                     editor.apply();
+                    updatePositions();
                 }
             });
         }

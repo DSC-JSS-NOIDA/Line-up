@@ -101,8 +101,8 @@ public class LeaderboardActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(String response) {
                         if(response != null){
-                            Log.e(TAG, "onSuccess: " + response);
                             players = new ArrayList<>(getPlayersFromResponse(response));
+                            Log.e(TAG, "onSuccess: " + players.get(0));
                             adapter.updateList(players);
                             recyclerView.setLayoutManager(new LinearLayoutManager(LeaderboardActivity.this));
                             recyclerView.setAdapter(adapter);
@@ -151,9 +151,9 @@ public class LeaderboardActivity extends AppCompatActivity {
             playerPOJO.setScore(user.get("score").getAsString());
             playerPOJO.setPosition(user.get("position").getAsString());
             playerPOJO.setZealId(user.get("zeal_id").getAsString());
+
             long millis = user.get("totalTimeTaken").getAsLong() / 1000;
             playerPOJO.setTimeTaken(String.format(Locale.UK, "%d:%02d:%02d", millis / 3600, (millis % 3600) / 60, (millis % 60)));
-
             playerPOJOList.add(playerPOJO);
         }
         return playerPOJOList;

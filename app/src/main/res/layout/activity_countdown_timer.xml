@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".timer.CountDownTimerActivity">
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/days_view"
+        android:layout_width="80dp"
+        android:layout_height="68dp"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        app:cardBackgroundColor="@android:color/white"
+        app:cardCornerRadius="10dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/days"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="14dp"
+                android:layout_toEndOf="@id/qr_icon"
+                android:fontFamily="@font/roboto_medium"
+                android:text="00"
+                android:textColor="@color/qr_green"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Days" />
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+        android:layout_width="80dp"
+        android:layout_height="68dp"
+        app:cardCornerRadius="10dp"
+        android:id="@+id/hours_view"
+        android:layout_margin="5dp"
+        android:layout_gravity="center"
+        app:cardBackgroundColor="@android:color/white">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="14dp"
+                android:layout_toEndOf="@id/qr_icon"
+                android:fontFamily="@font/roboto_medium"
+                android:text="00"
+                android:textColor="@color/qr_green"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hours" />
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+        android:layout_width="80dp"
+        android:layout_height="68dp"
+        app:cardCornerRadius="10dp"
+        android:layout_margin="5dp"
+        android:id="@+id/mins_view"
+        android:layout_gravity="center"
+        app:cardBackgroundColor="@android:color/white">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/mins"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="14dp"
+                android:layout_toEndOf="@id/qr_icon"
+                android:fontFamily="@font/roboto_medium"
+                android:text="00"
+                android:textColor="@color/qr_green"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Minutes" />
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+        android:layout_width="80dp"
+        android:layout_height="68dp"
+        app:cardCornerRadius="10dp"
+        android:layout_margin="5dp"
+        android:id="@+id/seconds_view"
+        android:layout_gravity="center"
+        app:cardBackgroundColor="@android:color/white">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal">
+            <TextView
+                android:id="@+id/seconds"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="14dp"
+                android:layout_toEndOf="@id/qr_icon"
+                android:fontFamily="@font/roboto_medium"
+                android:text="00"
+                android:textColor="@color/qr_green"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Seconds" />
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+</LinearLayout>
