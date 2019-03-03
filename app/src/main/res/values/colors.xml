@@ -10,10 +10,10 @@
     <color name="text">#ffffff</color>
     <color name="text_two">#94ffffff</color>
     <color name="green"> #229954 </color>
-    
+    <color name="qr">#977500</color>
     <color name="grant">#545e67</color>
     <color name="location">#19788C</color>
-    <color name="qr">#C12F2F</color>
+    <color name="alert">#C12F2F</color>
     <color name="red"> #e74c3c </color>
 
     <color name="qr_green"> #138d75 </color>
