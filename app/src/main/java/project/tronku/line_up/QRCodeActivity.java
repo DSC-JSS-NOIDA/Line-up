@@ -37,7 +37,7 @@ public class QRCodeActivity extends AppCompatActivity {
     private String zealid;
     private View view;
     private SharedPreferences pref;
-    private CardView scanQR, locate, leaderboard, route;
+    private CardView scanQR, locate, leaderboard, route, logout;
     private NetworkReceiver receiver;
     public static final String TAG = "QRCodeActivty";
     private static final int CAMERA_PERMISSION_CODE = 2;
@@ -52,6 +52,7 @@ public class QRCodeActivity extends AppCompatActivity {
         scanQR = findViewById(R.id.scan_qr);
         locate = findViewById(R.id.locate);
         route = findViewById(R.id.route);
+        logout = findViewById(R.id.logout);
         leaderboard = findViewById(R.id.leaderboard);
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
@@ -80,6 +81,16 @@ public class QRCodeActivity extends AppCompatActivity {
                 }
                 else
                     startActivity(new Intent(QRCodeActivity.this, QRCodeScanActivity.class));
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pref.edit().clear().apply();
+                Intent start = new Intent(QRCodeActivity.this, MainActivity.class);
+                finishAffinity();
+                startActivity(start);
             }
         });
     }

@@ -10,7 +10,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
         android:background="@color/qr_green"
         android:orientation="vertical"
         tools:context=".QRCodeActivity">
@@ -165,7 +164,6 @@
             android:id="@+id/leaderboard"
             android:layout_marginTop="16dp"
             android:layout_gravity="center"
-            android:layout_marginBottom="40dp"
             app:cardBackgroundColor="@android:color/white">
 
             <RelativeLayout
@@ -188,6 +186,43 @@
                     android:text="Leaderboard"
                     android:textSize="18sp"
                     android:layout_marginStart="14dp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textColor="@color/qr_green"
+                    android:layout_centerInParent="true"/>
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="260dp"
+            android:layout_height="68dp"
+            app:cardCornerRadius="36dp"
+            android:id="@+id/logout"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="40dp"
+            app:cardBackgroundColor="@android:color/white">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal">
+
+                <ImageView
+                    android:id="@+id/logout_icon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_logout"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/logout_icon"
+                    android:text="Log Out"
+                    android:textSize="18sp"
+                    android:layout_marginStart="30dp"
                     android:fontFamily="@font/roboto_medium"
                     android:textColor="@color/qr_green"
                     android:layout_centerInParent="true"/>
