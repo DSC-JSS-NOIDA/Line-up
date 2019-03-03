@@ -79,6 +79,13 @@ public class QRCodeActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        leaderboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(QRCodeActivity.this, LeaderboardActivity.class));
+            }
+        });
+
         scanQR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
