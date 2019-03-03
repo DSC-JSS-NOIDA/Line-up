@@ -222,7 +222,7 @@ public class QRCodeActivity extends AppCompatActivity {
             }
         });
         View snackbarView = snackbar.getView();
-        snackbarView.setBackgroundColor(getResources().getColor(R.color.qr));
+        snackbarView.setBackgroundColor(getResources().getColor(R.color.route));
         snackbar.show();
     }
 

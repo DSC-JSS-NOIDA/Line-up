@@ -32,7 +32,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.name.setText(list.get(position).getName());
         holder.zealid.setText(list.get(position).getZealId());
-        if (position + 1 == list.size() - 1)
+        if (position + 1 == list.size())
             holder.hanger.setVisibility(View.INVISIBLE);
     }
 
