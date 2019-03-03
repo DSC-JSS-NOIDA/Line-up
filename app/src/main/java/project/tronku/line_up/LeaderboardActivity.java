@@ -8,8 +8,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -44,6 +46,7 @@ public class LeaderboardActivity extends AppCompatActivity {
     private ProgressBar loader;
     private NetworkReceiver receiver;
     private ArrayList<PlayerPOJO> players = new ArrayList<>();
+    private SharedPreferences pref;
     private LeaderboardAdapter adapter;
 
     @Override
@@ -56,6 +59,7 @@ public class LeaderboardActivity extends AppCompatActivity {
         layer = findViewById(R.id.layer_leaderboard);
         loader = findViewById(R.id.loader_leaderboard);
         receiver = new NetworkReceiver();
+        pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         adapter = new LeaderboardAdapter(this, players);
         updateList();
@@ -80,32 +84,15 @@ public class LeaderboardActivity extends AppCompatActivity {
         swipeRefreshLayout.setEnabled(false);
 
         players.clear();
-
-        //call API here
-
         updateLeaderboard();
-
-
-
-       /* LineUpApplication.getInstance().getRequestQueue().addRequestFinishedListener(new RequestQueue.RequestFinishedListener<JSONObject>() {
-            @Override
-            public void onRequestFinished(Request<JSONObject> request) {
-                adapter.updateList(players);
-                layer.setVisibility(View.INVISIBLE);
-                loader.setVisibility(View.INVISIBLE);
-                recyclerView.setLayoutManager(new LinearLayoutManager(LeaderboardActivity.this));
-                recyclerView.setAdapter(adapter);
-                swipeRefreshLayout.setRefreshing(false);
-                swipeRefreshLayout.setEnabled(true);
-            }
-        });*/
-
     }
 
     private void updateLeaderboard() {
         String accessToken = LineUpApplication.getInstance().getAccessToken();
         if(accessToken == null){
             Intent mainActivity = new Intent(this, MainActivity.class);
+            pref.edit().clear().apply();
+            finishAffinity();
             startActivity(mainActivity);
         } else{
             if (receiver.isConnected()) {
@@ -114,12 +101,18 @@ public class LeaderboardActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(String response) {
                         if(response != null){
+                            Log.e(TAG, "onSuccess: " + response);
                             players = new ArrayList<>(getPlayersFromResponse(response));
+                            adapter.updateList(players);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(LeaderboardActivity.this));
+                            recyclerView.setAdapter(adapter);
                         } else{
                             Toast.makeText(getApplicationContext(), "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
                         }
                         layer.setVisibility(View.INVISIBLE);
                         loader.setVisibility(View.INVISIBLE);
+                        swipeRefreshLayout.setRefreshing(false);
+                        swipeRefreshLayout.setEnabled(true);
                     }
 
                     @Override
@@ -128,7 +121,7 @@ public class LeaderboardActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Please login to perform this action.", Toast.LENGTH_SHORT).show();
                             LineUpApplication.getInstance().getDefaultSharedPreferences().edit().clear().apply();
                             Intent login = new Intent(getApplicationContext(), MainActivity.class);
-                            login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            finishAffinity();
                             startActivity(login);
                         } else{
                             Toast.makeText(getApplicationContext(), "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();

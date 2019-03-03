@@ -62,8 +62,8 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
             startActivity(mainActivity);
         }
 
-        lat = Double.parseDouble(pref.getString("latitude", "28.4245"));
-        lng = Double.parseDouble(pref.getString("longitude", "28.4245"));
+        lat = Double.parseDouble(pref.getString("latitude", "28.614562"));
+        lng = Double.parseDouble(pref.getString("longitude", "77.358839"));
 
         if (receiver.isConnected()) {
             validateQR(rawResult.getText(), accessToken, new VolleyCallback() {
