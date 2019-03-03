@@ -107,6 +107,13 @@ public class QRCodeActivity extends AppCompatActivity {
                 startActivity(start);
             }
         });
+
+        route.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(QRCodeActivity.this, YourRouteActivity.class));
+            }
+        });
     }
 
     private void startLocationService() {

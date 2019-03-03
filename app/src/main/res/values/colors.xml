@@ -21,4 +21,6 @@
     <color name="leaderboard"> #4a235a </color>
     <color name="leader_item"> #6c3483 </color>
     <color name="score"> #eb984e  </color>
+    <color name="route"> #922b21 </color>
+    <color name="routeName"> #cb4335 </color>
 </resources>

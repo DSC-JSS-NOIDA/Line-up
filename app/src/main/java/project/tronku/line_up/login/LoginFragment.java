@@ -124,10 +124,12 @@ public class LoginFragment extends Fragment implements project.tronku.line_up.lo
                 Log.e(TAG, " Login Activity onResponse: " + response);
                 Map<String, String> responseMap = new Gson().fromJson(response, new TypeToken<Map<String, String>>() {}.getType());
                 String token = responseMap.get("access_token");
+                String code = responseMap.get("uniqueCode");
                 Log.e(TAG, "onResponse: " + token);
                 SharedPreferences.Editor editor = pref.edit();
                 editor.putString("token", token);
                 editor.putString("zealid", username);
+                editor.putString("uniqueCode", code);
                 editor.apply();
                 startActivities();
             }

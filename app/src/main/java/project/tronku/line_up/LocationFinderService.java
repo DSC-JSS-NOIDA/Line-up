@@ -58,6 +58,7 @@ public class LocationFinderService extends Service {
         super.onCreate();
         handler = new Handler();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
+        request = new LocationRequest();
         request.setInterval(delay);
         request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
