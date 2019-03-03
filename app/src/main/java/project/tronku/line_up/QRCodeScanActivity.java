@@ -48,6 +48,7 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
     public void handleResult(final Result rawResult) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Scan Result");
+        builder.setCancelable(false);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
@@ -95,8 +96,6 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
         else
             Toast.makeText(this, "No internet!", Toast.LENGTH_SHORT).show();
 
-        scannerView.setResultHandler(this);
-        scannerView.startCamera();
 
     }
 

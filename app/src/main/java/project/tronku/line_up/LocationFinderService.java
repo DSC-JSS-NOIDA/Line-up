@@ -23,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -41,10 +42,10 @@ public class LocationFinderService extends Service {
     private SharedPreferences pref;
     private static final String TAG = "LocationFinder";
     private double latitude, longitude;
-    private double prevLat, prevLong;
     private Handler handler;
-    private int delay = 30000;
+    private int delay = 10000;
     private boolean isConnected;
+    private LocationRequest request;
 
     @Nullable
     @Override
@@ -57,10 +58,9 @@ public class LocationFinderService extends Service {
         super.onCreate();
         handler = new Handler();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
+        request.setInterval(delay);
+        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
-        prevLat = Double.parseDouble(pref.getString("latitude", "28.353"));
-        prevLong = Double.parseDouble(pref.getString("longitude", "28.353"));
     }
 
     @Override
@@ -113,11 +113,12 @@ public class LocationFinderService extends Service {
                 longitude = location.getLongitude();
                 Log.e(TAG, "lat: " + latitude + "; long: " + longitude);
 
-                if (Math.abs(latitude - prevLat) >= 0.0005 || Math.abs(longitude - prevLong) >= 0.005 && isConnected) {
-                    SharedPreferences.Editor editor = pref.edit();
-                    editor.putString("latitude", String.valueOf(latitude));
-                    editor.putString("longitude", String.valueOf(longitude));
-                    editor.apply();
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putString("latitude", String.valueOf(latitude));
+                editor.putString("longitude", String.valueOf(longitude));
+                editor.apply();
+
+                if (isConnected) {
                     sendLocation(latitude, longitude);
                 }
             }

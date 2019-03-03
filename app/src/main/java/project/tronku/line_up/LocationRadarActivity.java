@@ -1,12 +1,18 @@
 package project.tronku.line_up;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -20,6 +26,9 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -45,6 +54,7 @@ public class LocationRadarActivity extends AppCompatActivity {
     private View layer;
     private TextView loader;
     private NetworkReceiver receiver;
+    private FusedLocationProviderClient fusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +65,7 @@ public class LocationRadarActivity extends AppCompatActivity {
         refresh = findViewById(R.id.refresh);
         receiver = new NetworkReceiver();
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
 
         player1 = findViewById(R.id.player1_img);
         player2 = findViewById(R.id.player2_img);
@@ -85,15 +96,13 @@ public class LocationRadarActivity extends AppCompatActivity {
 
     private void updatePositions() {
         if (pref.contains("token")) {
+            getLocation();
             accessToken = pref.getString("token", "");
             layer.setVisibility(View.VISIBLE);
             loader.setVisibility(View.VISIBLE);
             refresh.setEnabled(false);
 
             final List<TextView> textViews = Arrays.asList(dis1, dis2, dis3, dis4);
-
-            lat = Double.parseDouble(pref.getString("latitude", "28.4245"));
-            lng = Double.parseDouble(pref.getString("longitude", "28.4245"));
 
             if (receiver.isConnected()) {
                 fetchNearestParticipants(accessToken, new VolleyCallback(){
@@ -115,6 +124,11 @@ public class LocationRadarActivity extends AppCompatActivity {
                         loader.setVisibility(View.INVISIBLE);
                         refresh.setEnabled(true);
                         rippleBackground.startRippleAnimation();
+                        player1.setVisibility(View.VISIBLE);
+                        player2.setVisibility(View.VISIBLE);
+                        player3.setVisibility(View.VISIBLE);
+                        player4.setVisibility(View.VISIBLE);
+
                     }
 
                     @Override
@@ -191,6 +205,7 @@ public class LocationRadarActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        updatePositions();
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(receiver, filter);
     }
@@ -201,4 +216,37 @@ public class LocationRadarActivity extends AppCompatActivity {
         unregisterReceiver(receiver);
     }
 
+    private void getLocation() {
+        Log.e(TAG, "getLocation: ");
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+        else {
+            fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    double latitude = location.getLatitude();
+                    double longitude = location.getLongitude();
+                    Log.e(TAG, "lat: " + latitude + "; long: " + longitude);
+
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString("latitude", String.valueOf(latitude));
+                    editor.putString("longitude", String.valueOf(longitude));
+                    lng = longitude;
+                    lat = latitude;
+                    editor.apply();
+                }
+            });
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            getLocation();
+        }
+    }
 }

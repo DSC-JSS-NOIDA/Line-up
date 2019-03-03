@@ -39,6 +39,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/female"
+            android:visibility="invisible"
             android:id="@+id/player1_img"/>
 
         <TextView
@@ -65,6 +66,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/female"
+            android:visibility="invisible"
             android:id="@+id/player2_img"/>
 
         <TextView
@@ -91,6 +93,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:visibility="invisible"
             android:src="@drawable/female"
             android:id="@+id/player3_img"/>
 
@@ -119,6 +122,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/female"
+            android:visibility="invisible"
             android:id="@+id/player4_img"/>
 
         <TextView
@@ -148,7 +152,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/title_radar"
-        android:text="You can find four players that are within 200m radius."
+        android:text="You can find four players that are closest to you."
         android:textSize="18sp"
         android:layout_marginEnd="30dp"
         android:fontFamily="@font/roboto_thin"
