@@ -68,6 +68,7 @@ public class LocationFinderService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e(TAG, "onStartCommand: ");
         getLocation();
+
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
