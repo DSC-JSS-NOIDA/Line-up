@@ -7,41 +7,24 @@
     tools:context=".LocationRadarActivity"
     android:background="@color/ripple">
 
-    <!--<com.skyfishjy.library.RippleBackground-->
-        <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-        <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:id="@+id/content"-->
-        <!--app:rb_color="#0099CC"-->
-        <!--app:rb_radius="32dp"-->
-        <!--app:rb_rippleAmount="4"-->
-        <!--app:rb_duration="3000"-->
-        <!--app:rb_scale="6"/>-->
-
     <com.skyfishjy.library.RippleBackground
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/content"
+        android:id="@+id/ripple"
         app:rb_color="#0099CC"
         app:rb_radius="32dp"
         app:rb_rippleAmount="4"
-        app:rb_duration="3000"
-        app:rb_scale="6">
-
-
+        app:rb_duration="3500"
+        app:rb_scale="6"/>
 
     <ImageView
         android:layout_width="74dp"
         android:layout_height="74dp"
         android:id="@+id/player"
         android:layout_centerInParent="true"
-        android:src="@drawable/female"
-        />
-
-
+        android:src="@drawable/female"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -52,6 +35,7 @@
         android:layout_marginEnd="20dp">
 
         <ImageView
+            android:layout_gravity="center_horizontal"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/female"
@@ -60,12 +44,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="50m"
             android:id="@+id/player1_distance"
-            android:fontFamily="@font/roboto_medium"
+            android:fontFamily="@font/roboto_thin"
             android:textColor="@android:color/white"
             android:layout_gravity="center_horizontal"
-            android:textSize="18sp"/>
+            android:textSize="16sp"/>
 
     </LinearLayout>
 
@@ -78,6 +61,7 @@
         android:layout_marginStart="40dp">
 
         <ImageView
+            android:layout_gravity="center_horizontal"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/female"
@@ -86,12 +70,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="140m"
             android:id="@+id/player2_distance"
-            android:fontFamily="@font/roboto_medium"
+            android:fontFamily="@font/roboto_thin"
             android:textColor="@android:color/white"
             android:layout_gravity="center_horizontal"
-            android:textSize="18sp"/>
+            android:textSize="16sp"/>
 
     </LinearLayout>
 
@@ -105,6 +88,7 @@
         android:layout_centerHorizontal="true">
 
         <ImageView
+            android:layout_gravity="center_horizontal"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/female"
@@ -113,12 +97,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="70m"
             android:id="@+id/player3_distance"
-            android:fontFamily="@font/roboto_medium"
+            android:fontFamily="@font/roboto_thin"
             android:textColor="@android:color/white"
             android:layout_gravity="center_horizontal"
-            android:textSize="18sp"/>
+            android:textSize="16sp"/>
 
     </LinearLayout>
 
@@ -132,6 +115,7 @@
         android:layout_marginTop="50dp">
 
         <ImageView
+            android:layout_gravity="center_horizontal"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/female"
@@ -140,12 +124,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="100m"
             android:id="@+id/player4_distance"
-            android:fontFamily="@font/roboto_medium"
+            android:fontFamily="@font/roboto_thin"
             android:textColor="@android:color/white"
             android:layout_gravity="center_horizontal"
-            android:textSize="18sp"/>
+            android:textSize="16sp"/>
 
     </LinearLayout>
 
@@ -172,6 +155,60 @@
         android:textColor="@color/text_two"
         android:layout_marginStart="30dp"/>
 
-    </com.skyfishjy.library.RippleBackground>
+    <androidx.cardview.widget.CardView
+        android:layout_width="200dp"
+        android:layout_height="70dp"
+        app:cardCornerRadius="36dp"
+        android:foreground="?attr/selectableItemBackground"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"
+        android:id="@+id/refresh">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_refresh"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="REFRESH"
+                android:textSize="20sp"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/roboto_thin"
+                android:textColor="@android:color/black"/>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:alpha="0.6"
+        android:elevation="10dp"
+        android:visibility="invisible"
+        android:id="@+id/layer"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="12dp"
+        android:text="Updating..."
+        android:textColor="@android:color/white"
+        android:textSize="28sp"
+        android:fontFamily="@font/roboto_medium"
+        android:layout_above="@id/refresh"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:visibility="invisible"
+        android:id="@+id/loader"/>
 
 </RelativeLayout>

@@ -1,23 +1,60 @@
 package project.tronku.line_up;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.skyfishjy.library.RippleBackground;
 
 public class LocationRadarActivity extends AppCompatActivity {
 
+    private static final String TAG = "LocationRadarActivity";
     private ImageView player1, player2, player3, player4;
     private TextView dis1, dis2, dis3, dis4;
+    private RippleBackground rippleBackground;
+    private SharedPreferences pref;
+    private CardView refresh;
+    private double lat, lng;
+    private String accessToken;
+    private View layer;
+    private TextView loader;
+    private NetworkReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_radar);
+
+        rippleBackground = findViewById(R.id.ripple);
+        refresh = findViewById(R.id.refresh);
+        receiver = new NetworkReceiver();
+        pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         player1 = findViewById(R.id.player1_img);
         player2 = findViewById(R.id.player2_img);
@@ -29,16 +66,139 @@ public class LocationRadarActivity extends AppCompatActivity {
         dis3 = findViewById(R.id.player3_distance);
         dis4 = findViewById(R.id.player4_distance);
 
+        layer = findViewById(R.id.layer);
+        loader = findViewById(R.id.loader);
 
-        final RippleBackground rippleBackground=(RippleBackground)findViewById(R.id.content);
-        ImageView imageView=(ImageView)findViewById(R.id.player);
-        imageView.setOnClickListener(new View.OnClickListener() {
+        refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                rippleBackground.startRippleAnimation();
+                updatePositions();
             }
         });
-        rippleBackground.startRippleAnimation();
+    }
+
+    private class Participant {
+
+        private String username;
+        private int distance;
+    }
+
+    private void updatePositions() {
+        if (pref.contains("token")) {
+            accessToken = pref.getString("token", "");
+            layer.setVisibility(View.VISIBLE);
+            loader.setVisibility(View.VISIBLE);
+            refresh.setEnabled(false);
+
+            final List<TextView> textViews = Arrays.asList(dis1, dis2, dis3, dis4);
+
+            lat = Double.parseDouble(pref.getString("latitude", "28.4245"));
+            lng = Double.parseDouble(pref.getString("longitude", "28.4245"));
+
+            if (receiver.isConnected()) {
+                fetchNearestParticipants(accessToken, new VolleyCallback(){
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onSuccess(String response) {
+                        if(response != null){
+                            List<Participant> participants = getParticipantsFromResponse(response);
+                            for(int i = 0; i < Math.min(participants.size(), textViews.size()); i++){
+                                TextView textView = textViews.get(i);
+                                Participant participant = participants.get(i);
+                                textView.setText(participant.distance + "m");
+                            }
+
+                        } else{
+                            Toast.makeText(getApplicationContext(), "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
+                        }
+                        layer.setVisibility(View.INVISIBLE);
+                        loader.setVisibility(View.INVISIBLE);
+                        refresh.setEnabled(true);
+                        rippleBackground.startRippleAnimation();
+                    }
+
+                    @Override
+                    public void onError(int status, String error) {
+                        if(status == HttpStatus.UNAUTHORIZED.value()){
+                            Toast.makeText(getApplicationContext(), "Please login to perform this action.", Toast.LENGTH_SHORT).show();
+                            pref.edit().clear().apply();
+                            Intent login = new Intent(LocationRadarActivity.this, MainActivity.class);
+                            login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(login);
+                        } else{
+                            Toast.makeText(getApplicationContext(), "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
+                        }
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    }
+                });
+            }
+            else {
+                Toast.makeText(this, "No internet!", Toast.LENGTH_SHORT).show();
+                layer.setVisibility(View.INVISIBLE);
+                loader.setVisibility(View.INVISIBLE);
+                refresh.setEnabled(true);
+                rippleBackground.stopRippleAnimation();
+            }
+
+        }
+    }
+
+    private List<Participant> getParticipantsFromResponse(String response) {
+        JsonParser parser = new JsonParser();
+        JsonArray jsonArray = parser.parse(response).getAsJsonArray();
+        List<Participant> participants = new ArrayList<>();
+        for(int i = 0; i < jsonArray.size(); i++){
+            JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
+            Participant participant = new Participant();
+            double distance = jsonObject.get("distance").getAsDouble();
+            participant.distance = (int)Math.round(distance);
+            participants.add(participant);
+        }
+        return participants;
+    }
+
+
+    private void fetchNearestParticipants(final String accessToken, final VolleyCallback volleyCallback) {
+
+        String url = API.BASE + API.NEAREST_NEIGHBOUR + "?lat=" + lat + "&lng=" + lng;
+        StringRequest sr = new StringRequest(Request.Method.GET,url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.e(TAG, " Location Radar Activity onResponse: " + response);
+                volleyCallback.onSuccess(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, " Location Radar Activity onErrorResponse: " + error.toString());
+                if(error.networkResponse != null)
+                    volleyCallback.onError(error.networkResponse.statusCode, new String(error.networkResponse.data));
+                else
+                    volleyCallback.onError(HttpStatus.SERVICE_UNAVAILABLE.value(), "");
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String,String> params = new HashMap<>();
+                params.put("Authorization", "Bearer " + accessToken);
+                return params;
+            }
+        };
+
+        LineUpApplication.getInstance().addToRequestQueue(sr);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(receiver, filter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(receiver);
     }
 
 }

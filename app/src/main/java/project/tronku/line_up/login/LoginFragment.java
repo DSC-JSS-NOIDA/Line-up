@@ -5,7 +5,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Base64;
@@ -22,12 +24,9 @@ import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -39,12 +38,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import project.tronku.line_up.API;
 import project.tronku.line_up.InstructionsActivity;
 import project.tronku.line_up.LineUpApplication;
-import project.tronku.line_up.LocationFinder;
-import project.tronku.line_up.MainActivity;
+import project.tronku.line_up.NetworkReceiver;
 import project.tronku.line_up.QRCodeActivity;
 import project.tronku.line_up.R;
 
@@ -62,8 +59,7 @@ public class LoginFragment extends Fragment implements project.tronku.line_up.lo
     private View layer;
     private ProgressBar loader;
     private SharedPreferences pref;
-    private LocationFinder locationFinder;
-    private LineUpApplication application;
+    private NetworkReceiver receiver;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -81,32 +77,34 @@ public class LoginFragment extends Fragment implements project.tronku.line_up.lo
         passwordEditText = inflate.findViewById(R.id.password_login);
         layer = inflate.findViewById(R.id.login_layer);
         loader = inflate.findViewById(R.id.login_loader);
+        receiver = new NetworkReceiver();
         pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        locationFinder = new LocationFinder(getActivity());
-        application = new LineUpApplication(locationFinder);
         return inflate;
     }
 
     @Override
     public void login() {
-
-        zealid = zealIdEditText.getText().toString();
-        password = passwordEditText.getText().toString();
-
         hideKeyboard();
+        if (receiver.isConnected()) {
+            zealid = zealIdEditText.getText().toString();
+            password = passwordEditText.getText().toString();
 
-        if (zealid.isEmpty() || password.isEmpty()) {
-            Snackbar snackbar = Snackbar.make(inflate, "Enter details.", Snackbar.LENGTH_SHORT);
-            View snackbarView = snackbar.getView();
-            snackbarView.setBackgroundColor(getResources().getColor(R.color.qr));
-            snackbar.show();
-        } else{
-            layer.setVisibility(View.VISIBLE);
-            loader.setVisibility(View.VISIBLE);
-            zealIdEditText.setEnabled(false);
-            passwordEditText.setEnabled(false);
-            login(zealid, password);
+            if (zealid.isEmpty() || password.isEmpty()) {
+                Snackbar snackbar = Snackbar.make(inflate, "Enter details.", Snackbar.LENGTH_SHORT);
+                View snackbarView = snackbar.getView();
+                snackbarView.setBackgroundColor(getResources().getColor(R.color.qr));
+                snackbar.show();
+            } else{
+                layer.setVisibility(View.VISIBLE);
+                loader.setVisibility(View.VISIBLE);
+                zealIdEditText.setEnabled(false);
+                passwordEditText.setEnabled(false);
+                login(zealid, password);
+            }
+        }
+        else {
+            Toast.makeText(getContext(), "No internet!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -120,24 +118,64 @@ public class LoginFragment extends Fragment implements project.tronku.line_up.lo
     }
 
     private void login(final String username, final String password){
-        RequestQueue queue = Volley.newRequestQueue(getContext());
-        StringRequest sr = new StringRequest(Request.Method.POST,API.BASE + API.LOGIN, new Response.Listener<String>() {
+        StringRequest loginReq = new StringRequest(Request.Method.POST,API.BASE + API.LOGIN, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.e(TAG, " Login Activity onResponse: " + response);
-                Map<String, String> responseMap = new Gson().fromJson(response,
-                        new TypeToken<Map<String, String>>() {}.getType());
+                Map<String, String> responseMap = new Gson().fromJson(response, new TypeToken<Map<String, String>>() {}.getType());
                 String token = responseMap.get("access_token");
                 Log.e(TAG, "onResponse: " + token);
                 SharedPreferences.Editor editor = pref.edit();
                 editor.putString("token", token);
+                editor.putString("zealid", username);
                 editor.apply();
-                startActivity(new Intent(getActivity(), QRCodeActivity.class));
+                startActivities();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, " Login Activity onErrorResponse: " + error.toString());
+                String json = new String(error.networkResponse.data);
+                try {
+                    JSONObject jsonError = new JSONObject(json);
+                    if (jsonError.has("error")) {
+                        String errorString = "Invalid data! Try again.";
+                        final Dialog dialog = new Dialog(getActivity());
+                        dialog.setContentView(R.layout.dialog_layout);
+                        ImageView close = dialog.findViewById(R.id.close);
+                        close.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialogInterface) {
+                                zealIdEditText.setText("");
+                                passwordEditText.setText("");
+                                zealIdEditText.setEnabled(true);
+                                passwordEditText.setEnabled(true);
+                                layer.setVisibility(View.INVISIBLE);
+                                loader.setVisibility(View.INVISIBLE);
+                            }
+                        });
+
+                        TextView errorView = dialog.findViewById(R.id.errorText);
+                        errorView.setText(errorString);
+                        dialog.show();
+
+                        layer.setVisibility(View.INVISIBLE);
+                        loader.setVisibility(View.INVISIBLE);
+                        zealIdEditText.setEnabled(true);
+                        passwordEditText.setEnabled(true);
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }){
             @Override
@@ -160,25 +198,7 @@ public class LoginFragment extends Fragment implements project.tronku.line_up.lo
                 return params;
             }
         };
-        queue.add(sr);
-        queue.addRequestFinishedListener(new RequestQueue.RequestFinishedListener<JSONObject>() {
-            @Override
-            public void onRequestFinished(Request<JSONObject> request) {
-                layer.setVisibility(View.INVISIBLE);
-                loader.setVisibility(View.INVISIBLE);
-                zealIdEditText.setEnabled(true);
-                passwordEditText.setEnabled(true);
-
-                if (firstTime) {
-                    Intent intro = new Intent(getActivity(), InstructionsActivity.class);
-                    startActivityForResult(intro, REQUEST_CODE_INTRO);
-                }
-                else {
-                    Intent qrcode = new Intent(getActivity(), QRCodeActivity.class);
-                    startActivity(qrcode);
-                }
-            }
-        });
+        LineUpApplication.getInstance().addToRequestQueue(loginReq);
     }
 
 
@@ -194,6 +214,30 @@ public class LoginFragment extends Fragment implements project.tronku.line_up.lo
                 //Toast
             }
         }
+    }
+
+    private void startActivities() {
+        if (firstTime) {
+            Intent intro = new Intent(getActivity(), InstructionsActivity.class);
+            startActivityForResult(intro, REQUEST_CODE_INTRO);
+        }
+        else {
+            Intent qrcode = new Intent(getActivity(), QRCodeActivity.class);
+            startActivity(qrcode);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        getActivity().registerReceiver(receiver, filter);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        getActivity().unregisterReceiver(receiver);
     }
 
 }
