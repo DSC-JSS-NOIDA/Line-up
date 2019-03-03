@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ContactUs"
+    android:background="#7d3c98">
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"
+        android:text="Contact us:"
+        android:textColor="@color/text"
+        android:fontFamily="@font/roboto_bold"
+        android:textSize="20sp"
+        android:layout_margin="5dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="78dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/bubble"
+        android:padding="5dp"
+        android:paddingStart="20dp">
+
+        <TextView
+            android:id="@+id/name_shubham"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_marginTop="21dp"
+            android:fontFamily="@font/roboto_bold"
+            android:paddingStart="15dp"
+            android:text="Shubham Pathak"
+            android:textColor="@color/text"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/name_dheeraj"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/name_shubham"
+            android:layout_margin="10dp"
+            android:fontFamily="@font/roboto_bold"
+            android:paddingStart="15dp"
+            android:text="Dheeraj Kotwani"
+            android:textColor="@color/text"
+            android:textSize="25sp" />
+
+        <ImageView
+            android:id="@+id/call_shubham"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignBottom="@+id/name_shubham"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="108dp"
+            android:layout_marginBottom="7dp"
+            android:background="@drawable/bubble2"
+            android:onClick="call_shubham"
+            android:src="@drawable/call" />
+        <ImageView
+            android:id="@+id/call_dheeraj"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignBottom="@+id/name_dheeraj"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="108dp"
+            android:layout_marginBottom="7dp"
+            android:background="@drawable/bubble2"
+            android:onClick="call_dheeraj"
+            android:src="@drawable/call" />
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

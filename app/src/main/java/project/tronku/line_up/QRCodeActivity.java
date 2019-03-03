@@ -9,16 +9,20 @@ import project.tronku.line_up.timer.CountDownTimerActivity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -35,13 +39,15 @@ import org.jetbrains.annotations.NotNull;
 public class QRCodeActivity extends AppCompatActivity {
 
     private ImageView myQRCode;
-    private String zealid;
+    private String uniqueCode;
     private View view;
     private SharedPreferences pref;
     private CardView scanQR, locate, leaderboard, route, logout;
     private NetworkReceiver receiver;
     public static final String TAG = "QRCodeActivty";
     private static final int CAMERA_PERMISSION_CODE = 2;
+    public static final int GPS_PERMISSION_CODE = 3;
+    private Intent service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,16 +63,16 @@ public class QRCodeActivity extends AppCompatActivity {
         leaderboard = findViewById(R.id.leaderboard);
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-        zealid = pref.getString("zealid", "zo1241");
+        service = new Intent(this, LocationFinderService.class);
+
+        uniqueCode = pref.getString("uniqueCode", "Data missing");
         receiver = new NetworkReceiver();
 
-        final Intent service = new Intent(this, LocationFinderService.class);
-        ContextCompat.startForegroundService(this, service);
-        Log.e(TAG, "onCreate: ");
+        startLocationService();
 
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
-            BitMatrix bitMatrix = multiFormatWriter.encode(zealid, BarcodeFormat.QR_CODE,1000,1000);
+            BitMatrix bitMatrix = multiFormatWriter.encode(uniqueCode, BarcodeFormat.QR_CODE,1000,1000);
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
             Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
             myQRCode.setImageBitmap(bitmap);
@@ -106,10 +112,31 @@ public class QRCodeActivity extends AppCompatActivity {
                 startActivity(start);
             }
         });
+
+        route.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(QRCodeActivity.this, YourRouteActivity.class));
+            }
+        });
+    }
+
+    private void startLocationService() {
+        if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) ||
+                (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, GPS_PERMISSION_CODE);
+        }
+        else
+            ContextCompat.startForegroundService(this, service);
     }
 
     public void Location(View view){
         Intent i = new Intent(QRCodeActivity.this,LocationRadarActivity.class);
+        startActivity(i);
+    }
+
+    public void ContactUs(View view){
+        Intent i=new Intent(QRCodeActivity.this,ContactUs.class);
         startActivity(i);
     }
 
@@ -127,6 +154,14 @@ public class QRCodeActivity extends AppCompatActivity {
                 }
             }
 
+            case GPS_PERMISSION_CODE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startLocationService();
+                } else {
+                    Toast.makeText(this, "Sorry, permission is not granted", Toast.LENGTH_SHORT).show();
+                }
+            }
         }
     }
 
@@ -156,4 +191,38 @@ public class QRCodeActivity extends AppCompatActivity {
         super.onStop();
         unregisterReceiver(receiver);
     }
+
+    public void call_shubham(View view) {
+
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:9643761192"));
+        startActivity(intent);
+    }
+    public void mail_dsc(View view) {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto: dscjssnoida@gmail.com"));
+        intent.putExtra(Intent.EXTRA_EMAIL, "dscjssnoida@gmail.com");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Queries");
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+    public void facebook(View view)
+    {
+
+        Uri uri = Uri.parse("http://facebook.com/dscjssnoida");
+        Intent i= new Intent(Intent.ACTION_VIEW,uri);
+
+        i.setPackage("com.facebook.katana");
+
+        try{
+            i=new Intent(Intent.ACTION_VIEW,Uri.parse("dscjssnoida"));
+            startActivity(i);
+        } catch (ActivityNotFoundException e) {
+
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://facebook.com/dscjssnoida")));
+        }
+
+        }
 }

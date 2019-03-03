@@ -200,14 +200,15 @@
             app:cardCornerRadius="36dp"
             android:id="@+id/logout"
             android:layout_marginTop="16dp"
-            android:layout_gravity="center"
             android:layout_marginBottom="40dp"
+            android:layout_gravity="center"
             app:cardBackgroundColor="@android:color/white">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal">
+                android:layout_gravity="center_horizontal"
+                >
 
                 <ImageView
                     android:id="@+id/logout_icon"
@@ -230,6 +231,54 @@
             </RelativeLayout>
 
         </androidx.cardview.widget.CardView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Contact Us:"
+            android:textColor="@color/text_two"
+            android:fontFamily="@font/roboto_thin"
+            android:layout_marginTop="5dp"
+            android:textSize="18sp"
+            android:layout_gravity="center"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="68dp"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"
+            >
+
+            <ImageView
+                android:onClick="call_shubham"
+                android:padding="5dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/call"
+                android:background="@drawable/bubble2"
+                android:layout_margin="10dp"/>
+            <ImageView
+                android:onClick="mail_dsc"
+                android:padding="5dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/email"
+                android:background="@drawable/bubble2"
+                android:layout_margin="10dp"/>
+            <ImageView
+                android:onClick="facebook"
+                android:alpha="0.7"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/facebook_white"
+                android:layout_margin="7dp"
+                />
+
+
+
+
+        </LinearLayout>
+
 
     </LinearLayout>
 
