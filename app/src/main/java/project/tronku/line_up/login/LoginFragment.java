@@ -223,6 +223,7 @@ public class LoginFragment extends Fragment implements project.tronku.line_up.lo
         }
         else {
             Intent qrcode = new Intent(getActivity(), QRCodeActivity.class);
+            getActivity().finishAffinity();
             startActivity(qrcode);
         }
     }

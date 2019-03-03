@@ -95,6 +95,9 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
         else
             Toast.makeText(this, "No internet!", Toast.LENGTH_SHORT).show();
 
+        scannerView.setResultHandler(this);
+        scannerView.startCamera();
+
     }
 
     private void validateQR(final String scannedCode, final String accessToken, final VolleyCallback volleyCallback) {

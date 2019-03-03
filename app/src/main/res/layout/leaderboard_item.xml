@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:weightSum="5"
+    android:layout_margin="2dp"
+    android:background="@color/leader_item">
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="1"
+        android:id="@+id/player_position"
+        android:gravity="center"
+        android:textSize="44sp"
+        android:textColor="@android:color/white"
+        android:fontFamily="@font/roboto_bold"/>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:text="Shubham Pathak"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:id="@+id/player_name"
+            android:textColor="@android:color/white"
+            android:textSize="22sp"
+            android:fontFamily="@font/roboto_medium"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/player_name"
+            android:text="Z0_1241"
+            android:id="@+id/player_zealid"
+            android:textColor="@color/text_two"
+            android:textSize="18sp"
+            android:fontFamily="@font/roboto_thin"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="30"
+        android:id="@+id/player_score"
+        android:gravity="center"
+        android:textSize="44sp"
+        android:textColor="@color/score"
+        android:fontFamily="@font/roboto_bold"/>
+
+</LinearLayout>

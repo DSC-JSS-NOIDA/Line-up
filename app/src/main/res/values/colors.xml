@@ -18,4 +18,7 @@
 
     <color name="qr_green"> #138d75 </color>
     <color name="ripple">#05192E</color>
+    <color name="leaderboard"> #4a235a </color>
+    <color name="leader_item"> #6c3483 </color>
+    <color name="score"> #eb984e  </color>
 </resources>

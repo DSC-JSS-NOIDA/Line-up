@@ -59,7 +59,7 @@ public class QRCodeActivity extends AppCompatActivity {
         zealid = pref.getString("zealid", "zo1241");
         receiver = new NetworkReceiver();
 
-        Intent service = new Intent(this, LocationFinderService.class);
+        final Intent service = new Intent(this, LocationFinderService.class);
         ContextCompat.startForegroundService(this, service);
         Log.e(TAG, "onCreate: ");
 
@@ -89,6 +89,7 @@ public class QRCodeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 pref.edit().clear().apply();
                 Intent start = new Intent(QRCodeActivity.this, MainActivity.class);
+                stopService(service);
                 finishAffinity();
                 startActivity(start);
             }

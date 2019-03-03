@@ -23,6 +23,7 @@ public class InstructionsActivity extends IntroActivity {
                 .image(R.drawable.ic_security)
                 .background(R.color.grant)
                 .scrollable(false)
+                .canGoBackward(false)
                 .build());
 
         addSlide(new SimpleSlide.Builder()
