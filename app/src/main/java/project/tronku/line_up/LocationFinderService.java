@@ -45,6 +45,7 @@ public class LocationFinderService extends Service {
     private Handler handler;
     private int delay = 10000;
     private boolean isConnected;
+    private boolean start;
     private LocationRequest request;
 
     @Nullable
@@ -67,27 +68,34 @@ public class LocationFinderService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e(TAG, "onStartCommand: ");
-        getLocation();
+        if (pref.contains("token")) {
+            getLocation();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (pref.contains("token")) {
+                        getLocation();
+                        handler.postDelayed(this, delay);
+                    }
+                    else
+                        stopForeground(true);
+                }
+            }, delay);
 
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getLocation();
-                handler.postDelayed(this, delay);
-            }
-        }, delay);
+            Intent startActivity = new Intent(this, QRCodeActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, startActivity, 0);
 
-        Intent startActivity = new Intent(this, QRCodeActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, startActivity, 0);
+            Notification notification = new NotificationCompat.Builder(getApplicationContext(), NOTIF_CHANNEL_ID)
+                    .setContentTitle("Line-up")
+                    .setContentText("GPS location is getting used.")
+                    .setSmallIcon(R.drawable.location_player)
+                    .setContentIntent(pendingIntent)
+                    .build();
 
-        Notification notification = new NotificationCompat.Builder(getApplicationContext(), NOTIF_CHANNEL_ID)
-                .setContentTitle("Line-up")
-                .setContentText("GPS location is getting used.")
-                .setSmallIcon(R.drawable.location_player)
-                .setContentIntent(pendingIntent)
-                .build();
-
-        startForeground(1, notification);
+            startForeground(1, notification);
+        }
+        else
+            stopForeground(true);
 
         return START_STICKY;
     }
@@ -101,7 +109,6 @@ public class LocationFinderService extends Service {
     private void getLocation() {
         Log.e(TAG, "getLocation: ");
         isConnected = Boolean.parseBoolean(pref.getString("connected", "true"));
-
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             //ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
@@ -125,7 +132,6 @@ public class LocationFinderService extends Service {
                 }
             }
         });
-
     }
 
     public void sendLocation(final double latitude, final double longitude) {

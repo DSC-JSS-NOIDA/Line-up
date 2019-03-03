@@ -20,8 +20,10 @@
         android:roundIcon="@drawable/line_up"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".YourRouteActivity"></activity>
-        <activity android:name=".LeaderboardActivity" />
+        <activity android:name=".YourRouteActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".LeaderboardActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".LocationRadarActivity"
             android:screenOrientation="portrait" />

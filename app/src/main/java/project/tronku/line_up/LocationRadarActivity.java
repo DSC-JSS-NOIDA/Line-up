@@ -22,7 +22,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -40,6 +42,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.skyfishjy.library.RippleBackground;
+
+import org.json.JSONObject;
 
 public class LocationRadarActivity extends AppCompatActivity {
 
@@ -235,7 +239,7 @@ public class LocationRadarActivity extends AppCompatActivity {
                     lng = longitude;
                     lat = latitude;
                     editor.apply();
-                    updatePositions();
+                    sendLocation(lat, lng);
                 }
             });
         }
@@ -248,5 +252,41 @@ public class LocationRadarActivity extends AppCompatActivity {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             getLocation();
         }
+    }
+
+    public void sendLocation(final double latitude, final double longitude) {
+        final String token = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("token", "token_no");
+
+        StringRequest locationReq = new StringRequest(Request.Method.PUT,API.BASE + API.LOCATION_SEND, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.e(TAG, " onResponse: " + response);
+                updatePositions();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, " onErrorResponse: " + error.toString());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams(){
+                Map<String,String> params = new HashMap<>();
+                params.put("lat", String.valueOf(latitude));
+                params.put("lng", String.valueOf(longitude));
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("Content-Type","application/x-www-form-urlencoded");
+                params.put("Authorization", "Bearer " + token);
+
+                return params;
+            }
+        };
+
+        LineUpApplication.getInstance().addToRequestQueue(locationReq);
     }
 }

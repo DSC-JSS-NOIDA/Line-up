@@ -147,6 +147,7 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
         super.onResume();
         scannerView.setResultHandler(this);
         scannerView.startCamera();
+        scannerView.setAutoFocus(true);
     }
 
     @Override

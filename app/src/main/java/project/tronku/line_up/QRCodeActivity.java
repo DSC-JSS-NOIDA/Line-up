@@ -2,6 +2,7 @@ package project.tronku.line_up;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.Constraints;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,6 +23,7 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.SyncStateContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +34,7 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
+import com.google.android.gms.common.internal.Constants;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
@@ -56,7 +59,7 @@ public class QRCodeActivity extends AppCompatActivity {
     public static final String TAG = "QRCodeActivty";
     private static final int CAMERA_PERMISSION_CODE = 2;
     public static final int GPS_PERMISSION_CODE = 3;
-    private Intent service;
+    private Intent startService;
     private PlayerPOJO currentUser;
     private ProgressBar loader;
 
@@ -75,8 +78,8 @@ public class QRCodeActivity extends AppCompatActivity {
         loader = findViewById(R.id.loader_qr);
 
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        startService = new Intent(this, LocationFinderService.class);
 
-        service = new Intent(this, LocationFinderService.class);
         receiver = new NetworkReceiver();
         startLocationService();
 
@@ -107,7 +110,6 @@ public class QRCodeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 pref.edit().clear().apply();
                 Intent start = new Intent(QRCodeActivity.this, MainActivity.class);
-                stopService(service);
                 finishAffinity();
                 startActivity(start);
             }
@@ -177,7 +179,7 @@ public class QRCodeActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, GPS_PERMISSION_CODE);
         }
         else
-            ContextCompat.startForegroundService(this, service);
+            ContextCompat.startForegroundService(this, startService);
     }
 
     public void Location(View view){
