@@ -271,7 +271,8 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:src="@drawable/facebook_white"
-                android:layout_margin="10dp"/>
+                android:layout_margin="7dp"
+                />
 
 
 
