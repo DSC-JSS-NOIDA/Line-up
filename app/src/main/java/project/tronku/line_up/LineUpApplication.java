@@ -19,7 +19,6 @@ public class LineUpApplication extends Application {
     private RequestQueue mRequestQueue;
     private static LineUpApplication instance;
 
-
     @Override
     public void onCreate() {
         super.onCreate();

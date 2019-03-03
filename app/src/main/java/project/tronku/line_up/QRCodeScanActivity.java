@@ -4,23 +4,20 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.zxing.Result;
@@ -34,12 +31,15 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
 
     private static final String TAG = "QRScanActivity";
     private SharedPreferences pref;
+    private double lat, lng;
+    private NetworkReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         scannerView = new ZXingScannerView(this);
         setContentView(scannerView);
+        receiver = new NetworkReceiver();
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     }
 
@@ -61,40 +61,43 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
             startActivity(mainActivity);
         }
 
-        double lat, lng;
         lat = Double.parseDouble(pref.getString("latitude", "28.4245"));
         lng = Double.parseDouble(pref.getString("longitude", "28.4245"));
 
-        validateQR(getApplicationContext(), rawResult.getText(), accessToken, lat, lng, new VolleyCallback() {
-            @Override
-            public void onSuccess(String response) {
-                Map<String, String> responseMap = new Gson().fromJson(response, new TypeToken<Map<String, String>>() {}.getType());
-                boolean valid = Boolean.valueOf(responseMap.get("valid"));
-                String msg = responseMap.get("message");
-                builder.setMessage(msg);
-                AlertDialog alert1 = builder.create();
-                alert1.show();
-            }
-
-            @Override
-            public void onError(int status, String error) {
-                if(status == HttpStatus.UNAUTHORIZED.value()){
-                    builder.setMessage("Please login to continue.");
-                    pref.edit().clear();
-                    Intent login = new Intent(QRCodeScanActivity.this, MainActivity.class);
-                    login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(login);
-                } else {
-                    builder.setMessage("Error scanning the code, please try again.");
+        if (receiver.isConnected()) {
+            validateQR(rawResult.getText(), accessToken, new VolleyCallback() {
+                @Override
+                public void onSuccess(String response) {
+                    Map<String, String> responseMap = new Gson().fromJson(response, new TypeToken<Map<String, String>>() {}.getType());
+                    boolean valid = Boolean.valueOf(responseMap.get("valid"));
+                    String msg = responseMap.get("message");
+                    builder.setMessage(msg);
+                    AlertDialog alert1 = builder.create();
+                    alert1.show();
                 }
-                AlertDialog alert1 = builder.create();
-                alert1.show();
-            }
-        });
+
+                @Override
+                public void onError(int status, String error) {
+                    if(status == HttpStatus.UNAUTHORIZED.value()){
+                        builder.setMessage("Please login to continue.");
+                        pref.edit().clear().apply();
+                        Intent login = new Intent(QRCodeScanActivity.this, MainActivity.class);
+                        login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(login);
+                    } else {
+                        builder.setMessage("Error scanning the code, please try again.");
+                    }
+                    AlertDialog alert1 = builder.create();
+                    alert1.show();
+                }
+            });
+        }
+        else
+            Toast.makeText(this, "No internet!", Toast.LENGTH_SHORT).show();
+
     }
 
-    private void validateQR(Context applicationContext, final String scannedCode, final String accessToken, final double lat, final double lng, final VolleyCallback volleyCallback) {
-        RequestQueue queue = Volley.newRequestQueue(applicationContext);
+    private void validateQR(final String scannedCode, final String accessToken, final VolleyCallback volleyCallback) {
         StringRequest sr = new StringRequest(Request.Method.POST,API.BASE + API.VALIDATE_QR, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -126,8 +129,7 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
                 return params;
             }
         };
-        queue.add(sr);
-
+        LineUpApplication.getInstance().addToRequestQueue(sr);
     }
 
     private String getAccessToken() {
@@ -149,5 +151,18 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
     public void onPause() {
         super.onPause();
         scannerView.stopCamera();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(receiver, filter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(receiver);
     }
 }
