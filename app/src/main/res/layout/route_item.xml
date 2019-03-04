@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="140dp"
     android:layout_marginStart="2dp"
     android:layout_marginEnd="2dp">
 
@@ -38,9 +38,39 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="90dp"
+        android:layout_gravity="end"
+        android:orientation="vertical"
+        android:layout_marginEnd="10dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lat: "
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:id="@+id/latitude"
+            android:textColor="@color/text_two"
+            android:textSize="12sp"
+            android:fontFamily="@font/roboto_medium"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lng:"
+            android:id="@+id/longitude"
+            android:textColor="@color/text_two"
+            android:textSize="12sp"
+            android:fontFamily="@font/roboto_medium"/>
+
+    </LinearLayout>
+
     <View
         android:layout_width="16dp"
-        android:layout_height="70dp"
+        android:layout_height="60dp"
         android:id="@+id/hanger"
         android:background="@color/colorAccent"
         android:layout_marginStart="30dp"

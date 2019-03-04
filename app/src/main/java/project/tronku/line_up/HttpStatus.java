@@ -18,7 +18,7 @@ public enum HttpStatus {
     REQUEST_TIMEOUT(408, "Request Timeout"),
     CONFLICT(409, "Conflict"),
     UNSUPPORTED_MEDIA_TYPE(415, "Unsupported Media Type"),
-
+    PRECONDITION_REQUIRED(428, "Precondition Required"),
     INTERNAL_SERVER_ERROR(500, "Internal Server Error"),
     BAD_GATEWAY(502, "Bad Gateway"),
     SERVICE_UNAVAILABLE(503, "Service Unavailable"),

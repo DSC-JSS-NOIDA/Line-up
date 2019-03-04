@@ -7,6 +7,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -22,14 +23,21 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -43,10 +51,8 @@ public class LocationFinderService extends Service {
     private static final String TAG = "LocationFinder";
     private double latitude, longitude;
     private Handler handler;
-    private int delay = 10000;
+    private int delay = 15000;
     private boolean isConnected;
-    private boolean start;
-    private LocationRequest request;
 
     @Nullable
     @Override
@@ -59,9 +65,7 @@ public class LocationFinderService extends Service {
         super.onCreate();
         handler = new Handler();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
-        request = new LocationRequest();
-        request.setInterval(delay);
-        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     }
 
@@ -109,6 +113,7 @@ public class LocationFinderService extends Service {
     private void getLocation() {
         Log.e(TAG, "getLocation: ");
         isConnected = Boolean.parseBoolean(pref.getString("connected", "true"));
+
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             //ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
@@ -168,5 +173,7 @@ public class LocationFinderService extends Service {
 
         LineUpApplication.getInstance().addToRequestQueue(locationReq);
     }
+
+
 
 }

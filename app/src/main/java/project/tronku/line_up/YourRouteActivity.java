@@ -8,17 +8,23 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class YourRouteActivity extends AppCompatActivity {
 
@@ -30,6 +36,9 @@ public class YourRouteActivity extends AppCompatActivity {
     private NetworkReceiver receiver;
     private RouteAdapter adapter;
     private TextView noMembers;
+    private SharedPreferences pref;
+    private TextView score;
+    private int myScore, myPosition;
 
     private ArrayList<PlayerPOJO> teammatesFound = new ArrayList<>();
 
@@ -45,11 +54,17 @@ public class YourRouteActivity extends AppCompatActivity {
         swipeRefreshLayout = findViewById(R.id.swipe_route);
         recyclerView = findViewById(R.id.route_recyclerview);
         noMembers  = findViewById(R.id.no_members);
+        score = findViewById(R.id.score_pos);
+        pref = PreferenceManager.getDefaultSharedPreferences(this);
         receiver = new NetworkReceiver();
         adapter = new RouteAdapter(this, teammatesFound);
 
         updateRoute();
 
+        myScore = pref.getInt("score", 0);
+        myPosition = pref.getInt("position", 0);
+
+        score.setText(getString(R.string.scorepos, myScore, myPosition));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -82,6 +97,13 @@ public class YourRouteActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(String response) {
                         if(response != null){
+                            Map<String, Object> responseMap = new Gson().fromJson(response, new TypeToken<Map<String, Object>>() {}.getType());
+                            myScore = (int) Double.parseDouble(responseMap.get("score").toString());
+                            myPosition = (int) Double.parseDouble(responseMap.get("position").toString());
+                            Log.e(TAG, "onSuccess: " + myScore + " " + myPosition);
+                            pref.edit().putInt("score", 0).apply();
+                            pref.edit().putInt("position", 0).apply();
+                            score.setText(getString(R.string.scorepos, myScore, myPosition));
                             teammatesFound = new ArrayList<>(Helper.getPlayersFromResponse(response));
                             if (teammatesFound.size() == 0) {
                                 noMembers.setVisibility(View.VISIBLE);

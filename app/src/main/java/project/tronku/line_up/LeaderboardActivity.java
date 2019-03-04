@@ -102,7 +102,6 @@ public class LeaderboardActivity extends AppCompatActivity {
                     public void onSuccess(String response) {
                         if(response != null){
                             players = new ArrayList<>(getPlayersFromResponse(response));
-                            Log.e(TAG, "onSuccess: " + players.get(0));
                             adapter.updateList(players);
                             recyclerView.setLayoutManager(new LinearLayoutManager(LeaderboardActivity.this));
                             recyclerView.setAdapter(adapter);
