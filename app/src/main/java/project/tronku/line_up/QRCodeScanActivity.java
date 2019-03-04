@@ -19,6 +19,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.google.zxing.Result;
 
@@ -79,15 +82,21 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
 
                 @Override
                 public void onError(int status, String error) {
-                    if(status == HttpStatus.UNAUTHORIZED.value()){
-                        builder.setMessage("Please login to continue.");
+
+                    JsonParser jsonParser = new JsonParser();
+                    JsonObject jsonObject = jsonParser.parse(error).getAsJsonObject();
+                    String errorString = "Error scanning the code, please try again.";
+                    if(status == HttpStatus.UNAUTHORIZED.value()) {
+                        errorString = "Please login to continue.";
                         pref.edit().clear().apply();
-                        Intent login = new Intent(QRCodeScanActivity.this, MainActivity.class);
-                        login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(login);
-                    } else {
-                        builder.setMessage("Error scanning the code, please try again.");
+                    }else if(jsonObject.has("error")){
+                        errorString = jsonObject.get("error") instanceof JsonNull ? errorString : jsonObject.get("error").getAsString();
                     }
+                    builder.setMessage(errorString);
+                    /*Intent login = new Intent(QRCodeScanActivity.this, MainActivity.class);
+                    login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(login);*/
+
                     AlertDialog alert1 = builder.create();
                     alert1.show();
                 }
