@@ -159,7 +159,7 @@ public class Helper {
 
     private static Date getDateFromString(String dateString) throws ParseException {
         DateFormat formatterIST = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
-        formatterIST.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+        formatterIST.setTimeZone(TimeZone.getTimeZone("UTC"));
         Date date = formatterIST.parse(dateString);
         Log.i(TAG, "Helper parse date {}" + formatterIST.format(date));
         return date;

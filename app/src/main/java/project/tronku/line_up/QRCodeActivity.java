@@ -176,7 +176,10 @@ public class QRCodeActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(int status, String error) {
-                        if(status == HttpStatus.UNAUTHORIZED.value()){
+
+                        if(status == HttpStatus.PRECONDITION_REQUIRED.value()){
+                            startActivity(new Intent(QRCodeActivity.this, CountDownTimerActivity.class));
+                        }else if(status == HttpStatus.UNAUTHORIZED.value()){
                             Toast.makeText(QRCodeActivity.this, "Please login to perform this action.", Toast.LENGTH_SHORT).show();
                             LineUpApplication.getInstance().getDefaultSharedPreferences().edit().clear().apply();
                             Intent login = new Intent(QRCodeActivity.this, MainActivity.class);
@@ -307,30 +310,17 @@ public class QRCodeActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(receiver, filter);
 
-        if(pref.contains("uniqueCode")){
+       /* if(pref.contains("uniqueCode")){
             uniqueCode = pref.getString("uniqueCode", "Data missing");
             updateQR();
-        } else{
+        } else{*/
             loader.setVisibility(View.VISIBLE);
             updateUniqueCode();
-        }
+       // }
 
 
     }
 
-    private void fetchEventDetails() {
-        RequestFuture<JSONObject> future = RequestFuture.newFuture();
-        JsonObjectRequest request = new JsonObjectRequest(API.BASE + API.EVENT_DETAILS, new JSONObject(), future, future);
-        LineUpApplication.getInstance().getRequestQueue().add(request);
-
-        try {
-            JSONObject response = future.get(); // this will block
-        } catch (InterruptedException e) {
-            // exception handling
-        } catch (ExecutionException e) {
-            // exception handling
-        }
-    }
 
     private void updateQR(){
         loader.setVisibility(View.INVISIBLE);

@@ -1,8 +1,9 @@
 package project.tronku.line_up;
 
 public class API {
-    public static final String BASE = "https://dsccode.tk";
-//    public static final String BASE = "http://192.168.1.15:8080";
+    //public static final String BASE = "https://dsccode.tk";
+    public static final String BASE = "http://3.82.83.237";
+    //public static final String BASE = "http://192.168.1.15:8080";
     public static final String SIGN_UP = "/api/signup";
     public static final String LOGIN = "/oauth/token";
     public static final String VALIDATE_QR = "/api/validate_scan";

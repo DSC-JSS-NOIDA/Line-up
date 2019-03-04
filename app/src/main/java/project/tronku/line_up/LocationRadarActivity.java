@@ -110,7 +110,7 @@ public class LocationRadarActivity extends AppCompatActivity {
     private class Participant {
 
         private String username;
-        private int distance;
+        private String distance;
     }
 
     private void updatePositions() {
@@ -132,7 +132,7 @@ public class LocationRadarActivity extends AppCompatActivity {
                             for(int i = 0; i < Math.min(participants.size(), textViews.size()); i++){
                                 TextView textView = textViews.get(i);
                                 Participant participant = participants.get(i);
-                                textView.setText(participant.distance + "m");
+                                textView.setText(participant.distance);
                             }
 
                         } else{
@@ -183,7 +183,8 @@ public class LocationRadarActivity extends AppCompatActivity {
             JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
             Participant participant = new Participant();
             double distance = jsonObject.get("distance").getAsDouble();
-            participant.distance = (int)Math.round(distance);
+            String direction = jsonObject.get("direction").getAsString();
+            participant.distance = (int)Math.round(distance) + " m " + direction;
             participants.add(participant);
         }
         return participants;
