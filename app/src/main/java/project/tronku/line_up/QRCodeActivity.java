@@ -1,5 +1,6 @@
 package project.tronku.line_up;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.Constraints;
@@ -15,6 +16,7 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -32,9 +34,23 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.StringRequest;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.common.internal.Constants;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
@@ -45,7 +61,8 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class QRCodeActivity extends AppCompatActivity {
@@ -56,12 +73,17 @@ public class QRCodeActivity extends AppCompatActivity {
     private SharedPreferences pref;
     private CardView scanQR, locate, leaderboard, route, logout;
     private NetworkReceiver receiver;
+
     public static final String TAG = "QRCodeActivty";
+    private static final int REQUEST_CHECK_SETTINGS = 101;
     private static final int CAMERA_PERMISSION_CODE = 2;
-    public static final int GPS_PERMISSION_CODE = 3;
-    private Intent startService;
+    private static final int GPS_PERMISSION_CODE = 3;
+
     private PlayerPOJO currentUser;
     private ProgressBar loader;
+    private LocationRequest locationRequest;
+    private boolean needPermission = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,16 +100,16 @@ public class QRCodeActivity extends AppCompatActivity {
         loader = findViewById(R.id.loader_qr);
 
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        startService = new Intent(this, LocationFinderService.class);
 
         receiver = new NetworkReceiver();
+        askPermission();
+        getLatestLocation();
         startLocationService();
 
         leaderboard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(QRCodeActivity.this, LeaderboardActivity.class));
-
 //                Intent countDown = new Intent(QRCodeActivity.this, CountDownTimerActivity.class);
 //                startActivity(countDown);
 
@@ -122,7 +144,15 @@ public class QRCodeActivity extends AppCompatActivity {
             }
         });
 
+    }
 
+    private void startLocationService() {
+        if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) ||
+                (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, GPS_PERMISSION_CODE);
+        }
+        else
+            ContextCompat.startForegroundService(this, new Intent(this, LocationFinderService.class));
     }
 
     private void updateUniqueCode() {
@@ -173,13 +203,54 @@ public class QRCodeActivity extends AppCompatActivity {
         }
     }
 
-    private void startLocationService() {
+    private void askPermission() {
         if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) ||
                 (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, GPS_PERMISSION_CODE);
         }
-        else
-            ContextCompat.startForegroundService(this, startService);
+
+    }
+
+    private void getLatestLocation() {
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(2000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+
+        SettingsClient client = LocationServices.getSettingsClient(this);
+        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+
+        task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
+            @Override
+            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                LocationProvider provider = new LocationProvider(QRCodeActivity.this, locationRequest);
+                needPermission = provider.getLocation();
+                if (needPermission)
+                    askPermission();
+                else
+                    sendLocation();
+            }
+        });
+
+        task.addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if (e instanceof ResolvableApiException) {
+
+                    try {
+                        ResolvableApiException resolvable = (ResolvableApiException) e;
+                        resolvable.startResolutionForResult(QRCodeActivity.this,
+                                REQUEST_CHECK_SETTINGS);
+                    } catch (IntentSender.SendIntentException sendEx) {
+                        // Ignore the error.
+                    }
+                }
+            }
+        });
+
+
     }
 
     public void Location(View view){
@@ -204,9 +275,24 @@ public class QRCodeActivity extends AppCompatActivity {
             case GPS_PERMISSION_CODE: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startLocationService();
+                    getLatestLocation();
                 } else {
                     Toast.makeText(this, "Sorry, permission is not granted", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            case REQUEST_CHECK_SETTINGS: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    LocationProvider provider = new LocationProvider(QRCodeActivity.this, locationRequest);
+                    provider.getLocation();
+                    needPermission = provider.getLocation();
+                    if (needPermission)
+                        askPermission();
+                    else
+                        sendLocation();
+                } else {
+                    Toast.makeText(this, "Sorry, location is not accurate!", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -309,4 +395,42 @@ public class QRCodeActivity extends AppCompatActivity {
         }
 
     }
+
+    private void sendLocation() {
+        final double latitude = Double.parseDouble(pref.getString("latitude", "28.3525"));
+        final double longitude = Double.parseDouble(pref.getString("longitude", "77.35453"));
+        final String token = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("token", "token_no");
+        StringRequest locationReq = new StringRequest(Request.Method.PUT,API.BASE + API.LOCATION_SEND, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.e(TAG, " onResponse: " + response);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, " onErrorResponse: " + error.toString());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams(){
+                Map<String,String> params = new HashMap<>();
+                params.put("lat", String.valueOf(latitude));
+                params.put("lng", String.valueOf(longitude));
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("Content-Type","application/x-www-form-urlencoded");
+                params.put("Authorization", "Bearer " + token);
+
+                return params;
+            }
+        };
+
+        LineUpApplication.getInstance().addToRequestQueue(locationReq);
+    }
+
 }

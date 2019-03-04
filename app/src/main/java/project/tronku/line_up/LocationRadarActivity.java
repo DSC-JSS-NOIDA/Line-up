@@ -1,5 +1,6 @@
 package project.tronku.line_up;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -10,6 +11,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -28,9 +30,16 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -43,11 +52,15 @@ import java.util.Map;
 
 import com.skyfishjy.library.RippleBackground;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 public class LocationRadarActivity extends AppCompatActivity {
 
     private static final String TAG = "LocationRadarActivity";
+    private static final int REQUEST_CHECK_SETTINGS = 101;
+    private static final int GPS_PERMISSION_CODE = 3;
+
     private ImageView player1, player2, player3, player4;
     private TextView dis1, dis2, dis3, dis4;
     private RippleBackground rippleBackground;
@@ -59,6 +72,8 @@ public class LocationRadarActivity extends AppCompatActivity {
     private TextView loader;
     private NetworkReceiver receiver;
     private FusedLocationProviderClient fusedLocationClient;
+    private LocationRequest locationRequest;
+    private boolean needPermission = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +102,7 @@ public class LocationRadarActivity extends AppCompatActivity {
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updatePositions();
+                getLatestLocation();
             }
         });
     }
@@ -177,6 +192,9 @@ public class LocationRadarActivity extends AppCompatActivity {
 
     private void fetchNearestParticipants(final String accessToken, final VolleyCallback volleyCallback) {
 
+        lat = Double.parseDouble(pref.getString("latitude", "28.5325"));
+        lng = Double.parseDouble(pref.getString("longitude", "77.364"));
+
         String url = API.BASE + API.NEAREST_NEIGHBOUR + "?lat=" + lat + "&lng=" + lng;
         StringRequest sr = new StringRequest(Request.Method.GET,url, new Response.Listener<String>() {
             @Override
@@ -208,7 +226,7 @@ public class LocationRadarActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        getLocation();
+        getLatestLocation();
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(receiver, filter);
     }
@@ -239,7 +257,7 @@ public class LocationRadarActivity extends AppCompatActivity {
                     lng = longitude;
                     lat = latitude;
                     editor.apply();
-                    sendLocation(lat, lng);
+                    //sendLocation(lat, lng);
                 }
             });
         }
@@ -247,46 +265,119 @@ public class LocationRadarActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == RESULT_OK) {
-            getLocation();
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NotNull String permissions[], @NotNull int[] grantResults) {
+        switch (requestCode) {
+
+            case GPS_PERMISSION_CODE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getLatestLocation();
+                } else {
+                    Toast.makeText(this, "Sorry, permission is not granted", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            case REQUEST_CHECK_SETTINGS: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    LocationProvider provider = new LocationProvider(LocationRadarActivity.this, locationRequest);
+                    provider.getLocation();
+                    needPermission = provider.getLocation();
+                    if (needPermission)
+                        askPermission();
+                } else {
+                    Toast.makeText(this, "Sorry, location is not accurate!", Toast.LENGTH_SHORT).show();
+                }
+            }
         }
     }
 
-    public void sendLocation(final double latitude, final double longitude) {
-        final String token = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("token", "token_no");
+//    public void sendLocation(final double latitude, final double longitude) {
+//        final String token = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("token", "token_no");
+//
+//        StringRequest locationReq = new StringRequest(Request.Method.PUT,API.BASE + API.LOCATION_SEND, new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//                Log.e(TAG, " onResponse: " + response);
+//                updatePositions();
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.e(TAG, " onErrorResponse: " + error.toString());
+//            }
+//        }){
+//            @Override
+//            protected Map<String, String> getParams(){
+//                Map<String,String> params = new HashMap<>();
+//                params.put("lat", String.valueOf(latitude));
+//                params.put("lng", String.valueOf(longitude));
+//                return params;
+//            }
+//
+//            @Override
+//            public Map<String, String> getHeaders() throws AuthFailureError {
+//                Map<String,String> params = new HashMap<>();
+//                params.put("Content-Type","application/x-www-form-urlencoded");
+//                params.put("Authorization", "Bearer " + token);
+//
+//                return params;
+//            }
+//        };
+//
+//        LineUpApplication.getInstance().addToRequestQueue(locationReq);
+//    }
 
-        StringRequest locationReq = new StringRequest(Request.Method.PUT,API.BASE + API.LOCATION_SEND, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.e(TAG, " onResponse: " + response);
-                updatePositions();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, " onErrorResponse: " + error.toString());
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams(){
-                Map<String,String> params = new HashMap<>();
-                params.put("lat", String.valueOf(latitude));
-                params.put("lng", String.valueOf(longitude));
-                return params;
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String,String> params = new HashMap<>();
-                params.put("Content-Type","application/x-www-form-urlencoded");
-                params.put("Authorization", "Bearer " + token);
-
-                return params;
-            }
-        };
-
-        LineUpApplication.getInstance().addToRequestQueue(locationReq);
+    private void askPermission() {
+        if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) ||
+                (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, GPS_PERMISSION_CODE);
+        }
+        else
+            getLatestLocation();
     }
+
+    private void getLatestLocation() {
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(2000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+
+        SettingsClient client = LocationServices.getSettingsClient(this);
+        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+
+        task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
+            @Override
+            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                LocationProvider provider = new LocationProvider(LocationRadarActivity.this, locationRequest);
+                needPermission = provider.getLocation();
+                if (needPermission)
+                    askPermission();
+                else
+                    updatePositions();
+            }
+        });
+
+        task.addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if (e instanceof ResolvableApiException) {
+
+                    try {
+                        ResolvableApiException resolvable = (ResolvableApiException) e;
+                        resolvable.startResolutionForResult(LocationRadarActivity.this,
+                                REQUEST_CHECK_SETTINGS);
+                    } catch (IntentSender.SendIntentException sendEx) {
+                        // Ignore the error.
+                    }
+                }
+            }
+        });
+
+
+    }
+
 }

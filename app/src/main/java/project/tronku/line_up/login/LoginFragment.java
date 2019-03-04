@@ -81,6 +81,7 @@ public class LoginFragment extends Fragment implements project.tronku.line_up.lo
 
         zealIdEditText = inflate.findViewById(R.id.zeal_id_login);
         passwordEditText = inflate.findViewById(R.id.password_login);
+        passwordEditText.setTypeface(getContext().getResources().getFont(R.font.roboto_thin));
         layer = inflate.findViewById(R.id.login_layer);
         loader = inflate.findViewById(R.id.login_loader);
         visible = inflate.findViewById(R.id.visible);

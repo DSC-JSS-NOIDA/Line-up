@@ -12,4 +12,5 @@
     <string name="phone_no">Phone no</string>
     <string name="zeal_id">Zeal id</string>
     <string name="title_activity_location_radar">LocationRadar</string>
+    <string name="scorepos">Score: %1$d, Position: %2$d</string>
 </resources>
