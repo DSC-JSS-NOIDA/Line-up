@@ -30,12 +30,14 @@ import com.google.gson.JsonParser;
 
 import org.json.JSONObject;
 
+import java.sql.Time;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class LeaderboardActivity extends AppCompatActivity {
 
@@ -152,7 +154,9 @@ public class LeaderboardActivity extends AppCompatActivity {
             playerPOJO.setZealId(user.get("zeal_id").getAsString());
 
             long millis = user.get("totalTimeTaken").getAsLong() / 1000;
-            playerPOJO.setTimeTaken(String.format(Locale.UK, "%d:%02d:%02d", millis / 3600, (millis % 3600) / 60, (millis % 60)));
+            long hour = TimeUnit.SECONDS.toHours(millis);
+            long min = TimeUnit.SECONDS.toMinutes(millis - hour*60*60);
+            playerPOJO.setTimeTaken(String.format(Locale.UK, "%dh %02dm", hour, min));
             playerPOJOList.add(playerPOJO);
         }
         return playerPOJOList;

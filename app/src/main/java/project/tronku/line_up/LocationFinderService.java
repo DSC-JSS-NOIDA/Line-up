@@ -23,16 +23,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.google.android.gms.common.api.ResolvableApiException;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +36,6 @@ import static project.tronku.line_up.LineUpApplication.NOTIF_CHANNEL_ID;
 
 public class LocationFinderService extends Service {
 
-    private FusedLocationProviderClient fusedLocationClient;
     private SharedPreferences pref;
     private static final String TAG = "LocationFinder";
     private double latitude, longitude;
@@ -64,8 +53,6 @@ public class LocationFinderService extends Service {
     public void onCreate() {
         super.onCreate();
         handler = new Handler();
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
-
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     }
 
@@ -114,29 +101,33 @@ public class LocationFinderService extends Service {
         Log.e(TAG, "getLocation: ");
         isConnected = Boolean.parseBoolean(pref.getString("connected", "true"));
 
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            //ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            return;
+//        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+//                ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            //ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+//            return;
+//        }
+//
+//        fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+//            @Override
+//            public void onSuccess(Location location) {
+//                latitude = location.getLatitude();
+//                longitude = location.getLongitude();
+//                Log.e(TAG, "lat: " + latitude + "; long: " + longitude);
+//
+//                SharedPreferences.Editor editor = pref.edit();
+//                editor.putString("latitude", String.valueOf(latitude));
+//                editor.putString("longitude", String.valueOf(longitude));
+//                editor.apply();
+//
+//
+//            }
+//        });
+
+        if (isConnected) {
+            longitude = Double.parseDouble(pref.getString("longitude", "77.3255"));
+            latitude = Double.parseDouble(pref.getString("latitude", "28.23525"));
+            sendLocation(latitude, longitude);
         }
-
-        fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
-                Log.e(TAG, "lat: " + latitude + "; long: " + longitude);
-
-                SharedPreferences.Editor editor = pref.edit();
-                editor.putString("latitude", String.valueOf(latitude));
-                editor.putString("longitude", String.valueOf(longitude));
-                editor.apply();
-
-                if (isConnected) {
-                    sendLocation(latitude, longitude);
-                }
-            }
-        });
     }
 
     public void sendLocation(final double latitude, final double longitude) {

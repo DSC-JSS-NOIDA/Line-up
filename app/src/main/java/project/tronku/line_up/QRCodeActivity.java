@@ -34,8 +34,13 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.common.internal.Constants;
 import com.google.android.gms.location.LocationRequest;
@@ -56,6 +61,8 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class QRCodeActivity extends AppCompatActivity {
@@ -222,6 +229,8 @@ public class QRCodeActivity extends AppCompatActivity {
                 needPermission = provider.getLocation();
                 if (needPermission)
                     askPermission();
+                else
+                    sendLocation();
             }
         });
 
@@ -280,6 +289,8 @@ public class QRCodeActivity extends AppCompatActivity {
                     needPermission = provider.getLocation();
                     if (needPermission)
                         askPermission();
+                    else
+                        sendLocation();
                 } else {
                     Toast.makeText(this, "Sorry, location is not accurate!", Toast.LENGTH_SHORT).show();
                 }
@@ -384,4 +395,42 @@ public class QRCodeActivity extends AppCompatActivity {
         }
 
     }
+
+    private void sendLocation() {
+        final double latitude = Double.parseDouble(pref.getString("latitude", "28.3525"));
+        final double longitude = Double.parseDouble(pref.getString("longitude", "77.35453"));
+        final String token = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("token", "token_no");
+        StringRequest locationReq = new StringRequest(Request.Method.PUT,API.BASE + API.LOCATION_SEND, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.e(TAG, " onResponse: " + response);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, " onErrorResponse: " + error.toString());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams(){
+                Map<String,String> params = new HashMap<>();
+                params.put("lat", String.valueOf(latitude));
+                params.put("lng", String.valueOf(longitude));
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("Content-Type","application/x-www-form-urlencoded");
+                params.put("Authorization", "Bearer " + token);
+
+                return params;
+            }
+        };
+
+        LineUpApplication.getInstance().addToRequestQueue(locationReq);
+    }
+
 }

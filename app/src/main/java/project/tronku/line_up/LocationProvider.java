@@ -68,8 +68,8 @@ public class LocationProvider {
                 pref.edit().putString("longitude", String.valueOf(longitude)).apply();
                 Log.e(TAG, "lat: " + latitude + "; long: " + longitude);
 
-                if (isConnected)
-                    sendLocation(latitude, longitude);
+//                if (isConnected)
+//                    sendLocation(latitude, longitude);
             }
         },null);
 
