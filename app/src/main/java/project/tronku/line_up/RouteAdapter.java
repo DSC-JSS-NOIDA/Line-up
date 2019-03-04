@@ -24,7 +24,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.route_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.member_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -34,8 +34,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
         holder.zealid.setText(list.get(position).getZealId());
         holder.lat.setText("Lat: " + list.get(position).getLat());
         holder.lng.setText("Lng: " + list.get(position).getLng());
-        if (position + 1 == list.size())
-            holder.hanger.setVisibility(View.INVISIBLE);
+
     }
 
     @Override
@@ -45,13 +44,11 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView name, zealid, lat, lng;
-        private View hanger;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.teammate_name);
             zealid = itemView.findViewById(R.id.teammate_zealid);
-            hanger = itemView.findViewById(R.id.hanger);
             lat = itemView.findViewById(R.id.latitude);
             lng = itemView.findViewById(R.id.longitude);
         }
