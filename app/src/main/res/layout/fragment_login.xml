@@ -6,10 +6,11 @@
     tools:context="project.tronku.line_up.login.LoginFragment">
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="56dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="92dp">
+        android:layout_marginTop="92dp"
+        android:background="@drawable/bubble">
 
         <ImageView
             android:layout_height="25dp"
@@ -27,7 +28,7 @@
             android:layout_gravity="center_horizontal"
             android:textColorHint="#8effffff"
             android:paddingEnd="32dp"
-            android:background="@drawable/bubble"
+            android:background="#00ffffff"
             android:gravity="center_vertical"
             android:paddingStart="42dp"
             android:hint="@string/zeal_id"
@@ -38,33 +39,56 @@
 
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="56dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="164dp">
+        android:layout_marginTop="164dp"
+        android:background="@drawable/bubble"
+        >
 
         <ImageView
             android:layout_height="25dp"
             android:layout_width="25dp"
             android:src="@drawable/lock"
             android:layout_margin="10dp"
-            android:layout_marginLeft="35dp"
+            android:layout_marginLeft="40dp"
+            android:layout_centerVertical="true"/>
+        <ImageView
+            android:id="@+id/invisible"
+            android:layout_height="25dp"
+            android:layout_width="25dp"
+            android:src="@drawable/invisible"
+            android:layout_margin="10dp"
+            android:layout_marginRight="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:visibility="visible"/>
+        <ImageView
+            android:id="@+id/visible"
+            android:layout_height="25dp"
+            android:layout_width="25dp"
+            android:src="@drawable/visible"
+            android:layout_margin="10dp"
+            android:visibility="invisible"
+            android:layout_marginRight="35dp"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"/>
 
         <EditText
             android:id="@+id/password_login"
-            android:layout_width="300dp"
+            android:layout_width="240dp"
             android:layout_height="56dp"
             android:paddingEnd="32dp"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/bubble"
             android:textColorHint="#8effffff"
             android:gravity="center_vertical"
             android:paddingStart="42dp"
             android:inputType="textPassword"
             android:hint="@string/password"
             android:fontFamily="@font/roboto_thin"
-            android:textColor="#ffffff" />
+            android:textColor="#ffffff"
+
+            android:background="#00FFFFFF"/>
 
     </RelativeLayout>
 

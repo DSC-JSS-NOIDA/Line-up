@@ -7,9 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.InputType;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,6 +40,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import project.tronku.line_up.API;
 import project.tronku.line_up.InstructionsActivity;
 import project.tronku.line_up.LineUpApplication;
@@ -48,6 +51,8 @@ import project.tronku.line_up.R;
 import androidx.fragment.app.Fragment;
 
 import static android.app.Activity.RESULT_OK;
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 
 public class LoginFragment extends Fragment implements project.tronku.line_up.login.OnLoginListener {
     private static final String TAG = "LoginFragment";
@@ -60,6 +65,7 @@ public class LoginFragment extends Fragment implements project.tronku.line_up.lo
     private ProgressBar loader;
     private SharedPreferences pref;
     private NetworkReceiver receiver;
+    private ImageView visible,invisible;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -78,9 +84,29 @@ public class LoginFragment extends Fragment implements project.tronku.line_up.lo
         passwordEditText.setTypeface(getContext().getResources().getFont(R.font.roboto_thin));
         layer = inflate.findViewById(R.id.login_layer);
         loader = inflate.findViewById(R.id.login_loader);
+        visible = inflate.findViewById(R.id.visible);
+        invisible = inflate.findViewById(R.id.invisible);
         receiver = new NetworkReceiver();
         pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        visible.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                passwordEditText.setTypeface(ResourcesCompat.getFont(getContext(), R.font.roboto_thin));
+                visible.setVisibility(INVISIBLE);
+                invisible.setVisibility(VISIBLE);
+            }
+        });
 
+        invisible.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                passwordEditText.setTypeface(ResourcesCompat.getFont(getContext(), R.font.roboto_thin));
+                invisible.setVisibility(INVISIBLE);
+                visible.setVisibility(VISIBLE);
+            }
+        });
         return inflate;
     }
 

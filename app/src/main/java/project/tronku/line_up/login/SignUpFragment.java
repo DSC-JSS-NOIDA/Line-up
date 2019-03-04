@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import com.google.android.material.snackbar.Snackbar;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import androidx.core.content.res.ResourcesCompat;
 import project.tronku.line_up.API;
 import project.tronku.line_up.LineUpApplication;
 import project.tronku.line_up.NetworkReceiver;
@@ -35,6 +37,9 @@ import project.tronku.line_up.R;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 
 public class SignUpFragment extends Fragment implements OnSignUpListener {
     private static final String TAG = "SignUpFragment";
@@ -44,6 +49,7 @@ public class SignUpFragment extends Fragment implements OnSignUpListener {
     private View layer;
     private ProgressBar loader;
     private NetworkReceiver receiver;
+    private ImageView visible,invisible;
 
     public SignUpFragment() {
         // Required empty public constructor
@@ -60,7 +66,30 @@ public class SignUpFragment extends Fragment implements OnSignUpListener {
         passwordEditText = inflate.findViewById(R.id.password_signup);
         layer = inflate.findViewById(R.id.signup_layer);
         loader = inflate.findViewById(R.id.signup_loader);
+        visible = inflate.findViewById(R.id.visible2);
+        invisible = inflate.findViewById(R.id.invisible2);
         receiver = new NetworkReceiver();
+
+
+        visible.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                passwordEditText.setTypeface(ResourcesCompat.getFont(getContext(), R.font.roboto_thin));
+                visible.setVisibility(INVISIBLE);
+                invisible.setVisibility(VISIBLE);
+            }
+        });
+
+        invisible.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                passwordEditText.setTypeface(ResourcesCompat.getFont(getContext(), R.font.roboto_thin));
+                invisible.setVisibility(INVISIBLE);
+                visible.setVisibility(VISIBLE);
+            }
+        });
 
         return inflate;
     }
