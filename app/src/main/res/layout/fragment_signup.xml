@@ -10,6 +10,8 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+
+
         <EditText
             android:id="@+id/name_signup"
             android:layout_width="300dp"
@@ -25,6 +27,8 @@
             android:fontFamily="@font/roboto_thin"
             android:textColor="#ffffff"
             android:textColorHint="#8effffff" />
+
+
 
         <EditText
             android:id="@+id/zeal_id_signup"
@@ -57,14 +61,20 @@
             android:fontFamily="@font/roboto_thin"
             android:textColor="#ffffff"
             android:textColorHint="#8effffff" />
-
-        <EditText
-            android:id="@+id/password_signup"
+        <RelativeLayout
             android:layout_width="300dp"
             android:layout_height="56dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
+
             android:background="@drawable/bubble"
+            android:gravity="center_vertical">
+        <EditText
+            android:id="@+id/password_signup"
+            android:layout_width="245dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center_horizontal"
+            android:background="#00ffffff"
             android:gravity="center_vertical"
             android:hint="@string/password"
             android:inputType="textPassword"
@@ -73,6 +83,28 @@
             android:fontFamily="@font/roboto_thin"
             android:paddingEnd="32dp"
             android:textColorHint="#8effffff" />
+
+        <ImageView
+            android:id="@+id/invisible2"
+            android:layout_height="25dp"
+            android:layout_width="25dp"
+            android:src="@drawable/invisible2"
+            android:layout_margin="10dp"
+            android:layout_marginRight="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:visibility="visible"/>
+        <ImageView
+            android:id="@+id/visible2"
+            android:layout_height="25dp"
+            android:layout_width="25dp"
+            android:src="@drawable/visible2"
+            android:layout_margin="10dp"
+            android:visibility="invisible"
+            android:layout_marginRight="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+        </RelativeLayout>
 
     </LinearLayout>
 

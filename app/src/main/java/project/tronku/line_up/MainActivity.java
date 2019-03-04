@@ -12,8 +12,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.InputType;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -29,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
     private LoginButton button;
     private boolean isLogin = true;
     private View view;
+    private EditText password;
+    private ImageView visible, invisible;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
         signUpFragment = findViewById(R.id.sign_up_fragment);
         wrapper = findViewById(R.id.wrapper);
         button = findViewById(R.id.button);
+        visible = findViewById(R.id.visible);
+        invisible = findViewById(R.id.invisible);
+        password=findViewById(R.id.password_login);
         view.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
 
         LoginFragment topLoginFragment = new LoginFragment();
@@ -65,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         loginFragment.setVisibility(INVISIBLE);
+
+
     }
 
 
@@ -87,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                     signUpFragment.setVisibility(INVISIBLE);
                     signUpFragment.setRotation(90);
                     wrapper.setDrawOrder(ORDER_LOGIN_STATE);
+
                 }
             });
         } else {
@@ -105,6 +116,17 @@ public class MainActivity extends AppCompatActivity {
         isLogin = !isLogin;
         button.startAnimation();
     }
+
+//    public void view_invisible(View view){
+//        password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+//        findViewById(R.id.invisible).setVisibility(INVISIBLE);
+//        findViewById(R.id.visible).setVisibility(VISIBLE);
+//    }
+//    public void view_visible(View view){
+//      password.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+//        findViewById(R.id.visible).setVisibility(INVISIBLE);
+//        findViewById(R.id.invisible).setVisibility(VISIBLE);
+//    }
 
     @Override
     protected void onStart() {
@@ -133,4 +155,5 @@ public class MainActivity extends AppCompatActivity {
         snackbarView.setBackgroundColor(getResources().getColor(R.color.qr));
         snackbar.show();
     }
+
 }
