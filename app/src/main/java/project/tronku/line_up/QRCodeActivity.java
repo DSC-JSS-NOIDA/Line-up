@@ -114,19 +114,18 @@ public class QRCodeActivity extends AppCompatActivity {
 
 
         ObjectAnimator animation_y1=ObjectAnimator.ofFloat(poke_top,"translationY",0f, -1500f);
-        animation_y1.setStartDelay(500);
-        animation_y1.setInterpolator(new AccelerateInterpolator());
+        animation_y1.setStartDelay(100);
         animation_y1.setDuration(1500);
         animation_y1.start();
+
         ObjectAnimator animation_y2=ObjectAnimator.ofFloat(poke_down,"translationY",0, 1500f);
-        animation_y1.setStartDelay(500);
-        animation_y2.setInterpolator(new AccelerateInterpolator());
+        animation_y1.setStartDelay(100);
         animation_y2.setDuration(1500);
         animation_y2.start();
 
         AlphaAnimation back=new AlphaAnimation(1.0f,0.0f);
-        back.setStartTime(500);
-        back.setDuration(2000);
+        back.setStartTime(100);
+        back.setDuration(3000);
         back.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {

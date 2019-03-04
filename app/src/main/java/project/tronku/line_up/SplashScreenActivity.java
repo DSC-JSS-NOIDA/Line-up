@@ -27,6 +27,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         loader = findViewById(R.id.loader);
 
         final Intent i=new Intent(SplashScreenActivity.this,MainActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         Thread timer=new Thread()
         {
             public void run()
