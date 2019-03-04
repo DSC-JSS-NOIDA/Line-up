@@ -44,8 +44,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.skyfishjy.ripplebackground:library:1.0.1'
-    implementation 'com.airbnb.android:lottie:2.8.0'
-    implementation 'jp.wasabeef:blurry:3.0.0'
+    implementation 'com.github.ibrahimsn98:android-particles:1.6'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.2-alpha01'

@@ -32,8 +32,11 @@ public class CountDownTimerActivity extends AppCompatActivity {
     private TextView minsView;
     private TextView secondsView;
     private TextView heading;
-
+    private CountDownTimer timer;
     private View view;
+    private long timeRemaining = 0L;
+    private int temp = -1;
+    final int flag = temp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,31 @@ public class CountDownTimerActivity extends AppCompatActivity {
         minsView = findViewById(R.id.mins);
         secondsView = findViewById(R.id.seconds);
         heading = findViewById(R.id.heading);
+
+        timer = new CountDownTimer(timeRemaining, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                int[] time = getTimeRemaining(millisUntilFinished);
+                daysView.setText(String.valueOf(time[0]));
+                hoursView.setText(String.valueOf(time[1]));
+                minsView.setText(String.valueOf(time[2]));
+                secondsView.setText(String.valueOf(time[3]));
+            }
+
+            public void onFinish() {
+                if(flag == 1){
+                    Toast.makeText(getApplicationContext(), "Sign Ups have started.", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(CountDownTimerActivity.this, MainActivity.class));
+                } else if(flag == 0){
+                    Toast.makeText(getApplicationContext(), "Game has started.", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(CountDownTimerActivity.this, QRCodeActivity.class));
+                } else{
+                    Toast.makeText(getApplicationContext(), Constants.ERROR_FETCHING_DATA, Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(CountDownTimerActivity.this, MainActivity.class));
+                }
+
+            }
+        };
     }
 
     @Override
@@ -61,9 +89,8 @@ public class CountDownTimerActivity extends AppCompatActivity {
                     EventDetails eventDetails = Helper.getEventDetailsFromJsonResponse(response);
                     Date now = new Date();
 
-                    long timeRemaining = 0L;
                     String headingText = "Game starts in: ";
-                    int temp = -1;
+
                     if(eventDetails.getSignUpStartTime().after(now)){
                         temp = 1;
                         headingText = "Sign Up starts in: ";
@@ -73,32 +100,9 @@ public class CountDownTimerActivity extends AppCompatActivity {
                         headingText = "Game starts in: ";
                         timeRemaining = eventDetails.getStartTime().getTime() - now.getTime();
                     }
-                    final int flag = temp;
                     heading.setText(String.valueOf(headingText));
-                    new CountDownTimer(timeRemaining, 1000) {
+                    timer.start();
 
-                        public void onTick(long millisUntilFinished) {
-                            int[] time = getTimeRemaining(millisUntilFinished);
-                            daysView.setText(String.valueOf(time[0]));
-                            hoursView.setText(String.valueOf(time[1]));
-                            minsView.setText(String.valueOf(time[2]));
-                            secondsView.setText(String.valueOf(time[3]));
-                        }
-
-                        public void onFinish() {
-                            if(flag == 1){
-                                Toast.makeText(getApplicationContext(), "Sign Ups have started.", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(CountDownTimerActivity.this, MainActivity.class));
-                            } else if(flag == 0){
-                                Toast.makeText(getApplicationContext(), "Game has started.", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(CountDownTimerActivity.this, QRCodeActivity.class));
-                            } else{
-                                Toast.makeText(getApplicationContext(), Constants.ERROR_FETCHING_DATA, Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(CountDownTimerActivity.this, MainActivity.class));
-                            }
-
-                        }
-                    }.start();
                 } catch (ParseException e) {
                     Toast.makeText(CountDownTimerActivity.this, Constants.ERROR_FETCHING_DATA, Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(CountDownTimerActivity.this, MainActivity.class));
@@ -127,6 +131,7 @@ public class CountDownTimerActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        timer.cancel();
         final Snackbar snackbar = Snackbar.make(view, "Are you sure you want to exit?", Snackbar.LENGTH_LONG);
         snackbar.setAction("YES", new View.OnClickListener() {
             @Override

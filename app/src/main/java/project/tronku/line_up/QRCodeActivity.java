@@ -156,7 +156,6 @@ public class QRCodeActivity extends AppCompatActivity {
     }
 
     private void updateUniqueCode() {
-
         String accessToken = LineUpApplication.getInstance().getAccessToken();
         if(accessToken == null){
             Intent mainActivity = new Intent(this, MainActivity.class);
@@ -200,8 +199,6 @@ public class QRCodeActivity extends AppCompatActivity {
                 });
             } else {
                 Toast.makeText(this, "No internet!", Toast.LENGTH_SHORT).show();
-                //layer.setVisibility(View.INVISIBLE);
-                //loader.setVisibility(View.INVISIBLE);
             }
         }
     }
@@ -321,15 +318,13 @@ public class QRCodeActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(receiver, filter);
 
-       /* if(pref.contains("uniqueCode")){
+        if(pref.contains("uniqueCode")){
             uniqueCode = pref.getString("uniqueCode", "Data missing");
             updateQR();
-        } else{*/
+        } else{
             loader.setVisibility(View.VISIBLE);
             updateUniqueCode();
-       // }
-
-
+        }
     }
 
 
@@ -353,7 +348,6 @@ public class QRCodeActivity extends AppCompatActivity {
     }
 
     public void call_shubham(View view) {
-
         Intent intent = new Intent(Intent.ACTION_DIAL);
         intent.setData(Uri.parse("tel:9643761192"));
         startActivity(intent);

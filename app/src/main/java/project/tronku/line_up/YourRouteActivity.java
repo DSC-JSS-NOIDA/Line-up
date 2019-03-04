@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import jp.wasabeef.blurry.Blurry;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,15 +32,17 @@ public class YourRouteActivity extends AppCompatActivity {
 
     private static final String TAG = "YourRouteActivity";
     private View layer;
-    private ProgressBar loader;
+    private ProgressBar loader, progressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private NetworkReceiver receiver;
     private RouteAdapter adapter;
     private TextView noMembers;
     private SharedPreferences pref;
-    private TextView score;
-    private int myScore, myPosition;
+    private TextView score, position, name, zealid;
+    private int myScore, myPosition, progress;
+    private String myName, myZealId;
+    private ImageView bg;
 
     private ArrayList<PlayerPOJO> teammatesFound = new ArrayList<>();
 
@@ -47,14 +51,22 @@ public class YourRouteActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_your_route);
+        setContentView(R.layout.activity_route);
 
         layer = findViewById(R.id.layer_route);
         loader = findViewById(R.id.loader_route);
         swipeRefreshLayout = findViewById(R.id.swipe_route);
         recyclerView = findViewById(R.id.route_recyclerview);
         noMembers  = findViewById(R.id.no_members);
-        score = findViewById(R.id.score_pos);
+        score = findViewById(R.id.score);
+        position = findViewById(R.id.position);
+        name = findViewById(R.id.player_name);
+        zealid = findViewById(R.id.player_zealid);
+        progressBar = findViewById(R.id.progress_member);
+        bg = findViewById(R.id.bg_route);
+
+        //Blurry.with(this).radius(25).capture(bg).into(bg);
+
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         receiver = new NetworkReceiver();
         adapter = new RouteAdapter(this, teammatesFound);
@@ -63,8 +75,16 @@ public class YourRouteActivity extends AppCompatActivity {
 
         myScore = pref.getInt("score", 0);
         myPosition = pref.getInt("position", 0);
+        myName = pref.getString("name", "Player Name");
+        myZealId = pref.getString("zealid", "Zeal id");
+        progress = pref.getInt("progress", 0);
 
-        score.setText(getString(R.string.scorepos, myScore, myPosition));
+        score.setText("" + myScore);
+        position.setText("" + myPosition);
+        name.setText(myName);
+        zealid.setText(myZealId);
+        progressBar.setProgress(progress*25);
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -100,11 +120,25 @@ public class YourRouteActivity extends AppCompatActivity {
                             Map<String, Object> responseMap = new Gson().fromJson(response, new TypeToken<Map<String, Object>>() {}.getType());
                             myScore = (int) Double.parseDouble(responseMap.get("score").toString());
                             myPosition = (int) Double.parseDouble(responseMap.get("position").toString());
+                            myName = responseMap.get("firstName").toString();
+                            myZealId = responseMap.get("zeal_id").toString();
+
                             Log.e(TAG, "onSuccess: " + myScore + " " + myPosition);
                             pref.edit().putInt("score", 0).apply();
                             pref.edit().putInt("position", 0).apply();
-                            score.setText(getString(R.string.scorepos, myScore, myPosition));
+                            pref.edit().putString("name", "Player Name").apply();
+                            pref.edit().putString("zealid", "Zeal id").apply();
+
+                            score.setText("" + myScore);
+                            position.setText("" + myPosition);
+                            name.setText(myName);
+                            zealid.setText(myZealId);
+
                             teammatesFound = new ArrayList<>(Helper.getPlayersFromResponse(response));
+                            progress = teammatesFound.size();
+                            pref.edit().putInt("progress", progress).apply();
+                            progressBar.setProgress(progress*25);
+
                             if (teammatesFound.size() == 0) {
                                 noMembers.setVisibility(View.VISIBLE);
                                 Toast.makeText(YourRouteActivity.this, "No teammates found!", Toast.LENGTH_SHORT).show();

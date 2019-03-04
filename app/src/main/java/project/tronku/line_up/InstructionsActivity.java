@@ -1,20 +1,36 @@
 package project.tronku.line_up;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.view.View;
 import android.widget.Toast;
 
 import com.heinrichreimersoftware.materialintro.app.IntroActivity;
 import com.heinrichreimersoftware.materialintro.slide.SimpleSlide;
 
+import project.tronku.line_up.timer.CountDownTimerActivity;
+
 
 public class InstructionsActivity extends IntroActivity {
+
+    private NetworkReceiver receiver;
+    private String uniqueCode, name;
+    private SharedPreferences pref;
+    private PlayerPOJO currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setFullscreen(true);
+
+        pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        receiver = new NetworkReceiver();
 
         addSlide(new SimpleSlide.Builder()
                 .title("Grant Permission")
@@ -52,4 +68,65 @@ public class InstructionsActivity extends IntroActivity {
 
     }
 
+    private void updateUniqueCode() {
+        String accessToken = LineUpApplication.getInstance().getAccessToken();
+        if(accessToken == null){
+            Intent mainActivity = new Intent(this, MainActivity.class);
+            LineUpApplication.getInstance().getDefaultSharedPreferences().edit().clear().apply();
+            finishAffinity();
+            startActivity(mainActivity);
+        } else{
+            if (receiver.isConnected()) {
+                Helper.fetchUserInfo(accessToken, new VolleyCallback(){
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onSuccess(String response) {
+                        if(response != null){
+                            currentUser = Helper.getPlayerFromJsonString(response);
+                            uniqueCode = currentUser.getUniqueCode();
+                            name = currentUser.getName();
+                            pref.edit().putString("uniqueCode", uniqueCode).apply();
+                            pref.edit().putString("name", name).apply();
+
+                        } else{
+                            Toast.makeText(InstructionsActivity.this, "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(int status, String error) {
+
+                        if(status == HttpStatus.PRECONDITION_REQUIRED.value()){
+                            startActivity(new Intent(InstructionsActivity.this, CountDownTimerActivity.class));
+                        }else if(status == HttpStatus.UNAUTHORIZED.value()){
+                            Toast.makeText(InstructionsActivity.this, "Please login to perform this action.", Toast.LENGTH_SHORT).show();
+                            LineUpApplication.getInstance().getDefaultSharedPreferences().edit().clear().apply();
+                            Intent login = new Intent(InstructionsActivity.this, MainActivity.class);
+                            finishAffinity();
+                            startActivity(login);
+                        } else{
+                            Toast.makeText(InstructionsActivity.this, "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(InstructionsActivity.this, MainActivity.class));
+                        }
+                    }
+                });
+            } else {
+                Toast.makeText(this, "No internet!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(receiver, filter);
+        updateUniqueCode();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(receiver);
+    }
 }
