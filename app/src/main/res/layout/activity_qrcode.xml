@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<ScrollView
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+
+
+<ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -291,3 +296,19 @@
     </LinearLayout>
 
 </ScrollView>
+    <View
+        android:id="@+id/black_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000"/>
+    <ImageView
+        android:id="@+id/pokeball_top"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/pokeball_01"/>
+    <ImageView
+        android:id="@+id/pokeball_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/pokeball_02"/>
+</FrameLayout>
