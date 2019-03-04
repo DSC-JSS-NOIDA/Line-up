@@ -4,12 +4,17 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -36,6 +41,8 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
     private SharedPreferences pref;
     private double lat, lng;
     private NetworkReceiver receiver;
+    private MediaPlayer success, failure;
+    private Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +51,8 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
         setContentView(scannerView);
         receiver = new NetworkReceiver();
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        success = MediaPlayer.create(this, R.raw.pikachu);
+        failure = MediaPlayer.create(this, R.raw.short_pika);
     }
 
 
@@ -74,6 +83,14 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
                 public void onSuccess(String response) {
                     Map<String, String> responseMap = new Gson().fromJson(response, new TypeToken<Map<String, String>>() {}.getType());
                     boolean valid = Boolean.valueOf(responseMap.get("valid"));
+                    if (valid) {
+                        success.start();
+                        success.setLooping(false);
+                    }
+                    else {
+                        failure.start();
+                        failure.setLooping(false);
+                    }
                     String msg = responseMap.get("message");
                     builder.setMessage(msg);
                     AlertDialog alert1 = builder.create();
@@ -101,6 +118,13 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
                     alert1.show();
                 }
             });
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                v.vibrate(500);
+            }
+
         }
         else
             Toast.makeText(this, "No internet!", Toast.LENGTH_SHORT).show();

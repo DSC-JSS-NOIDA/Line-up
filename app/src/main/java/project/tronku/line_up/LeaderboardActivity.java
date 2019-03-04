@@ -85,12 +85,8 @@ public class LeaderboardActivity extends AppCompatActivity {
         layer.setVisibility(View.VISIBLE);
         loader.setVisibility(View.VISIBLE);
         swipeRefreshLayout.setEnabled(false);
-        recyclerView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
+        recyclerView.setVisibility(View.INVISIBLE);
+
         players.clear();
         updateLeaderboard();
     }
@@ -120,12 +116,7 @@ public class LeaderboardActivity extends AppCompatActivity {
                         loader.setVisibility(View.INVISIBLE);
                         swipeRefreshLayout.setRefreshing(false);
                         swipeRefreshLayout.setEnabled(true);
-                        recyclerView.setOnTouchListener(new View.OnTouchListener() {
-                            @Override
-                            public boolean onTouch(View v, MotionEvent event) {
-                                return false;
-                            }
-                        });
+                        recyclerView.setVisibility(View.VISIBLE);
                     }
 
                     @Override

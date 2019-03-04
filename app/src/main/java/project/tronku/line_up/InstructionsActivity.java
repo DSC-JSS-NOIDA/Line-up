@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -75,6 +76,7 @@ public class InstructionsActivity extends IntroActivity {
     private void setRandomPokemon() {
         Random random = new Random();
         int i = random.nextInt(6);
+        Toast.makeText(this, "Pokemon", Toast.LENGTH_SHORT).show();
         switch (i) {
             case 0 : pref.edit().putString("avatar", "a").apply();
             case 1 : pref.edit().putString("avatar", "b").apply();
@@ -83,7 +85,7 @@ public class InstructionsActivity extends IntroActivity {
             case 4 : pref.edit().putString("avatar", "e").apply();
             case 5 : pref.edit().putString("avatar", "f").apply();
         }
-
+        Log.e("pokemon", "setRandomPokemon: " + i);
     }
 
     private void updateUniqueCode() {
@@ -104,6 +106,7 @@ public class InstructionsActivity extends IntroActivity {
                             uniqueCode = currentUser.getUniqueCode();
                             name = currentUser.getName();
                             pref.edit().putString("uniqueCode", uniqueCode).apply();
+                            Log.e("CODE", "onSuccess: " + uniqueCode);
                             pref.edit().putString("name", name).apply();
 
                         } else{

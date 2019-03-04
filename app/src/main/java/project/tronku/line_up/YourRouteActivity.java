@@ -65,8 +65,6 @@ public class YourRouteActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progress_member);
         pokemon = findViewById(R.id.pokemon_img);
 
-        //Blurry.with(this).radius(25).capture(bg).into(bg);
-
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         receiver = new NetworkReceiver();
         adapter = new RouteAdapter(this, teammatesFound);
@@ -111,18 +109,14 @@ public class YourRouteActivity extends AppCompatActivity {
             case "e" : pokemon.setImageResource(R.drawable.pokemone);
             case "f" : pokemon.setImageResource(R.drawable.pokemonf);
         }
+        Log.e(TAG, "updatePokemon: " + pokemonCode);
     }
 
     private void updateRoute() {
         layer.setVisibility(View.VISIBLE);
         loader.setVisibility(View.VISIBLE);
         swipeRefreshLayout.setEnabled(false);
-        recyclerView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
+        recyclerView.setVisibility(View.INVISIBLE);
 
         String accessToken = LineUpApplication.getInstance().getAccessToken();
         if(accessToken == null){
@@ -175,12 +169,7 @@ public class YourRouteActivity extends AppCompatActivity {
                         loader.setVisibility(View.INVISIBLE);
                         swipeRefreshLayout.setRefreshing(false);
                         swipeRefreshLayout.setEnabled(true);
-                        recyclerView.setOnTouchListener(new View.OnTouchListener() {
-                            @Override
-                            public boolean onTouch(View v, MotionEvent event) {
-                                return false;
-                            }
-                        });
+                        recyclerView.setVisibility(View.VISIBLE);
                     }
 
                     @Override
