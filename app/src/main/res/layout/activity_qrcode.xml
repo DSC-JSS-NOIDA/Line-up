@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:background = "#312f2f">
 
     <me.ibrahimsn.particle.ParticleView
         android:id="@+id/particleView"
@@ -136,7 +137,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@id/locate_icon"
-                        android:text="Locate Mates"
+                        android:text="Line-up Radar"
                         android:textSize="18sp"
                         android:layout_marginStart="14dp"
                         android:fontFamily="@font/roboto_medium"
@@ -314,24 +315,24 @@
         android:scaleType="centerCrop"
         android:src="@drawable/small_poke_top"/>
 
-    <View
-        android:id="@+id/black_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#000"/>
+    <!--<View-->
+        <!--android:id="@+id/black_background"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@android:color/black"/>-->
 
-    <ImageView
-        android:id="@+id/pokeball_top"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/pokeball_01"/>
+    <!--<ImageView-->
+        <!--android:id="@+id/pokeball_top"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:scaleType="centerCrop"-->
+        <!--android:src="@drawable/pokeball_01"/>-->
 
-    <ImageView
-        android:id="@+id/pokeball_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/pokeball_02"/>
+    <!--<ImageView-->
+        <!--android:id="@+id/pokeball_bottom"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:scaleType="centerCrop"-->
+        <!--android:src="@drawable/pokeball_02"/>-->
 
 </FrameLayout>

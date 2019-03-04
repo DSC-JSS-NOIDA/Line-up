@@ -42,6 +42,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".QRCodeActivity"
+            android:theme="@style/qr_activity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".InstructionsActivity"

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import me.ibrahimsn.particle.ParticleView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -43,6 +44,7 @@ public class YourRouteActivity extends AppCompatActivity {
     private int myScore, myPosition, progress;
     private String myName, myZealId;
     private ImageView pokemon;
+    private ParticleView particleView;
 
     private ArrayList<PlayerPOJO> teammatesFound = new ArrayList<>();
 
@@ -64,6 +66,7 @@ public class YourRouteActivity extends AppCompatActivity {
         zealid = findViewById(R.id.player_zealid);
         progressBar = findViewById(R.id.progress_member);
         pokemon = findViewById(R.id.pokemon_img);
+        particleView = findViewById(R.id.particleView);
 
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         receiver = new NetworkReceiver();
@@ -100,14 +103,14 @@ public class YourRouteActivity extends AppCompatActivity {
     }
 
     private void updatePokemon() {
-        String pokemonCode = pref.getString("pokemon", "a");
+        String pokemonCode = pref.getString("avatar", "a");
         switch (pokemonCode) {
-            case "a" : pokemon.setImageResource(R.drawable.pokemona);
-            case "b" : pokemon.setImageResource(R.drawable.pokemonb);
-            case "c" : pokemon.setImageResource(R.drawable.pokemonc);
-            case "d" : pokemon.setImageResource(R.drawable.pokemond);
-            case "e" : pokemon.setImageResource(R.drawable.pokemone);
-            case "f" : pokemon.setImageResource(R.drawable.pokemonf);
+            case "a" : pokemon.setImageResource(R.drawable.pokemona);break;
+            case "b" : pokemon.setImageResource(R.drawable.pokemonb);break;
+            case "c" : pokemon.setImageResource(R.drawable.pokemonc);break;
+            case "d" : pokemon.setImageResource(R.drawable.pokemond);break;
+            case "e" : pokemon.setImageResource(R.drawable.pokemone);break;
+            case "f" : pokemon.setImageResource(R.drawable.pokemonf);break;
         }
         Log.e(TAG, "updatePokemon: " + pokemonCode);
     }
@@ -207,5 +210,17 @@ public class YourRouteActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         unregisterReceiver(receiver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        particleView.pause();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        particleView.pause();
     }
 }

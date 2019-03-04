@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
+import me.ibrahimsn.particle.ParticleView;
 import project.tronku.line_up.timer.CountDownTimerActivity;
 
 import android.Manifest;
@@ -87,7 +88,9 @@ public class QRCodeActivity extends AppCompatActivity {
     private ProgressBar loader;
     private LocationRequest locationRequest;
     private boolean needPermission = false;
-    private ImageView poke_top,poke_down;
+//    private ImageView poke_top,poke_down;
+    private ParticleView particleView;
+//    private View layer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,8 +105,10 @@ public class QRCodeActivity extends AppCompatActivity {
         logout = findViewById(R.id.logout);
         leaderboard = findViewById(R.id.leaderboard);
         loader = findViewById(R.id.loader_qr);
-        poke_top = findViewById(R.id.pokeball_top);
-        poke_down = findViewById(R.id.pokeball_bottom);
+        particleView = findViewById(R.id.particleView);
+//        layer = findViewById(R.id.black_background);
+//        poke_top = findViewById(R.id.pokeball_top);
+//        poke_down = findViewById(R.id.pokeball_bottom);
 
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         receiver = new NetworkReceiver();
@@ -112,38 +117,38 @@ public class QRCodeActivity extends AppCompatActivity {
         getLatestLocation();
         startLocationService();
 
-        ObjectAnimator animation_y1=ObjectAnimator.ofFloat(poke_top,"translationY",0f, -1500f);
-        animation_y1.setStartDelay(700);
-        animation_y1.setDuration(1500);
-        animation_y1.start();
-
-        ObjectAnimator animation_y2=ObjectAnimator.ofFloat(poke_down,"translationY",0, 1500f);
-        animation_y2.setStartDelay(700);
-        animation_y2.setDuration(1500);
-        animation_y2.start();
-
-        AlphaAnimation back=new AlphaAnimation(1.0f,0.0f);
-        back.setStartTime(1000);
-        back.setDuration(3000);
-        back.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                findViewById(R.id.black_background).setVisibility(View.VISIBLE);
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                findViewById(R.id.black_background).setVisibility(View.INVISIBLE);
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        findViewById(R.id.black_background).startAnimation(back);
+//        ObjectAnimator animation_y1=ObjectAnimator.ofFloat(poke_top,"translationY",0f, -1500f);
+//        animation_y1.setStartDelay(700);
+//        animation_y1.setDuration(1500);
+//        animation_y1.start();
+//
+//        ObjectAnimator animation_y2=ObjectAnimator.ofFloat(poke_down,"translationY",0, 1500f);
+//        animation_y2.setStartDelay(700);
+//        animation_y2.setDuration(1500);
+//        animation_y2.start();
+//
+//        AlphaAnimation back=new AlphaAnimation(1.0f,0.0f);
+//        back.setStartTime(1000);
+//        back.setDuration(3000);
+//        back.setAnimationListener(new Animation.AnimationListener() {
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//                layer.setVisibility(View.VISIBLE);
+//
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//                layer.setVisibility(View.INVISIBLE);
+//
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//
+//            }
+//        });
+//        layer.startAnimation(back);
 
 
 
@@ -457,6 +462,18 @@ public class QRCodeActivity extends AppCompatActivity {
         };
 
         LineUpApplication.getInstance().addToRequestQueue(locationReq);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        particleView.pause();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        particleView.pause();
     }
 
 }

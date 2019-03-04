@@ -42,7 +42,7 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
     private double lat, lng;
     private NetworkReceiver receiver;
     private MediaPlayer success, failure;
-    private Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+//    private Vibrator v;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +53,7 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         success = MediaPlayer.create(this, R.raw.pikachu);
         failure = MediaPlayer.create(this, R.raw.short_pika);
+//        v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
     }
 
 
@@ -119,11 +120,11 @@ public class QRCodeScanActivity extends AppCompatActivity implements ZXingScanne
                 }
             });
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
-            } else {
-                v.vibrate(500);
-            }
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+//            } else {
+//                v.vibrate(500);
+//            }
 
         }
         else

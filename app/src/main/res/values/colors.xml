@@ -23,4 +23,6 @@
     <color name="score"> #eb984e  </color>
     <color name="route"> #922b21 </color>
     <color name="routeName">#191919 </color>
+
+    <color name="qrActivity">#D10002</color>
 </resources>

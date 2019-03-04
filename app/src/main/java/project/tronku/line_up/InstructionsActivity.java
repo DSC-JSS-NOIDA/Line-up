@@ -76,14 +76,13 @@ public class InstructionsActivity extends IntroActivity {
     private void setRandomPokemon() {
         Random random = new Random();
         int i = random.nextInt(6);
-        Toast.makeText(this, "Pokemon", Toast.LENGTH_SHORT).show();
         switch (i) {
-            case 0 : pref.edit().putString("avatar", "a").apply();
-            case 1 : pref.edit().putString("avatar", "b").apply();
-            case 2 : pref.edit().putString("avatar", "c").apply();
-            case 3 : pref.edit().putString("avatar", "d").apply();
-            case 4 : pref.edit().putString("avatar", "e").apply();
-            case 5 : pref.edit().putString("avatar", "f").apply();
+            case 0 : pref.edit().putString("avatar", "a").apply();break;
+            case 1 : pref.edit().putString("avatar", "b").apply();break;
+            case 2 : pref.edit().putString("avatar", "c").apply();break;
+            case 3 : pref.edit().putString("avatar", "d").apply();break;
+            case 4 : pref.edit().putString("avatar", "e").apply();break;
+            case 5 : pref.edit().putString("avatar", "f").apply();break;
         }
         Log.e("pokemon", "setRandomPokemon: " + i);
     }

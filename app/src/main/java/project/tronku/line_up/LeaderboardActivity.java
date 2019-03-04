@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import me.ibrahimsn.particle.ParticleView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -50,6 +51,7 @@ public class LeaderboardActivity extends AppCompatActivity {
     private NetworkReceiver receiver;
     private ArrayList<PlayerPOJO> players = new ArrayList<>();
     private SharedPreferences pref;
+    private ParticleView particleView;
     private LeaderboardAdapter adapter;
 
     @Override
@@ -61,6 +63,7 @@ public class LeaderboardActivity extends AppCompatActivity {
         swipeRefreshLayout = findViewById(R.id.swipe_layout);
         layer = findViewById(R.id.layer_leaderboard);
         loader = findViewById(R.id.loader_leaderboard);
+        particleView = findViewById(R.id.particleView);
         receiver = new NetworkReceiver();
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
@@ -206,5 +209,17 @@ public class LeaderboardActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         unregisterReceiver(receiver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        particleView.pause();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        particleView.pause();
     }
 }
