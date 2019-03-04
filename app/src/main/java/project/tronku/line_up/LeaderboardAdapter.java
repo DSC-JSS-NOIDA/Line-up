@@ -1,15 +1,20 @@
 package project.tronku.line_up;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.ViewHolder> {
@@ -33,9 +38,20 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.name.setText(playerList.get(position).getName());
         holder.zealid.setText(playerList.get(position).getZealId());
-        holder.position.setText(playerList.get(position).getPosition());
         holder.score.setText(playerList.get(position).getScore());
-        holder.timeTaken.setText("|  " + playerList.get(position).getTimeTaken());
+        holder.pokeball.setColorFilter(ContextCompat.getColor(context, getColorLayer()));
+    }
+
+    private int getColorLayer() {
+        Random random = new Random();
+        int code = random.nextInt(4);
+        switch (code) {
+            case 0 : return R.color.score;
+            case 1 : return R.color.green;
+            case 2 : return R.color.alert;
+            case 3 : return R.color.location;
+            default: return R.color.alert;
+        }
     }
 
     @Override
@@ -44,15 +60,15 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView score, name, zealid, position, timeTaken;
+        private TextView score, name, zealid;
+        private ImageView pokeball;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             score = itemView.findViewById(R.id.player_score);
             name = itemView.findViewById(R.id.player_name);
             zealid = itemView.findViewById(R.id.player_zealid);
-            position = itemView.findViewById(R.id.player_position);
-            timeTaken = itemView.findViewById(R.id.player_time);
+            pokeball = itemView.findViewById(R.id.pokeball);
         }
     }
 

@@ -113,12 +113,12 @@ public class QRCodeActivity extends AppCompatActivity {
         startLocationService();
 
         ObjectAnimator animation_y1=ObjectAnimator.ofFloat(poke_top,"translationY",0f, -1500f);
-        animation_y1.setStartDelay(500);
+        animation_y1.setStartDelay(700);
         animation_y1.setDuration(1500);
         animation_y1.start();
 
         ObjectAnimator animation_y2=ObjectAnimator.ofFloat(poke_down,"translationY",0, 1500f);
-        animation_y2.setStartDelay(500);
+        animation_y2.setStartDelay(700);
         animation_y2.setDuration(1500);
         animation_y2.start();
 

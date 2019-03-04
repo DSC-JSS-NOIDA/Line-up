@@ -13,6 +13,7 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -54,7 +55,7 @@ public class LeaderboardActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_leaderboard);
+        setContentView(R.layout.activity_leader_board);
 
         recyclerView = findViewById(R.id.leaderboard_recyclerview);
         swipeRefreshLayout = findViewById(R.id.swipe_layout);
@@ -84,7 +85,12 @@ public class LeaderboardActivity extends AppCompatActivity {
         layer.setVisibility(View.VISIBLE);
         loader.setVisibility(View.VISIBLE);
         swipeRefreshLayout.setEnabled(false);
-
+        recyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
         players.clear();
         updateLeaderboard();
     }
@@ -114,6 +120,12 @@ public class LeaderboardActivity extends AppCompatActivity {
                         loader.setVisibility(View.INVISIBLE);
                         swipeRefreshLayout.setRefreshing(false);
                         swipeRefreshLayout.setEnabled(true);
+                        recyclerView.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                return false;
+                            }
+                        });
                     }
 
                     @Override

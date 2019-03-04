@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.heinrichreimersoftware.materialintro.app.IntroActivity;
 import com.heinrichreimersoftware.materialintro.slide.SimpleSlide;
 
+import java.util.Random;
+
 import project.tronku.line_up.timer.CountDownTimerActivity;
 
 
@@ -31,6 +33,8 @@ public class InstructionsActivity extends IntroActivity {
 
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         receiver = new NetworkReceiver();
+
+        setRandomPokemon();
 
         addSlide(new SimpleSlide.Builder()
                 .title("Grant Permission")
@@ -65,6 +69,20 @@ public class InstructionsActivity extends IntroActivity {
                 .background(R.color.alert)
                 .scrollable(false)
                 .build());
+
+    }
+
+    private void setRandomPokemon() {
+        Random random = new Random();
+        int i = random.nextInt(6);
+        switch (i) {
+            case 0 : pref.edit().putString("avatar", "a").apply();
+            case 1 : pref.edit().putString("avatar", "b").apply();
+            case 2 : pref.edit().putString("avatar", "c").apply();
+            case 3 : pref.edit().putString("avatar", "d").apply();
+            case 4 : pref.edit().putString("avatar", "e").apply();
+            case 5 : pref.edit().putString("avatar", "f").apply();
+        }
 
     }
 

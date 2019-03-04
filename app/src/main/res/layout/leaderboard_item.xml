@@ -4,22 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="90dp"
     android:weightSum="5"
-    android:layout_marginStart="2dp"
-    android:layout_marginEnd="2dp"
     android:layout_marginTop="4dp"
     android:layout_marginBottom="4dp"
-    android:background="@color/leader_item">
+    android:background="@color/routeName">
 
-    <TextView
+    <ImageView
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="1"
-        android:id="@+id/player_position"
-        android:gravity="center"
-        android:textSize="44sp"
-        android:textColor="@android:color/white"
-        android:fontFamily="@font/roboto_bold"/>
+        android:src="@drawable/pokeball"
+        android:id="@+id/pokeball"
+        android:padding="14dp"/>
 
     <RelativeLayout
         android:layout_width="0dp"
@@ -46,19 +41,7 @@
             android:text="Z0_1241"
             android:id="@+id/player_zealid"
             android:textColor="@color/text_two"
-            android:textSize="18sp"
-            android:fontFamily="@font/roboto_thin"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/player_zealid"
-            android:layout_below="@id/player_name"
-            android:layout_marginStart="10dp"
-            android:text="|  Time Taken"
-            android:id="@+id/player_time"
-            android:textColor="@color/text_two"
-            android:textSize="18sp"
+            android:textSize="14sp"
             android:fontFamily="@font/roboto_thin"/>
 
     </RelativeLayout>

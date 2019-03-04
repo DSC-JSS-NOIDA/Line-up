@@ -35,7 +35,7 @@
             android:layout_marginStart="30dp"
             android:id="@+id/teammate_zealid"
             android:textColor="@color/text_two"
-            android:textSize="18sp"
+            android:textSize="14sp"
             android:fontFamily="@font/roboto_thin"/>
 
     </LinearLayout>

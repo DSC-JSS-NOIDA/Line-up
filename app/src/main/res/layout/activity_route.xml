@@ -163,15 +163,14 @@
         android:layout_marginTop="20dp"
         android:elevation="6dp"
         android:id="@+id/pokemon_img"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/qr_green"/>
+        android:layout_gravity="center_horizontal"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/black"
         android:alpha="0.6"
-        android:elevation="10dp"
+        android:elevation="12dp"
         android:id="@+id/layer_route"
         android:visibility="invisible"/>
 
@@ -180,7 +179,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:id="@+id/loader_route"
-        android:elevation="10dp"
+        android:elevation="12dp"
         android:visibility="invisible"/>
 
     <TextView

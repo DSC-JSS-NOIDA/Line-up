@@ -13,6 +13,7 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -41,7 +42,7 @@ public class YourRouteActivity extends AppCompatActivity {
     private TextView score, position, name, zealid;
     private int myScore, myPosition, progress;
     private String myName, myZealId;
-    private ImageView bg;
+    private ImageView pokemon;
 
     private ArrayList<PlayerPOJO> teammatesFound = new ArrayList<>();
 
@@ -62,6 +63,7 @@ public class YourRouteActivity extends AppCompatActivity {
         name = findViewById(R.id.player_name);
         zealid = findViewById(R.id.player_zealid);
         progressBar = findViewById(R.id.progress_member);
+        pokemon = findViewById(R.id.pokemon_img);
 
         //Blurry.with(this).radius(25).capture(bg).into(bg);
 
@@ -70,6 +72,7 @@ public class YourRouteActivity extends AppCompatActivity {
         adapter = new RouteAdapter(this, teammatesFound);
 
         updateRoute();
+        updatePokemon();
 
         myScore = pref.getInt("score", 0);
         myPosition = pref.getInt("position", 0);
@@ -82,6 +85,7 @@ public class YourRouteActivity extends AppCompatActivity {
         name.setText(myName);
         zealid.setText(myZealId);
         progressBar.setProgress(progress*25);
+
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -97,10 +101,28 @@ public class YourRouteActivity extends AppCompatActivity {
         });
     }
 
+    private void updatePokemon() {
+        String pokemonCode = pref.getString("pokemon", "a");
+        switch (pokemonCode) {
+            case "a" : pokemon.setImageResource(R.drawable.pokemona);
+            case "b" : pokemon.setImageResource(R.drawable.pokemonb);
+            case "c" : pokemon.setImageResource(R.drawable.pokemonc);
+            case "d" : pokemon.setImageResource(R.drawable.pokemond);
+            case "e" : pokemon.setImageResource(R.drawable.pokemone);
+            case "f" : pokemon.setImageResource(R.drawable.pokemonf);
+        }
+    }
+
     private void updateRoute() {
         layer.setVisibility(View.VISIBLE);
         loader.setVisibility(View.VISIBLE);
         swipeRefreshLayout.setEnabled(false);
+        recyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
 
         String accessToken = LineUpApplication.getInstance().getAccessToken();
         if(accessToken == null){
@@ -153,6 +175,12 @@ public class YourRouteActivity extends AppCompatActivity {
                         loader.setVisibility(View.INVISIBLE);
                         swipeRefreshLayout.setRefreshing(false);
                         swipeRefreshLayout.setEnabled(true);
+                        recyclerView.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                return false;
+                            }
+                        });
                     }
 
                     @Override

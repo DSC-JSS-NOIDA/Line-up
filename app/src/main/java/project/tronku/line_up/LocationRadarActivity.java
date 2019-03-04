@@ -132,7 +132,7 @@ public class LocationRadarActivity extends AppCompatActivity {
                             for(int i = 0; i < Math.min(participants.size(), textViews.size()); i++){
                                 TextView textView = textViews.get(i);
                                 Participant participant = participants.get(i);
-                                textView.setText(participant.distance);
+                                textView.setText(participant.distance.substring(0, participant.distance.length()-2));
                             }
 
                         } else{
