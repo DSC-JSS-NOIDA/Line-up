@@ -3,6 +3,7 @@ package project.tronku.line_up.login;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -25,18 +26,25 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import androidx.core.content.res.ResourcesCompat;
 import project.tronku.line_up.API;
+import project.tronku.line_up.Constants;
+import project.tronku.line_up.HttpStatus;
 import project.tronku.line_up.LineUpApplication;
+import project.tronku.line_up.MainActivity;
 import project.tronku.line_up.NetworkReceiver;
 import project.tronku.line_up.R;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import project.tronku.line_up.timer.CountDownTimerActivity;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -162,6 +170,14 @@ public class SignUpFragment extends Fragment implements OnSignUpListener {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.e(TAG, "onResponse: " + response.toString());
+                        zealIdEditText.setText("");
+                        passwordEditText.setText("");
+                        nameEditText.setText("");
+                        phoneEditText.setText("");
+                        phoneEditText.setEnabled(true);
+                        nameEditText.setEnabled(true);
+                        zealIdEditText.setEnabled(true);
+                        passwordEditText.setEnabled(true);
                         Snackbar snackbar = Snackbar.make(inflate, "Registered successfully! Please log in.", Snackbar.LENGTH_SHORT);
                         View snackbarView = snackbar.getView();
                         snackbarView.setBackgroundColor(getResources().getColor(R.color.green));
@@ -174,9 +190,35 @@ public class SignUpFragment extends Fragment implements OnSignUpListener {
                 if(error.networkResponse!=null){
                     String json = new String(error.networkResponse.data);
                     Log.e(TAG, "onErrorResponse: " + json);
-                    try {
-                        JSONObject jsonError = new JSONObject(json);
-                        String errorString = jsonError.get("username").toString() + jsonError.get("password").toString();
+                    String errorString = "";
+                    if(error.networkResponse.statusCode == HttpStatus.PRECONDITION_REQUIRED.value()){
+                        startActivity(new Intent(getContext(), CountDownTimerActivity.class));
+                    }else {
+                        JsonParser jsonParser = new JsonParser();
+                        JsonObject jsonObject = jsonParser.parse(json).getAsJsonObject();
+                        if(error.networkResponse.statusCode == HttpStatus.CONFLICT.value()) {
+                            if(jsonObject.has("error")){
+                                errorString = jsonObject.get("error") instanceof JsonNull ? "You have already registered for the event." : jsonObject.get("error").getAsString();
+                            }else{
+                                errorString = "You have already registered for the event.";
+                            }
+                        } else{
+                            if(jsonObject.has("error")){
+                                errorString = jsonObject.get("error") instanceof JsonNull ? Constants.INVALID_DATA : jsonObject.get("error").getAsString();
+                            }else {
+                                if (jsonObject.has("username")) {
+                                    errorString = "Username: " + (jsonObject.get("username") instanceof JsonNull ? Constants.INVALID_DATA : jsonObject.get("username").getAsString());
+                                }
+                                if (jsonObject.has("password")) {
+                                    String temp = "Password: " + (jsonObject.get("password") instanceof JsonNull ? Constants.INVALID_DATA : jsonObject.get("password").getAsString());
+                                    errorString = errorString + "\n"  + temp;
+                                }
+                            }
+                        }
+
+                        if(errorString.length() == 0){
+                            errorString = "Error signing up, please try again.";
+                        }
                         final Dialog dialog = new Dialog(getActivity());
                         dialog.setContentView(R.layout.dialog_layout);
                         ImageView close = dialog.findViewById(R.id.close);
@@ -206,10 +248,8 @@ public class SignUpFragment extends Fragment implements OnSignUpListener {
                         TextView errorView = dialog.findViewById(R.id.errorText);
                         errorView.setText(errorString);
                         dialog.show();
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
+
                 }
             }
         });
