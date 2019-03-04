@@ -30,11 +30,6 @@ import android.preference.PreferenceManager;
 import android.provider.SyncStateContract;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -106,9 +101,6 @@ public class QRCodeActivity extends AppCompatActivity {
         leaderboard = findViewById(R.id.leaderboard);
         loader = findViewById(R.id.loader_qr);
         particleView = findViewById(R.id.particleView);
-//        layer = findViewById(R.id.black_background);
-//        poke_top = findViewById(R.id.pokeball_top);
-//        poke_down = findViewById(R.id.pokeball_bottom);
 
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         receiver = new NetworkReceiver();
@@ -116,42 +108,6 @@ public class QRCodeActivity extends AppCompatActivity {
         askPermission();
         getLatestLocation();
         startLocationService();
-
-//        ObjectAnimator animation_y1=ObjectAnimator.ofFloat(poke_top,"translationY",0f, -1500f);
-//        animation_y1.setStartDelay(700);
-//        animation_y1.setDuration(1500);
-//        animation_y1.start();
-//
-//        ObjectAnimator animation_y2=ObjectAnimator.ofFloat(poke_down,"translationY",0, 1500f);
-//        animation_y2.setStartDelay(700);
-//        animation_y2.setDuration(1500);
-//        animation_y2.start();
-//
-//        AlphaAnimation back=new AlphaAnimation(1.0f,0.0f);
-//        back.setStartTime(1000);
-//        back.setDuration(3000);
-//        back.setAnimationListener(new Animation.AnimationListener() {
-//            @Override
-//            public void onAnimationStart(Animation animation) {
-//                layer.setVisibility(View.VISIBLE);
-//
-//            }
-//
-//            @Override
-//            public void onAnimationEnd(Animation animation) {
-//                layer.setVisibility(View.INVISIBLE);
-//
-//            }
-//
-//            @Override
-//            public void onAnimationRepeat(Animation animation) {
-//
-//            }
-//        });
-//        layer.startAnimation(back);
-
-
-
 
         leaderboard.setOnClickListener(new View.OnClickListener() {
             @Override
