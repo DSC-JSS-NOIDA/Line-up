@@ -106,11 +106,24 @@ public class QRCodeActivity extends AppCompatActivity {
         poke_down = findViewById(R.id.pokeball_bottom);
 
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
         receiver = new NetworkReceiver();
-        askPermission();
-        getLatestLocation();
-        startLocationService();
+        Thread timer=new Thread()
+        {
+            public void run()
+            {
+                try{
+                    sleep(2500);
+                }catch(InterruptedException e){
+                    e.printStackTrace();
+                }
+                finally {
+                    askPermission();
+                    getLatestLocation();
+                    startLocationService();
+                    finish();
+                }
+            }
+        };
 
 
         ObjectAnimator animation_y1=ObjectAnimator.ofFloat(poke_top,"translationY",0f, -1500f);
