@@ -215,7 +215,7 @@ public class YourRouteActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        particleView.pause();
+        particleView.resume();
     }
 
     @Override

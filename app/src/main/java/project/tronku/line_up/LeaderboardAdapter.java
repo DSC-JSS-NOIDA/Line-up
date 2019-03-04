@@ -1,7 +1,6 @@
 package project.tronku.line_up;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,12 +8,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.ViewHolder> {
@@ -39,18 +35,18 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
         holder.name.setText(playerList.get(position).getName());
         holder.zealid.setText(playerList.get(position).getZealId());
         holder.score.setText(playerList.get(position).getScore());
-        holder.pokeball.setColorFilter(ContextCompat.getColor(context, getColorLayer()));
+        holder.pokeball.setImageResource(getPokeballs());
     }
 
-    private int getColorLayer() {
+    private int getPokeballs() {
         Random random = new Random();
         int code = random.nextInt(4);
         switch (code) {
-            case 0 : return R.color.score;
-            case 1 : return R.color.green;
-            case 2 : return R.color.alert;
-            case 3 : return R.color.location;
-            default: return R.color.alert;
+            case 0 : return R.drawable.pokeball_red;
+            case 1 : return R.drawable.pokeball_green;
+            case 2 : return R.drawable.pokeball_blue;
+            case 3 : return R.drawable.pokeball_yellow;
+            default: return R.drawable.pokeball_red;
         }
     }
 
