@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import jp.wasabeef.blurry.Blurry;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -63,7 +62,6 @@ public class YourRouteActivity extends AppCompatActivity {
         name = findViewById(R.id.player_name);
         zealid = findViewById(R.id.player_zealid);
         progressBar = findViewById(R.id.progress_member);
-        bg = findViewById(R.id.bg_route);
 
         //Blurry.with(this).radius(25).capture(bg).into(bg);
 
