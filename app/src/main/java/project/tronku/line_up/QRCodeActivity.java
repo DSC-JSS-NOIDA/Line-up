@@ -45,7 +45,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.common.api.ResolvableApiException;
-import com.google.android.gms.common.internal.Constants;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -203,7 +202,7 @@ public class QRCodeActivity extends AppCompatActivity {
                             pref.edit().putString("uniqueCode", uniqueCode).apply();
                             updateQR();
                         } else{
-                            Toast.makeText(QRCodeActivity.this, "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(QRCodeActivity.this, Constants.ERROR_FETCHING_DATA, Toast.LENGTH_SHORT).show();
                         }
                         /*layer.setVisibility(View.INVISIBLE);
                         loader.setVisibility(View.INVISIBLE);*/
@@ -215,13 +214,14 @@ public class QRCodeActivity extends AppCompatActivity {
                         if(status == HttpStatus.PRECONDITION_REQUIRED.value()){
                             startActivity(new Intent(QRCodeActivity.this, CountDownTimerActivity.class));
                         }else if(status == HttpStatus.UNAUTHORIZED.value()){
+                            pref.edit().clear().apply();
                             Toast.makeText(QRCodeActivity.this, "Please login to perform this action.", Toast.LENGTH_SHORT).show();
                             LineUpApplication.getInstance().getDefaultSharedPreferences().edit().clear().apply();
                             Intent login = new Intent(QRCodeActivity.this, MainActivity.class);
                             finishAffinity();
                             startActivity(login);
                         } else{
-                            Toast.makeText(QRCodeActivity.this, "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(QRCodeActivity.this, Constants.ERROR_FETCHING_DATA, Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(QRCodeActivity.this, MainActivity.class));
                         }
                     }

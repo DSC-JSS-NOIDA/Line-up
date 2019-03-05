@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import project.tronku.line_up.Constants;
 import project.tronku.line_up.EventDetails;
 import project.tronku.line_up.Helper;
+import project.tronku.line_up.InstructionsActivity;
 import project.tronku.line_up.MainActivity;
 import project.tronku.line_up.QRCodeActivity;
 import project.tronku.line_up.QRCodeScanActivity;
@@ -43,7 +44,6 @@ public class CountDownTimerActivity extends AppCompatActivity {
 
         view = findViewById(android.R.id.content);
 
-
         daysView = findViewById(R.id.days);
         hoursView = findViewById(R.id.hours);
         minsView = findViewById(R.id.mins);
@@ -60,7 +60,6 @@ public class CountDownTimerActivity extends AppCompatActivity {
 
                 long timeRemaining = 0L;
                 int temp = -1;
-                final int flag = temp;
 
                 try {
                     EventDetails eventDetails = Helper.getEventDetailsFromJsonResponse(response);
@@ -78,6 +77,7 @@ public class CountDownTimerActivity extends AppCompatActivity {
                         timeRemaining = eventDetails.getStartTime().getTime() - now.getTime();
                     }
                     heading.setText(String.valueOf(headingText));
+                    final int flag = temp;
 
                     timer = new CountDownTimer(timeRemaining, 1000) {
 
@@ -91,11 +91,11 @@ public class CountDownTimerActivity extends AppCompatActivity {
 
                         public void onFinish() {
                             if(flag == 1){
-                                Toast.makeText(getApplicationContext(), "Sign Ups have started.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Sign up now!", Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(CountDownTimerActivity.this, MainActivity.class));
                             } else if(flag == 0){
                                 Toast.makeText(getApplicationContext(), "Game has started.", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(CountDownTimerActivity.this, QRCodeActivity.class));
+                                startActivity(new Intent(CountDownTimerActivity.this, MainActivity.class));
                             } else{
                                 Toast.makeText(getApplicationContext(), Constants.ERROR_FETCHING_DATA, Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(CountDownTimerActivity.this, MainActivity.class));

@@ -65,7 +65,7 @@ public class InstructionsActivity extends IntroActivity {
 
         addSlide(new SimpleSlide.Builder()
                 .title("Alert")
-                .description("Sometimes, the app may show approximate location instead of the accurate one. So, kindly recentre your location using Google Maps for more accuracy.")
+                .description("Sometimes, the app may show approximate location instead of the accurate one. So, kindly re-centre your location using Google Maps for more accuracy.")
                 .image(R.drawable.alert)
                 .background(R.color.alert)
                 .scrollable(false)
@@ -119,16 +119,16 @@ public class InstructionsActivity extends IntroActivity {
                     public void onError(int status, String error) {
 
                         if(status == HttpStatus.PRECONDITION_REQUIRED.value()){
-                            pref.edit().clear().apply();
                             startActivity(new Intent(InstructionsActivity.this, CountDownTimerActivity.class));
                         }else if(status == HttpStatus.UNAUTHORIZED.value()){
+                            pref.edit().clear().apply();
                             Toast.makeText(InstructionsActivity.this, "Please login to perform this action.", Toast.LENGTH_SHORT).show();
                             LineUpApplication.getInstance().getDefaultSharedPreferences().edit().clear().apply();
                             Intent login = new Intent(InstructionsActivity.this, MainActivity.class);
                             finishAffinity();
                             startActivity(login);
                         } else{
-                            Toast.makeText(InstructionsActivity.this, "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(InstructionsActivity.this, Constants.ERROR_FETCHING_DATA, Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(InstructionsActivity.this, MainActivity.class));
                         }
                     }

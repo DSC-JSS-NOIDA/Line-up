@@ -207,8 +207,13 @@ public class LoginFragment extends Fragment implements project.tronku.line_up.lo
                         e.printStackTrace();
                     }
                 }
-                else
-                    Toast.makeText(getActivity(), "Network issue!", Toast.LENGTH_SHORT).show();
+                else {
+                    Toast.makeText(getActivity(), "Network issue! Try again.", Toast.LENGTH_SHORT).show();
+                    layer.setVisibility(View.INVISIBLE);
+                    loader.setVisibility(View.INVISIBLE);
+                    zealIdEditText.setEnabled(true);
+                    passwordEditText.setEnabled(true);
+                }
             }
         }){
             @Override

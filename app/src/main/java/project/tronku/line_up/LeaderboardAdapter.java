@@ -36,6 +36,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
         holder.zealid.setText(playerList.get(position).getZealId());
         holder.score.setText(playerList.get(position).getScore());
         holder.pokeball.setImageResource(getPokeballs());
+
     }
 
     private int getPokeballs() {

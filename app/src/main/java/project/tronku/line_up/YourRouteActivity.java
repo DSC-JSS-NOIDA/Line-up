@@ -39,7 +39,7 @@ public class YourRouteActivity extends AppCompatActivity {
     private TextView noMembers;
     private SharedPreferences pref;
     private TextView score, position, name, zealid;
-    private int myScore, myPosition, progress;
+    private int myScore, myPosition, progress, count;
     private String myName, myZealId, teamCount;
     private ImageView pokemon;
     private ParticleView particleView;
@@ -84,7 +84,9 @@ public class YourRouteActivity extends AppCompatActivity {
         position.setText("" + myPosition);
         name.setText(myName);
         zealid.setText(myZealId);
-        progressBar.setProgress(progress* 100 / Integer.parseInt(teamCount));
+
+        count = Integer.parseInt(teamCount) == 0 ? 10 : Integer.parseInt(teamCount);
+        progressBar.setProgress(progress* 100 / count);
 
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -153,7 +155,7 @@ public class YourRouteActivity extends AppCompatActivity {
                             teammatesFound = new ArrayList<>(Helper.getPlayersFromResponse(response));
                             progress = teammatesFound.size();
                             pref.edit().putInt("progress", progress).apply();
-                            progressBar.setProgress(progress*(100/ Integer.parseInt(teamCount)));
+                            progressBar.setProgress(progress* (100/count) );
 
                             if (teammatesFound.size() == 0) {
                                 noMembers.setVisibility(View.VISIBLE);
@@ -165,7 +167,7 @@ public class YourRouteActivity extends AppCompatActivity {
                                 recyclerView.setAdapter(adapter);
                             }
                         } else{
-                            Toast.makeText(YourRouteActivity.this, "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(YourRouteActivity.this, Constants.ERROR_FETCHING_DATA, Toast.LENGTH_SHORT).show();
                         }
                         layer.setVisibility(View.INVISIBLE);
                         loader.setVisibility(View.INVISIBLE);
@@ -179,11 +181,12 @@ public class YourRouteActivity extends AppCompatActivity {
                         if(status == HttpStatus.UNAUTHORIZED.value()){
                             Toast.makeText(YourRouteActivity.this, "Please login to perform this action.", Toast.LENGTH_SHORT).show();
                             LineUpApplication.getInstance().getDefaultSharedPreferences().edit().clear().apply();
+                            pref.edit().clear().apply();
                             Intent login = new Intent(YourRouteActivity.this, MainActivity.class);
                             finishAffinity();
                             startActivity(login);
                         } else{
-                            Toast.makeText(YourRouteActivity.this, "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(YourRouteActivity.this, Constants.ERROR_FETCHING_DATA, Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(YourRouteActivity.this, MainActivity.class));
                         }
                     }

@@ -129,6 +129,7 @@ public class LeaderboardActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Please login to perform this action.", Toast.LENGTH_SHORT).show();
                             LineUpApplication.getInstance().getDefaultSharedPreferences().edit().clear().apply();
                             Intent login = new Intent(getApplicationContext(), MainActivity.class);
+                            pref.edit().clear().apply();
                             finishAffinity();
                             startActivity(login);
                         } else{

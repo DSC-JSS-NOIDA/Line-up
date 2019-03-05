@@ -138,7 +138,7 @@ public class LocationRadarActivity extends AppCompatActivity {
                             }
 
                         } else{
-                            Toast.makeText(LocationRadarActivity.this, "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LocationRadarActivity.this, Constants.ERROR_FETCHING_DATA, Toast.LENGTH_SHORT).show();
                         }
                         layer.setVisibility(View.INVISIBLE);
                         loader.setVisibility(View.INVISIBLE);
@@ -170,7 +170,7 @@ public class LocationRadarActivity extends AppCompatActivity {
                             login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(login);
                         } else{
-                            Toast.makeText(LocationRadarActivity.this, "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LocationRadarActivity.this, Constants.ERROR_FETCHING_DATA, Toast.LENGTH_SHORT).show();
                         }
                         startActivity(new Intent(LocationRadarActivity.this, QRCodeActivity.class));
                     }
