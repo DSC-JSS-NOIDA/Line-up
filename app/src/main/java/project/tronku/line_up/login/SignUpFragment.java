@@ -115,19 +115,19 @@ public class SignUpFragment extends Fragment implements OnSignUpListener {
             if (name.isEmpty() || phone.isEmpty() || zealid.isEmpty() || password.isEmpty()) {
                 Snackbar snackbar = Snackbar.make(inflate, "Enter details.", Snackbar.LENGTH_SHORT);
                 View snackbarView = snackbar.getView();
-                snackbarView.setBackgroundColor(getResources().getColor(R.color.qr));
+                snackbarView.setBackgroundColor(getResources().getColor(R.color.route));
                 snackbar.show();
             }
             else if (!Patterns.PHONE.matcher(phone).matches()) {
                 Snackbar snackbar = Snackbar.make(inflate, "Enter valid number.", Snackbar.LENGTH_SHORT);
                 View snackbarView = snackbar.getView();
-                snackbarView.setBackgroundColor(getResources().getColor(R.color.qr));
+                snackbarView.setBackgroundColor(getResources().getColor(R.color.route));
                 snackbar.show();
             }
             else if (password.length() < 6 || password.length() > 18) {
                 Snackbar snackbar = Snackbar.make(inflate, "Password length should be between 6 and 18.", Snackbar.LENGTH_SHORT);
                 View snackbarView = snackbar.getView();
-                snackbarView.setBackgroundColor(getResources().getColor(R.color.qr));
+                snackbarView.setBackgroundColor(getResources().getColor(R.color.route));
                 snackbar.show();
             }
             else {

@@ -12,9 +12,9 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -25,8 +25,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class YourRouteActivity extends AppCompatActivity {
@@ -42,7 +40,7 @@ public class YourRouteActivity extends AppCompatActivity {
     private SharedPreferences pref;
     private TextView score, position, name, zealid;
     private int myScore, myPosition, progress;
-    private String myName, myZealId;
+    private String myName, myZealId, teamCount;
     private ImageView pokemon;
     private ParticleView particleView;
 
@@ -79,13 +77,14 @@ public class YourRouteActivity extends AppCompatActivity {
         myPosition = pref.getInt("position", 0);
         myName = pref.getString("name", "Player Name");
         myZealId = pref.getString("zealid", "Zeal id");
+        teamCount = pref.getString("teamCount", "0");
         progress = pref.getInt("progress", 0);
 
         score.setText("" + myScore);
         position.setText("" + myPosition);
         name.setText(myName);
         zealid.setText(myZealId);
-        progressBar.setProgress(progress*25);
+        progressBar.setProgress(progress* 100 / Integer.parseInt(teamCount));
 
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -154,7 +153,7 @@ public class YourRouteActivity extends AppCompatActivity {
                             teammatesFound = new ArrayList<>(Helper.getPlayersFromResponse(response));
                             progress = teammatesFound.size();
                             pref.edit().putInt("progress", progress).apply();
-                            progressBar.setProgress(progress*25);
+                            progressBar.setProgress(progress*(100/ Integer.parseInt(teamCount)));
 
                             if (teammatesFound.size() == 0) {
                                 noMembers.setVisibility(View.VISIBLE);
@@ -215,7 +214,12 @@ public class YourRouteActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        particleView.resume();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                particleView.resume();
+            }
+        }, 4000);
     }
 
     @Override

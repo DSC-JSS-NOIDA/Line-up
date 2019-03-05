@@ -3,6 +3,7 @@ package project.tronku.line_up.timer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,9 +35,6 @@ public class CountDownTimerActivity extends AppCompatActivity {
     private TextView heading;
     private CountDownTimer timer;
     private View view;
-    private long timeRemaining = 0L;
-    private int temp = -1;
-    final int flag = temp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,31 +49,6 @@ public class CountDownTimerActivity extends AppCompatActivity {
         minsView = findViewById(R.id.mins);
         secondsView = findViewById(R.id.seconds);
         heading = findViewById(R.id.heading);
-
-        timer = new CountDownTimer(timeRemaining, 1000) {
-
-            public void onTick(long millisUntilFinished) {
-                int[] time = getTimeRemaining(millisUntilFinished);
-                daysView.setText(String.valueOf(time[0]));
-                hoursView.setText(String.valueOf(time[1]));
-                minsView.setText(String.valueOf(time[2]));
-                secondsView.setText(String.valueOf(time[3]));
-            }
-
-            public void onFinish() {
-                if(flag == 1){
-                    Toast.makeText(getApplicationContext(), "Sign Ups have started.", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(CountDownTimerActivity.this, MainActivity.class));
-                } else if(flag == 0){
-                    Toast.makeText(getApplicationContext(), "Game has started.", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(CountDownTimerActivity.this, QRCodeActivity.class));
-                } else{
-                    Toast.makeText(getApplicationContext(), Constants.ERROR_FETCHING_DATA, Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(CountDownTimerActivity.this, MainActivity.class));
-                }
-
-            }
-        };
     }
 
     @Override
@@ -84,6 +57,10 @@ public class CountDownTimerActivity extends AppCompatActivity {
         Helper.fetchEventDetails(new VolleyCallback() {
             @Override
             public void onSuccess(String response) {
+
+                long timeRemaining = 0L;
+                int temp = -1;
+                final int flag = temp;
 
                 try {
                     EventDetails eventDetails = Helper.getEventDetailsFromJsonResponse(response);
@@ -101,6 +78,32 @@ public class CountDownTimerActivity extends AppCompatActivity {
                         timeRemaining = eventDetails.getStartTime().getTime() - now.getTime();
                     }
                     heading.setText(String.valueOf(headingText));
+
+                    timer = new CountDownTimer(timeRemaining, 1000) {
+
+                        public void onTick(long millisUntilFinished) {
+                            int[] time = getTimeRemaining(millisUntilFinished);
+                            daysView.setText(String.valueOf(time[0]));
+                            hoursView.setText(String.valueOf(time[1]));
+                            minsView.setText(String.valueOf(time[2]));
+                            secondsView.setText(String.valueOf(time[3]));
+                        }
+
+                        public void onFinish() {
+                            if(flag == 1){
+                                Toast.makeText(getApplicationContext(), "Sign Ups have started.", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(CountDownTimerActivity.this, MainActivity.class));
+                            } else if(flag == 0){
+                                Toast.makeText(getApplicationContext(), "Game has started.", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(CountDownTimerActivity.this, QRCodeActivity.class));
+                            } else{
+                                Toast.makeText(getApplicationContext(), Constants.ERROR_FETCHING_DATA, Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(CountDownTimerActivity.this, MainActivity.class));
+                            }
+
+                        }
+                    };
+
                     timer.start();
 
                 } catch (ParseException e) {

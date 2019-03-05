@@ -26,6 +26,7 @@ import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.SyncStateContract;
 import android.util.Log;
@@ -448,7 +449,13 @@ public class QRCodeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        particleView.resume();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                particleView.resume();
+            }
+        }, 4000);
+
     }
 
     @Override

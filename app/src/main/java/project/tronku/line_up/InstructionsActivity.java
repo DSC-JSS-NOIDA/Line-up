@@ -23,7 +23,7 @@ import project.tronku.line_up.timer.CountDownTimerActivity;
 public class InstructionsActivity extends IntroActivity {
 
     private NetworkReceiver receiver;
-    private String uniqueCode, name;
+    private String uniqueCode, name, teamCount;
     private SharedPreferences pref;
     private PlayerPOJO currentUser;
 
@@ -104,9 +104,11 @@ public class InstructionsActivity extends IntroActivity {
                             currentUser = Helper.getPlayerFromJsonString(response);
                             uniqueCode = currentUser.getUniqueCode();
                             name = currentUser.getName();
+                            teamCount = String.valueOf(currentUser.getTeamCount());
                             pref.edit().putString("uniqueCode", uniqueCode).apply();
                             Log.e("CODE", "onSuccess: " + uniqueCode);
                             pref.edit().putString("name", name).apply();
+                            pref.edit().putString("teamCount", teamCount).apply();
 
                         } else{
                             Toast.makeText(InstructionsActivity.this, "Error fetching data, Please try again.", Toast.LENGTH_SHORT).show();
@@ -117,6 +119,7 @@ public class InstructionsActivity extends IntroActivity {
                     public void onError(int status, String error) {
 
                         if(status == HttpStatus.PRECONDITION_REQUIRED.value()){
+                            pref.edit().clear().apply();
                             startActivity(new Intent(InstructionsActivity.this, CountDownTimerActivity.class));
                         }else if(status == HttpStatus.UNAUTHORIZED.value()){
                             Toast.makeText(InstructionsActivity.this, "Please login to perform this action.", Toast.LENGTH_SHORT).show();

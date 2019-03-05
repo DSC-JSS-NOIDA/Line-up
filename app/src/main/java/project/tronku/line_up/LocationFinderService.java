@@ -40,7 +40,7 @@ public class LocationFinderService extends Service {
     private static final String TAG = "LocationFinder";
     private double latitude, longitude;
     private Handler handler;
-    private int delay = 30000;
+    private int delay = 20000;
     private boolean isConnected;
 
     @Nullable

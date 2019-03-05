@@ -41,6 +41,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -98,6 +99,7 @@ public class LocationRadarActivity extends AppCompatActivity {
 
         layer = findViewById(R.id.layer);
         loader = findViewById(R.id.loader);
+        rippleBackground.startRippleAnimation();
 
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,7 +134,7 @@ public class LocationRadarActivity extends AppCompatActivity {
                             for(int i = 0; i < Math.min(participants.size(), textViews.size()); i++){
                                 TextView textView = textViews.get(i);
                                 Participant participant = participants.get(i);
-                                textView.setText(participant.distance.substring(0, participant.distance.length()-2));
+                                textView.setText(participant.distance);
                             }
 
                         } else{
@@ -141,7 +143,6 @@ public class LocationRadarActivity extends AppCompatActivity {
                         layer.setVisibility(View.INVISIBLE);
                         loader.setVisibility(View.INVISIBLE);
                         refresh.setEnabled(true);
-                        rippleBackground.startRippleAnimation();
                         player1.setVisibility(View.VISIBLE);
                         player2.setVisibility(View.VISIBLE);
                         player3.setVisibility(View.VISIBLE);
@@ -151,6 +152,17 @@ public class LocationRadarActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(int status, String error) {
+                        if(status == HttpStatus.BAD_REQUEST.value()) {
+                            JsonParser jsonParser = new JsonParser();
+                            JsonObject jsonObject = jsonParser.parse(error).getAsJsonObject();
+                            String errorString;
+                            if(jsonObject.has("error")){
+                                errorString = jsonObject.get("error") instanceof JsonNull ? Constants.ERROR_FETCHING_DATA : jsonObject.get("error").getAsString();
+                            }else{
+                                errorString = Constants.ERROR_FETCHING_DATA;
+                            }
+                            Toast.makeText(LocationRadarActivity.this, errorString, Toast.LENGTH_SHORT).show();
+                        }
                         if(status == HttpStatus.UNAUTHORIZED.value()){
                             Toast.makeText(LocationRadarActivity.this, "Please login to perform this action.", Toast.LENGTH_SHORT).show();
                             pref.edit().clear().apply();

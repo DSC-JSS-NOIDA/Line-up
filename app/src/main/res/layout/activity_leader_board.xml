@@ -56,11 +56,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="16dp"
         android:text="Leaderboard"
         android:textSize="40sp"
         android:fontFamily="@font/roboto_medium"
         android:textColor="@android:color/white"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="(Top 20 players)"
+        android:layout_gravity="center_horizontal"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="72dp"/>
 
     <View
         android:layout_width="match_parent"

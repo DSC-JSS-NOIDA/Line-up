@@ -2,7 +2,7 @@ package project.tronku.line_up;
 
 public class PlayerPOJO {
     //add members here
-    private String name, score, zealId, position, timeTaken, uniqueCode, lat, lng;
+    private String name, score, zealId, position, timeTaken, uniqueCode, lat, lng, teamCount;
 
     public String getName() {
         return name;
@@ -66,5 +66,13 @@ public class PlayerPOJO {
 
     public void setLng(String lng) {
         this.lng = lng;
+    }
+
+    public String getTeamCount() {
+        return teamCount;
+    }
+
+    public void setTeamCount(String teamCount) {
+        this.teamCount = teamCount;
     }
 }

@@ -12,6 +12,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -214,7 +215,13 @@ public class LeaderboardActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        particleView.resume();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                particleView.resume();
+            }
+        }, 4000);
+
     }
 
     @Override

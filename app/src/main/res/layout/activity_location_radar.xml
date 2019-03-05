@@ -46,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/player1_distance"
-            android:fontFamily="@font/roboto_thin"
+            android:fontFamily="@font/roboto_medium"
             android:textColor="@android:color/white"
             android:layout_gravity="center_horizontal"
             android:textSize="16sp"/>
@@ -73,7 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/player2_distance"
-            android:fontFamily="@font/roboto_thin"
+            android:fontFamily="@font/roboto_medium"
             android:textColor="@android:color/white"
             android:layout_gravity="center_horizontal"
             android:textSize="16sp"/>
@@ -101,7 +101,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/player3_distance"
-            android:fontFamily="@font/roboto_thin"
+            android:fontFamily="@font/roboto_medium"
             android:textColor="@android:color/white"
             android:layout_gravity="center_horizontal"
             android:textSize="16sp"/>
@@ -129,7 +129,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/player4_distance"
-            android:fontFamily="@font/roboto_thin"
+            android:fontFamily="@font/roboto_medium"
             android:textColor="@android:color/white"
             android:layout_gravity="center_horizontal"
             android:textSize="16sp"/>

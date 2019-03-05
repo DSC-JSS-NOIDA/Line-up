@@ -22,7 +22,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".PokeballActivity"></activity>
+        <activity android:name=".PokeballActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/qr_activity"/>
         <activity
             android:name=".YourRouteActivity"
             android:screenOrientation="portrait" />
@@ -34,7 +36,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".SplashScreenActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

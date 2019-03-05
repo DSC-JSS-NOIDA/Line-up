@@ -45,6 +45,7 @@ import project.tronku.line_up.API;
 import project.tronku.line_up.InstructionsActivity;
 import project.tronku.line_up.LineUpApplication;
 import project.tronku.line_up.NetworkReceiver;
+import project.tronku.line_up.PokeballActivity;
 import project.tronku.line_up.QRCodeActivity;
 import project.tronku.line_up.R;
 
@@ -240,7 +241,7 @@ public class LoginFragment extends Fragment implements project.tronku.line_up.lo
         if (requestCode == REQUEST_CODE_INTRO) {
             if (resultCode == RESULT_OK) {
                 PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("intro", false).apply();
-                Intent qrcode = new Intent(getActivity(), QRCodeActivity.class);
+                Intent qrcode = new Intent(getActivity(), PokeballActivity.class);
                 startActivity(qrcode);
             } else {
                 //Toast
