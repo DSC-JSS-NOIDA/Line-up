@@ -163,47 +163,51 @@ public class LoginFragment extends Fragment implements project.tronku.line_up.lo
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, " Login Activity onErrorResponse: " + error.toString());
-                String json = new String(error.networkResponse.data);
-                try {
-                    JSONObject jsonError = new JSONObject(json);
-                    if (jsonError.has("error")) {
-                        String errorString = "Invalid data! Try again.";
-                        final Dialog dialog = new Dialog(getActivity());
-                        dialog.setContentView(R.layout.dialog_layout);
-                        ImageView close = dialog.findViewById(R.id.close);
-                        close.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                dialog.dismiss();
-                            }
-                        });
+                if (error.networkResponse!=null) {
+                    String json = new String(error.networkResponse.data);
+                    try {
+                        JSONObject jsonError = new JSONObject(json);
+                        if (jsonError.has("error")) {
+                            String errorString = "Invalid data! Try again.";
+                            final Dialog dialog = new Dialog(getActivity());
+                            dialog.setContentView(R.layout.dialog_layout);
+                            ImageView close = dialog.findViewById(R.id.close);
+                            close.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    dialog.dismiss();
+                                }
+                            });
 
-                        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialogInterface) {
-                                zealIdEditText.setText("");
-                                passwordEditText.setText("");
-                                zealIdEditText.setEnabled(true);
-                                passwordEditText.setEnabled(true);
-                                layer.setVisibility(View.INVISIBLE);
-                                loader.setVisibility(View.INVISIBLE);
-                            }
-                        });
+                            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialogInterface) {
+                                    zealIdEditText.setText("");
+                                    passwordEditText.setText("");
+                                    zealIdEditText.setEnabled(true);
+                                    passwordEditText.setEnabled(true);
+                                    layer.setVisibility(View.INVISIBLE);
+                                    loader.setVisibility(View.INVISIBLE);
+                                }
+                            });
 
-                        TextView errorView = dialog.findViewById(R.id.errorText);
-                        errorView.setText(errorString);
-                        dialog.show();
+                            TextView errorView = dialog.findViewById(R.id.errorText);
+                            errorView.setText(errorString);
+                            dialog.show();
 
-                        layer.setVisibility(View.INVISIBLE);
-                        loader.setVisibility(View.INVISIBLE);
-                        zealIdEditText.setEnabled(true);
-                        passwordEditText.setEnabled(true);
+                            layer.setVisibility(View.INVISIBLE);
+                            loader.setVisibility(View.INVISIBLE);
+                            zealIdEditText.setEnabled(true);
+                            passwordEditText.setEnabled(true);
 
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
+                else
+                    Toast.makeText(getActivity(), "Network issue!", Toast.LENGTH_SHORT).show();
             }
         }){
             @Override

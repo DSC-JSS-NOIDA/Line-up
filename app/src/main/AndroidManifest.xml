@@ -10,10 +10,11 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".LineUpApplication"
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/line_up"
@@ -57,6 +58,9 @@
             android:screenOrientation="portrait" />
 
         <service android:name=".LocationFinderService" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="574501a4c01aed8ca21f841477c163a89ad9fc4e" />
     </application>
 
 </manifest>
