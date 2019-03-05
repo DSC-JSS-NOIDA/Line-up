@@ -30,6 +30,8 @@ import android.preference.PreferenceManager;
 import android.provider.SyncStateContract;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -85,7 +87,7 @@ public class QRCodeActivity extends AppCompatActivity {
     private boolean needPermission = false;
 //    private ImageView poke_top,poke_down;
     private ParticleView particleView;
-//    private View layer;
+    private View layer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +103,7 @@ public class QRCodeActivity extends AppCompatActivity {
         leaderboard = findViewById(R.id.leaderboard);
         loader = findViewById(R.id.loader_qr);
         particleView = findViewById(R.id.particleView);
+        layer = findViewById(R.id.pokemon_layer);
 
         pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         receiver = new NetworkReceiver();
@@ -108,6 +111,28 @@ public class QRCodeActivity extends AppCompatActivity {
         askPermission();
         getLatestLocation();
         startLocationService();
+
+        AlphaAnimation back=new AlphaAnimation(1.0f,0.0f);
+        back.setDuration(700);
+
+        back.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                layer.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                layer.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        layer.startAnimation(back);
 
         leaderboard.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -14,18 +14,21 @@
 
     <application
         android:name=".LineUpApplication"
-        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/line_up"
         android:label="@string/app_name"
         android:roundIcon="@drawable/line_up"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".YourRouteActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity android:name=".LeaderboardActivity"
-            android:screenOrientation="portrait"/>
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".PokeballActivity"></activity>
+        <activity
+            android:name=".YourRouteActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".LeaderboardActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".LocationRadarActivity"
             android:screenOrientation="portrait" />
@@ -43,8 +46,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".QRCodeActivity"
-            android:theme="@style/qr_activity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/qr_activity" />
         <activity
             android:name=".InstructionsActivity"
             android:screenOrientation="portrait"
@@ -58,6 +61,7 @@
             android:screenOrientation="portrait" />
 
         <service android:name=".LocationFinderService" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="574501a4c01aed8ca21f841477c163a89ad9fc4e" />

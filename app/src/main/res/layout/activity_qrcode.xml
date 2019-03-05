@@ -315,11 +315,11 @@
         android:scaleType="centerCrop"
         android:src="@drawable/small_poke_top"/>
 
-    <!--<View-->
-        <!--android:id="@+id/black_background"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:background="@android:color/black"/>-->
+    <View
+        android:id="@+id/pokemon_layer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"/>
 
     <!--<ImageView-->
         <!--android:id="@+id/pokeball_top"-->

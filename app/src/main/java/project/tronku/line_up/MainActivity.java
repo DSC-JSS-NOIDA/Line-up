@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         if (pref.contains("token")) {
-            Intent qrcode = new Intent(this, QRCodeActivity.class);
+            Intent qrcode = new Intent(this, PokeballActivity.class);
             startActivity(qrcode);
         }
     }
