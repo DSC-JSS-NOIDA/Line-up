@@ -91,6 +91,7 @@ public class Helper {
         playerPOJO.setLat(user.get("lat").getAsString());
         playerPOJO.setLng(user.get("lng").getAsString());
         playerPOJO.setZealId(user.get("zeal_id").getAsString());
+        playerPOJO.setTeamCount(user.get("teamCount").getAsInt());
 
         long millis = user.get("totalTimeTaken").getAsLong() / 1000;
 

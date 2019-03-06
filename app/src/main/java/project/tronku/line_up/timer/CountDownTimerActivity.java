@@ -134,12 +134,11 @@ public class CountDownTimerActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        timer.cancel();
         final Snackbar snackbar = Snackbar.make(view, "Are you sure you want to exit?", Snackbar.LENGTH_LONG);
         snackbar.setAction("YES", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finishAffinity();
+                finishAndRemoveTask();
             }
         });
         View snackbarView = snackbar.getView();

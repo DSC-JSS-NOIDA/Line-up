@@ -20,12 +20,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import java.util.ArrayList;
-import java.util.Map;
 
 public class YourRouteActivity extends AppCompatActivity {
 
@@ -39,8 +34,6 @@ public class YourRouteActivity extends AppCompatActivity {
     private TextView noMembers;
     private SharedPreferences pref;
     private TextView score, position, name, zealid;
-    private int myScore, myPosition, progress, count;
-    private String myName, myZealId, teamCount;
     private ImageView pokemon;
     private ParticleView particleView;
 
@@ -72,22 +65,6 @@ public class YourRouteActivity extends AppCompatActivity {
 
         updateRoute();
         updatePokemon();
-
-        myScore = pref.getInt("score", 0);
-        myPosition = pref.getInt("position", 0);
-        myName = pref.getString("name", "Player Name");
-        myZealId = pref.getString("zealid", "Zeal id");
-        teamCount = pref.getString("teamCount", "0");
-        progress = pref.getInt("progress", 0);
-
-        score.setText("" + myScore);
-        position.setText("" + myPosition);
-        name.setText(myName);
-        zealid.setText(myZealId);
-
-        count = Integer.parseInt(teamCount) == 0 ? 10 : Integer.parseInt(teamCount);
-        progressBar.setProgress(progress* 100 / count);
-
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -135,26 +112,17 @@ public class YourRouteActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(String response) {
                         if(response != null){
-                            Map<String, Object> responseMap = new Gson().fromJson(response, new TypeToken<Map<String, Object>>() {}.getType());
-                            myScore = (int) Double.parseDouble(responseMap.get("score").toString());
-                            myPosition = (int) Double.parseDouble(responseMap.get("position").toString());
-                            myName = responseMap.get("firstName").toString();
-                            myZealId = responseMap.get("zeal_id").toString();
+                            PlayerPOJO playerPOJO = Helper.getPlayerFromJsonString(response);
 
-                            Log.e(TAG, "onSuccess: " + myScore + " " + myPosition);
-                            pref.edit().putInt("score", 0).apply();
-                            pref.edit().putInt("position", 0).apply();
-                            pref.edit().putString("name", "Player Name").apply();
-                            pref.edit().putString("zealid", "Zeal id").apply();
+                            int count = playerPOJO.getTeamCount() == 0 ? 10 : playerPOJO.getTeamCount();
 
-                            score.setText("" + myScore);
-                            position.setText("" + myPosition);
-                            name.setText(myName);
-                            zealid.setText(myZealId);
+                            score.setText(String.valueOf(playerPOJO.getScore()));
+                            position.setText(String.valueOf(playerPOJO.getPosition()));
+                            name.setText(playerPOJO.getName());
+                            zealid.setText(playerPOJO.getZealId());
 
                             teammatesFound = new ArrayList<>(Helper.getPlayersFromResponse(response));
-                            progress = teammatesFound.size();
-                            pref.edit().putInt("progress", progress).apply();
+                            int progress = teammatesFound.size();
                             progressBar.setProgress(progress* (100/count) );
 
                             if (teammatesFound.size() == 0) {

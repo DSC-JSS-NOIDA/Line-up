@@ -109,8 +109,6 @@ public class QRCodeActivity extends AppCompatActivity {
         receiver = new NetworkReceiver();
 
         askPermission();
-        getLatestLocation();
-        startLocationService();
 
         AlphaAnimation back=new AlphaAnimation(1.0f,0.0f);
         back.setDuration(700);
@@ -201,6 +199,8 @@ public class QRCodeActivity extends AppCompatActivity {
                             uniqueCode = currentUser.getUniqueCode();
                             pref.edit().putString("uniqueCode", uniqueCode).apply();
                             updateQR();
+                            getLatestLocation();
+                            startLocationService();
                         } else{
                             Toast.makeText(QRCodeActivity.this, Constants.ERROR_FETCHING_DATA, Toast.LENGTH_SHORT).show();
                         }
@@ -213,6 +213,7 @@ public class QRCodeActivity extends AppCompatActivity {
 
                         if(status == HttpStatus.PRECONDITION_REQUIRED.value()){
                             startActivity(new Intent(QRCodeActivity.this, CountDownTimerActivity.class));
+                            finishAffinity();
                         }else if(status == HttpStatus.UNAUTHORIZED.value()){
                             pref.edit().clear().apply();
                             Toast.makeText(QRCodeActivity.this, "Please login to perform this action.", Toast.LENGTH_SHORT).show();
