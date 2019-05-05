@@ -1,3 +1,4 @@
+
 # Line-up
 Zealicon event app - GPS based team finding event
 
@@ -9,3 +10,6 @@ Zealicon event app - GPS based team finding event
 ### Installing
 
 The App is Available on Google Play Store for free. Download it from there or clone this repo using Android Studio.
+
+
+
