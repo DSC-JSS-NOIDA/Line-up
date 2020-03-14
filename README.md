@@ -3,19 +3,6 @@
 Zealicon event app - GPS based team finding event
 
 ## Getting Started
- 
-### Requirements
-* Android version 5.0 and above
-
-### Installing
-
-The App is Available on Google Play Store for free. Download it from there or clone this repo using Android Studio.
-
-### Screenshots
-
-<img src ="./LineUpArt/art1.jpg" width="260" />&nbsp;&nbsp;<img src ="./LineUpArt/art2.jpg" width="260" />
-
-<img src ="./LineUpArt/art3.jpg" width="260" />&nbsp;&nbsp;<img src ="./LineUpArt/art4.jpg" width="260" />
 
 ### About
 
@@ -28,7 +15,14 @@ The App is Available on Google Play Store for free. Download it from there or cl
 * Camera
 * Location
 
-### License
+### Requirements
+* Android version 5.0 and above
 
-This project is licensed under the MIT License
+### Screenshots
 
+<img src ="./LineUpArt/art1.jpg" width="260" />&nbsp;&nbsp;<img src ="./LineUpArt/art2.jpg" width="260" />
+
+<img src ="./LineUpArt/art3.jpg" width="260" />&nbsp;&nbsp;<img src ="./LineUpArt/art4.jpg" width="260" />
+
+### Stats
+<img src = "https://github.com/DSC-JSS-NOIDA/Line-up/blob/master/LineUpArt/53567228_2144616702251914_3860260418882633728_o.png"/>
